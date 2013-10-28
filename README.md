@@ -64,16 +64,13 @@ Try any of the `.launch` files in the `grips_gazebo` package: (e.g. `cordless_dr
 roslaunch grips_gazebo cordless_drill.launch
 ``` 
 
----
 ## Changelog
 ### 0.1.0 (2013-10-28)
 * Initial Release
 
----
 ## Roadmap
 ### 0.2.0 (2013-11-11)
 * Include bimanual setup
 
----
 ## Tutorials
 TODO
