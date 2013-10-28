@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(grips_kinematics)
 
 find_package(catkin REQUIRED COMPONENTS 
-  grips_description
   grips_moveit_config 
   moveit_core 
   moveit_ros_planning 
@@ -19,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   LIBRARIES
   DEPENDS
+  grips_description
   moveit_core
   pluginlib
   moveit_ros_planning_interface

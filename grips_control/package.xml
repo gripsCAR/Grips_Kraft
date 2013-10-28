@@ -14,7 +14,6 @@
   <build_depend>hdf5</build_depend>
   <build_depend>controller_manager</build_depend>
   <build_depend>control_msgs</build_depend>
-  <build_depend>grips_description</build_depend>
   <build_depend>grips_moveit_config</build_depend>
   <build_depend>grips_kinematics</build_depend>
   <build_depend>eigen_conversions</build_depend>

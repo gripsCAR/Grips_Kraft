@@ -15,7 +15,6 @@
   
   <build_depend>roscpp</build_depend>
   <build_depend>gazebo_ros</build_depend>
-  <build_depend>grips_description</build_depend>
   <build_depend>grips_control</build_depend>
   
   <run_depend>roscpp</run_depend>
