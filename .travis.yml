@@ -44,6 +44,5 @@ script: # All commands must exit with code 0 on success. Anything else is consid
   - echo "Test 1 ========================================"
   - catkin_make DCMAKE_BUILD_TYPE=Debug
   # Rebuild
-  - cd ../
   - rm -rf build/ devel/
   - catkin_make DCMAKE_BUILD_TYPE=Debug
