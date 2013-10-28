@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <!-- We use a custom world for the grips so that the camera angle is launched correctly -->
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!-- Global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Focus camera on the setup -->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>1.09878 -1.05928 1.57864 0 0.559643 2.32018</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+  </world>
+</sdf>

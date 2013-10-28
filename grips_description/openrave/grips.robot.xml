@@ -1,0 +1,6 @@
+<Robot name="grips" file="grips.dae">
+  <Manipulator name="arm">
+    <base>base_link</base>
+    <effector>end_effector</effector>
+  </Manipulator>
+</Robot>

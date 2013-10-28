@@ -1,0 +1,14 @@
+<launch>
+	<!-- Export env variable so that gazebo finds the models and materials -->
+	<env name="GAZEBO_MODEL_PATH" value="$(find grips_worlds)/models" />
+	
+	<include file="$(find grips_gazebo)/launch/grips.launch">
+		<arg name="world_name" value="$(find grips_worlds)/worlds/cordless_drill.world"/>
+		<arg name="spawn_args" default="-x 0.51 -y 0.95 -z 0.2 -Y 3.1415"/>
+		<arg name="robot_name" value="grips_simple_gripper"/>
+		<arg name="show_rviz" default="true"/>
+		<arg name="debug" value="false"/>
+		<arg name="paused" value="true"/>
+		<arg name="gui" value="true"/>
+	</include>
+</launch>

@@ -1,0 +1,27 @@
+<package>
+
+  <name>grips_moveit_config</name>
+  <description>
+     An automatically generated package with all the configuration and launch files for using the grips with the MoveIt Motion Planning Framework
+  </description>
+  
+  <version>0.1.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+
+  <run_depend>moveit_ros_move_group</run_depend>
+  <run_depend>moveit_planners_ompl</run_depend>
+  <run_depend>moveit_ros_visualization</run_depend>
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>xacro</run_depend>
+  <build_depend>grips_description</build_depend>
+  <run_depend>grips_description</run_depend>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+</package>

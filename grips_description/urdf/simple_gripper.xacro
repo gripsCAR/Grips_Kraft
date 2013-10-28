@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<robot name="simple_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	
+	<!-- Import all Gazebo-customization elements, including Gazebo colors -->
+	<xacro:include filename="$(find grips_description)/urdf/simple_gripper.gazebo" />
+	
+	<!-- Auxiliar Values -->
+	<property name="pi" value="3.1415926535897931" />
+	<property name="gripper_effort" value="200" />
+	<property name="gripper_velocity" value="100" />
+	<!-- Links Mass -->
+	<property name="gripper_base_mass" value="0.923" />
+	<property name="outer_mass" value="0.091" />
+	<property name="inner_mass" value="0.194" />
+	<property name="finger_mass" value="0.174" />
+	<!-- Links COG -->
+	<property name="gripper_base_cog" value="0 26.28e-3 0" />
+	<property name="outer_cog" value="0 31.725e-3 0" />
+	<property name="r_inner_cog" value="-0.316e-3 23.873e-3 0" />
+	<property name="l_inner_cog" value="0.316e-3 23.873e-3 0" />
+	<property name="r_finger_cog" value="3.441e-3 20.353e-3 0" />
+	<property name="l_finger_cog" value="-3.441e-3 20.353e-3 0" />	
+	<!-- Links Inertia -->
+	<macro name="gripper_base_inertia">
+		<inertia ixx="9.67e-4" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0"
+			izz="0.002" />
+	</macro>
+	<macro name="outer_inertia">
+		<inertia ixx="4.664e-5" ixy="0.0" ixz="0.0" iyy="5.519e-6"
+			iyz="0.0" izz="4.682e-5" />
+	</macro>
+	<macro name="r_inner_inertia">
+		<inertia ixx="1.179e-4" ixy="1.347e-6" ixz="0.0" iyy="5.647e-5"
+			iyz="0.0" izz="7.353e-5" />
+	</macro>
+	<macro name="l_inner_inertia">
+		<inertia ixx="1.179e-4" ixy="-1.347e-6" ixz="0.0" iyy="5.647e-5"
+			iyz="0.0" izz="7.353e-5" />
+	</macro>
+	<macro name="r_finger_inertia">
+		<inertia ixx="1.65e-4" ixy="3.16e-5" ixz="0.0" iyy="3.595e-5"
+			iyz="0.0" izz="1.701e-4" />
+	</macro>
+	<macro name="l_finger_inertia">
+		<inertia ixx="1.65e-4" ixy="-3.16e-5" ixz="0.0" iyy="3.595e-5"
+			iyz="0.0" izz="1.701e-4" />
+	</macro>
+	<!-- Meshes -->
+	<property name="gripper_base_mesh" value="package://grips_description/meshes/gripper_base.dae" />
+	<property name="outer_mesh" value="package://grips_description/meshes/outer_pivot.dae" />
+	<property name="r_inner_mesh" value="package://grips_description/meshes/r_inner_pivot.dae" />
+	<property name="l_inner_mesh" value="package://grips_description/meshes/l_inner_pivot.dae" />
+	<property name="r_finger_mesh" value="package://grips_description/meshes/r_finger.dae" />
+	<property name="l_finger_mesh" value="package://grips_description/meshes/l_finger.dae" />
+	<!-- Joints Dynamics -->
+	<property name="outer_damping" value="0.1" />
+	<property name="inner_damping" value="0.1" />
+	<property name="finger_damping" value="0.1" />
+	<property name="inner_friction" value="0" />
+	<property name="outer_friction" value="0" />
+	<property name="finger_friction" value="0" />
+	
+	<!-- base link -->
+	<create_link name="gripper_base" color="metal_seamed" mesh="${gripper_base_mesh}" cog="${gripper_base_cog}" mass="${gripper_base_mass}">
+		<base_inertia />
+	</create_link>
+	<!-- outer links -->
+	<create_link name="r_outer_link" color="metal_seamed" mesh="${outer_mesh}" cog="${outer_cog}" mass="${outer_mass}">
+		<outer_inertia />
+	</create_link>
+	<create_link name="l_outer_link" color="metal_seamed" mesh="${outer_mesh}" cog="${outer_cog}" mass="${outer_mass}">
+		<outer_inertia />
+	</create_link>
+	<!-- inner links -->
+	<create_link name="r_inner_link" color="metal_seamed" mesh="${r_inner_mesh}" cog="${r_inner_cog}" mass="${inner_mass}">
+		<r_inner_inertia />
+	</create_link>
+	<create_link name="l_inner_link" color="metal_seamed" mesh="${l_inner_mesh}" cog="${l_inner_cog}" mass="${inner_mass}">
+		<l_inner_inertia />
+	</create_link>
+	<!-- finger links -->
+	<create_link name="r_finger_link" color="metal_seamed" mesh="${r_finger_mesh}" cog="${r_finger_cog}" mass="${finger_mass}">
+		<r_finger_inertia />
+	</create_link>
+	<create_link name="l_finger_link" color="metal_seamed" mesh="${l_finger_mesh}" cog="${l_finger_cog}" mass="${finger_mass}">
+		<l_finger_inertia />
+	</create_link>
+
+	<!-- joints -->
+	<joint name="r_inner" type="revolute">
+		<child link="r_inner_link" />
+		<parent link="gripper_base" />
+		<axis xyz="0 0 1" />
+		<origin xyz="31.737e-3 42.19e-3 0" rpy="0 0 0" />
+		<limit lower="-1.43" upper="0.4" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${inner_damping}" />
+	</joint>
+	<joint name="l_inner" type="revolute">
+		<child link="l_inner_link" />
+		<parent link="gripper_base" />
+		<axis xyz="0 0 1" />
+		<origin xyz="-31.737e-3 42.19e-3 0" rpy="0 0 0" />
+		<limit lower="-0.4" upper="1.43" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${inner_damping}" />
+	</joint>
+	
+	<joint name="r_outer" type="revolute">
+		<child link="r_outer_link" />
+		<parent link="gripper_base" />
+		<axis xyz="0 0 1" />
+		<origin xyz="58.93e-3 26.49e-3 0" rpy="0 0 0" />
+		<limit lower="-1.43" upper="0.4" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${outer_damping}" />
+	</joint>
+	<joint name="l_outer" type="revolute">
+		<child link="l_outer_link" />
+		<parent link="gripper_base" />
+		<axis xyz="0 0 1" />
+		<origin xyz="-58.93e-3 26.49e-3 0" rpy="0 0 0" />
+		<limit lower="-0.4" upper="1.43" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${outer_damping}" />
+	</joint>
+
+	<joint name="r_finger" type="revolute">
+		<child link="r_finger_link" />
+		<parent link="r_inner_link" />
+		<axis xyz="0 0 1" />
+		<origin xyz="0 63.45e-3 0" rpy="0 0 0" />
+		<limit lower="${-pi/2}" upper="${pi/2}" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${finger_damping}" />
+	</joint>
+	<joint name="l_finger" type="revolute">
+		<child link="l_finger_link" />
+		<parent link="l_inner_link" />
+		<axis xyz="0 0 1" />
+		<origin xyz="0 63.45e-3 0" rpy="0 0 0" />
+		<limit lower="${-pi/2}" upper="${pi/2}" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+		<dynamics damping="${finger_damping}" />
+	</joint>
+
+	<!-- transmissions -->
+	<simple_transmission joint="r_outer" />
+	<simple_transmission joint="l_outer" />
+	<simple_transmission joint="r_inner" />
+	<simple_transmission joint="l_inner" />
+	<simple_transmission joint="r_finger" />
+	<simple_transmission joint="l_finger" />
+</robot>

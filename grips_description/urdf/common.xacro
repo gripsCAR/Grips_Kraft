@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">	
+	<!-- Link's Macro -->
+	<macro name="create_link" params="name color mesh mass cog *inertia">
+		<link name="${name}">
+			<visual>
+				<geometry>
+					<mesh filename="${mesh}" />
+				</geometry>
+				<material name="${color}" />
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="${mesh}" />
+				</geometry>
+			</collision>
+			<inertial>
+				<origin xyz="${cog}" rpy="0 0 0" />
+				<mass value="${mass}" />
+				<xacro:insert_block name="inertia" />
+			</inertial>
+		</link>
+	</macro>
+	<!-- Transmission's Macro -->
+	<macro name="simple_transmission" params="joint">
+		<transmission name="${joint}_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="${joint}" />
+			<actuator name="${joint}_motor">
+				<hardwareInterface>EffortJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+	</macro>
+</robot>

@@ -1,0 +1,12 @@
+#~ All the available plugins shorted by performance:
+#~ grips_arm_kinematics/IKFastTransform6dPlugin
+#~ kdl_kinematics_plugin/KDLKinematicsPlugin
+#~ grips_arm_kinematics/IterativeCouplingPlugin
+#~ grips_arm_kinematics/IKFastTranslationDirection5d_1_Plugin
+#~ grips_arm_kinematics/IKFastTranslationDirection5d_2_Plugin
+
+arm:
+  kinematics_solver: grips_arm_kinematics/IKFastTransform6dPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 0.001
+  kinematics_solver_attempts: 1

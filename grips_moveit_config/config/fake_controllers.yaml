@@ -1,0 +1,9 @@
+controller_list:
+  - name: fake_arm_controller
+    joints:
+      - SA
+      - SE
+      - linkage_tr
+      - WP
+      - WY
+      - WR

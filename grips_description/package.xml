@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>grips_description</name>
+  <description>
+		The grips_description package
+  </description>
+
+  <version>0.1.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

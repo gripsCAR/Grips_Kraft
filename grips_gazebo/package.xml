@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+
+  <name>grips_gazebo</name>
+  <description>The grips_gazebo package</description>
+
+  <version>0.1.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>roscpp</build_depend>
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>grips_description</build_depend>
+  <build_depend>grips_control</build_depend>
+  
+  <run_depend>roscpp</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>grips_description</run_depend>
+  <run_depend>grips_control</run_depend>
+  
+<!--
+  <export>
+		<gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />
+  </export>
+-->
+  
+</package>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot>
+	<!-- links -->
+	<gazebo reference="gripper_base">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+	</gazebo>
+	<gazebo reference="r_outer_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+	</gazebo>
+	<gazebo reference="l_outer_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+	</gazebo>
+	<gazebo reference="r_inner_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+	</gazebo>
+	<gazebo reference="l_inner_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+	</gazebo>
+	<gazebo reference="r_finger_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+		<mu1>1.1</mu1>
+		<mu2>1.1</mu2>
+		<fdir1>0 0 1</fdir1>
+		<kp>1000000.0</kp>
+		<kd>10.0</kd>
+		<maxVel>0.1</maxVel>
+		<minDepth>0.001</minDepth>
+		<maxContacts>5</maxContacts>
+	</gazebo>
+	<gazebo reference="l_finger_link">
+		<material>Telerobcar/MetalSeamed</material>
+		<selfCollide>false</selfCollide>
+		<mu1>1.1</mu1>
+		<mu2>1.1</mu2>
+		<fdir1>0 0 1</fdir1>
+		<kp>1000000.0</kp>
+		<kd>100.0</kd>
+		<maxVel>0.1</maxVel>
+		<minDepth>0.001</minDepth>
+		<maxContacts>5</maxContacts>
+	</gazebo>	
+	<!-- joints 
+	<gazebo reference="r_finger">
+		<kp>1e20</kp>
+		<kd>0.0</kd>
+		<stopCfm>1.0</stopCfm>
+	</gazebo>
+	<gazebo reference="l_finger">
+		<kp>1e20</kp>
+		<kd>0.0</kd>
+	</gazebo>
+	<gazebo reference="r_inner">
+		<kp>1e20</kp>
+		<kd>10.0</kd>
+		<fudgeFactor>1.0</fudgeFactor>
+	</gazebo>
+	<gazebo reference="l_inner">
+		<kp>1e20</kp>
+		<kd>10.0</kd>
+		<fudgeFactor>1.0</fudgeFactor>
+	</gazebo>-->
+	
+	<!-- Gripper plugin  -->
+	<gazebo>
+		<gripper name="grasping">
+			<grasp_check>
+				<attach_steps>1</attach_steps>		<!-- default: 20 -->
+				<detach_steps>1</detach_steps>		<!-- default: 40 -->
+				<min_contact_count>2</min_contact_count>
+			</grasp_check>
+			<gripper_link>r_finger_link</gripper_link>
+			<gripper_link>l_finger_link</gripper_link>
+			<palm_link>gripper_base</palm_link>
+		</gripper>
+	</gazebo>
+</robot>

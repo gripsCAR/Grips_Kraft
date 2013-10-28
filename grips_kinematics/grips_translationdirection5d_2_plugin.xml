@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='ASCII'?>
+<library path="lib/libgrips_translationdirection5d_2_plugin">
+  <class name="grips_arm_kinematics/IKFastTranslationDirection5d_2_Plugin" type="ikfast_kinematics_plugin::IKFastKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>IKFast61 plugin for closed-form kinematics. Free index = 2</description>
+  </class>
+</library>

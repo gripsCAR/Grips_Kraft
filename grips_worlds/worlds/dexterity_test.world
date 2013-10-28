@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+	<!-- We use a custom world to change the camera angle -->
+	<world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!-- Global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Dexterity test model -->
+    <include>
+			<pose>-0.385 0.7 0.8 0 0 0</pose>
+			<uri>model://dexterity_test</uri>
+		</include>
+    <!-- Focus camera on the setup -->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-0.859774 1.10484 1.65432 -3.65255e-17 0.707643 -0.735002</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+  </world>
+</sdf>

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='ASCII'?>
+<library path="lib/libgrips_iterative_coupling_plugin">
+  <class name="grips_arm_kinematics/IterativeCouplingPlugin" type="iterative_coupling_plugin::IterativeCouplingPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>iterative_coupling_plugin</description>
+  </class>
+</library>

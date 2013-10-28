@@ -1,0 +1,15 @@
+<launch>
+	<arg name="robot_name" value="grips" />
+	
+	<group ns="$(arg robot_name)">
+		<!-- Upload robot and semantic description that corresponds to the URDF -->
+		<include file="$(find grips_description)/launch/upload_grips.launch">
+			<arg name="robot_name" value="$(arg robot_name)" />
+		</include>
+    <!-- Start the kinematic services -->
+		<node name="kinematic_srv" pkg="grips_kinematics" type="kinematic_services" respawn="false" output="screen">
+			<rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
+		</node>
+	</group>
+	
+</launch>

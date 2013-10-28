@@ -1,0 +1,18 @@
+material Telerobcar/MetalSeamed
+{
+  technique
+  {
+    pass 
+    {
+			ambient 0.4627450980392157 0.4666666666666667 0.4509803921568628 1.0
+			/*	ambient 0.8 0.8 0.8 1.0 */
+			diffuse 0.3 0.3 0.3 1.0
+      specular 0.01 0.01 0.01 1.0 2.0
+      texture_unit
+      {
+        texture metal_seamed.jpg
+        filtering trilinear
+      }
+    }
+  }
+}
