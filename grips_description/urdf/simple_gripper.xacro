@@ -46,12 +46,12 @@
 			iyz="0.0" izz="1.701e-4" />
 	</macro>
 	<!-- Meshes -->
-	<property name="gripper_base_mesh" value="package://grips_description/meshes/gripper_base.dae" />
-	<property name="outer_mesh" value="package://grips_description/meshes/outer_pivot.dae" />
-	<property name="r_inner_mesh" value="package://grips_description/meshes/r_inner_pivot.dae" />
-	<property name="l_inner_mesh" value="package://grips_description/meshes/l_inner_pivot.dae" />
-	<property name="r_finger_mesh" value="package://grips_description/meshes/r_finger.dae" />
-	<property name="l_finger_mesh" value="package://grips_description/meshes/l_finger.dae" />
+	<property name="gripper_base_mesh" value="package://grips_description/meshes/gripper/gripper_base.dae" />
+	<property name="outer_mesh" value="package://grips_description/meshes/gripper/outer_pivot.dae" />
+	<property name="r_inner_mesh" value="package://grips_description/meshes/gripper/r_inner_pivot.dae" />
+	<property name="l_inner_mesh" value="package://grips_description/meshes/gripper/l_inner_pivot.dae" />
+	<property name="r_finger_mesh" value="package://grips_description/meshes/gripper/r_finger.dae" />
+	<property name="l_finger_mesh" value="package://grips_description/meshes/gripper/l_finger.dae" />
 	<!-- Joints Dynamics -->
 	<property name="outer_damping" value="0.1" />
 	<property name="inner_damping" value="0.1" />

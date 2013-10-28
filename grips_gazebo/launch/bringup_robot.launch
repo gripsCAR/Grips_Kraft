@@ -1,0 +1,34 @@
+<launch>
+	<!-- roslaunch arguments -->
+	<arg name="robot_name"/>
+  <arg name="spawn_args" default=""/>
+  <arg name="load_controllers" default="true"/>
+	
+  <group ns="$(arg robot_name)">    
+    
+    <param name="tf_prefix" type="string" value="$(arg robot_name)" />
+    
+    <!-- send robots urdfs to param server -->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'" />
+
+    <!-- push robot_description to factory and spawn robot in gazebo -->
+    <node name="$(arg robot_name)_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+          args="-urdf -param robot_description -model $(arg robot_name)
+                $(arg spawn_args)" />
+    
+    <group if="$(arg load_controllers)">
+      <!-- load joint controller configurations from YAML file to parameter server -->
+      <rosparam file="$(find grips_control)/config/joint_position_control.yaml" command="load" />
+      <!-- load the controllers -->
+      <node name="$(arg robot_name)_controller" pkg="controller_manager" type="spawner" output="screen" 
+          args="--namespace=/$(arg robot_name) SA SE WP WY WR linkage_tr linkage_tl linkage_bl
+          r_outer l_outer r_inner l_inner r_finger l_finger joint_state_controller" />
+      <!-- start robot state publisher -->
+      <node name="$(arg robot_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+        <param name="publish_frequency" type="double" value="50.0" />
+      </node>
+    </group>
+    
+  </group>
+	
+</launch>

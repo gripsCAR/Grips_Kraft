@@ -1,1 +1,4 @@
 - git: {local-name: grips, uri: 'https://github.com/fsuarez6/grips.git', version: hydro-devel}
+- git: {local-name: gazebo_ros_pkgs, uri: 'https://github.com/ros-simulation/gazebo_ros_pkgs.git', version: hydro-devel}
+- git: {local-name: ros_controllers, uri: 'https://github.com/fsuarez6/ros_controllers.git', version: hydro-devel}
+- git: {local-name: robot_state_publisher, uri: 'https://github.com/fsuarez6/robot_state_publisher.git', version: hydro_tf_prefix}

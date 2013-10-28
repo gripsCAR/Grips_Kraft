@@ -1,0 +1,214 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="blue_table">
+    <static>true</static>
+    <link name="link">
+      <collision name="surface">
+        <pose>0 0 0.795 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.6 0.6 0.01</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="surface">
+        <pose>0 0 0.795 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.6 0.6 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="front_r_pad">
+        <pose>0.735 0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_r_pad">
+        <pose>0.735 0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="front_l_pad">
+        <pose>-0.735 0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_l_pad">
+        <pose>-0.735 0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_r_pad">
+        <pose>0.735 -0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_r_pad">
+        <pose>0.735 -0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_l_pad">
+        <pose>-0.735 -0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_l_pad">
+        <pose>-0.735 -0.265 0.0045 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.15 0.009</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="front_r_leg">
+        <pose>0.735 0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_r_leg">
+        <pose>0.735 0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="front_l_leg">
+        <pose>-0.735 0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_l_leg">
+        <pose>-0.735 0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+
+      <collision name="back_r_leg">
+        <pose>0.735 -0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_r_leg">
+        <pose>0.735 -0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_l_leg">
+        <pose>-0.735 -0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_l_leg">
+        <pose>-0.735 -0.265 0.3995 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.07 0.07 0.781</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

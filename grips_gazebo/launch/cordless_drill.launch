@@ -2,13 +2,34 @@
 	<!-- Export env variable so that gazebo finds the models and materials -->
 	<env name="GAZEBO_MODEL_PATH" value="$(find grips_worlds)/models" />
 	
-	<include file="$(find grips_gazebo)/launch/grips.launch">
-		<arg name="world_name" value="$(find grips_worlds)/worlds/cordless_drill.world"/>
-		<arg name="spawn_args" default="-x 0.51 -y 0.95 -z 0.2 -Y 3.1415"/>
-		<arg name="robot_name" value="grips_simple_gripper"/>
-		<arg name="show_rviz" default="true"/>
-		<arg name="debug" value="false"/>
-		<arg name="paused" value="true"/>
-		<arg name="gui" value="true"/>
+  <!-- roslaunch arguments -->
+	<arg name="world_name" default="$(find grips_worlds)/worlds/cordless_drill.world"/>
+	<arg name="spawn_args" default="-x 0.51 -y 0.95 -z 0.2 -Y 3.1415"/>
+	<arg name="show_rviz" default="false"/>
+	<arg name="debug" default="false"/>
+	<arg name="paused" default="true"/>
+	<arg name="gui" default="true"/>
+
+	<!-- We resume the logic in empty_world.launch, changing only the name of 
+		the world to be launched -->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(arg world_name)" />
+		<arg name="debug" value="$(arg debug)" />
+		<arg name="gui" value="$(arg gui)" />
+		<arg name="paused" value="$(arg paused)" />
+		<arg name="use_sim_time" value="true" />
+		<arg name="headless" value="false" />
 	</include>
+	
+  <!-- Bring up the robot: description, spawn model, controllers and state publisher -->
+  <include file="$(find grips_gazebo)/launch/bringup_robot.launch">
+    <arg name="spawn_args" value="$(arg spawn_args)"/>
+    <arg name="robot_name" value="grips_simple_gripper" />
+  </include>
+  
+  <!-- Show in Rviz -->
+	<group if="$(arg show_rviz)">
+		<node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/grips.rviz"/> 
+	</group>
+  
 </launch>

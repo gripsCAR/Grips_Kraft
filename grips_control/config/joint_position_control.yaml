@@ -1,63 +1,62 @@
-grips_simple_gripper:
-  joint_state_controller:
-    type: joint_state_controller/JointStateController
-    # Hz
-    publish_rate: 1000
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  # Hz
+  publish_rate: 1000
 # Grips
-  SA:
-    type: effort_controllers/JointPositionController
-    joint: SA
-    pid: {p: 10000, i: 0, d: 100}
-  SE:
-    type: effort_controllers/JointPositionController
-    joint: SE
-    pid: {p: 1000000, i: 0, d: 100}
-  WP:
-    type: effort_controllers/JointPositionController
-    joint: WP
-    pid: {p: 10000, i: 0, d: 100}
-  WY:
-    type: effort_controllers/JointPositionController
-    joint: WY
-    pid: {p: 3000, i: 0, d: 50}
-  WR:
-    type: effort_controllers/JointPositionController
-    joint: WR
-    pid: {p: 100, i: 0, d: 0}
-  linkage_tr:
-    type: effort_controllers/JointPositionController
-    joint: linkage_tr
-    pid: {p: 10000, i: 0, d: 100}
-  linkage_tl:
-    type: effort_controllers/JointPositionController
-    joint: linkage_tl
-    pid: {p: 1000, i: 0, d: 10}
-  linkage_bl:
-    type: effort_controllers/JointPositionController
-    joint: linkage_bl
-    pid: {p: 100, i: 0, d: 1}
+SA:
+  type: effort_controllers/JointPositionController
+  joint: SA
+  pid: {p: 10000, i: 0, d: 100}
+SE:
+  type: effort_controllers/JointPositionController
+  joint: SE
+  pid: {p: 1000000, i: 0, d: 100}
+WP:
+  type: effort_controllers/JointPositionController
+  joint: WP
+  pid: {p: 10000, i: 0, d: 100}
+WY:
+  type: effort_controllers/JointPositionController
+  joint: WY
+  pid: {p: 3000, i: 0, d: 50}
+WR:
+  type: effort_controllers/JointPositionController
+  joint: WR
+  pid: {p: 100, i: 0, d: 0}
+linkage_tr:
+  type: effort_controllers/JointPositionController
+  joint: linkage_tr
+  pid: {p: 10000, i: 0, d: 100}
+linkage_tl:
+  type: effort_controllers/JointPositionController
+  joint: linkage_tl
+  pid: {p: 1000, i: 0, d: 10}
+linkage_bl:
+  type: effort_controllers/JointPositionController
+  joint: linkage_bl
+  pid: {p: 100, i: 0, d: 1}
 # Simple gripper
-  r_outer:
-    type: effort_controllers/JointPositionController
-    joint: r_outer
-    pid: {p: 10, i: 0, d: 0}
-  l_outer:
-    type: effort_controllers/JointPositionController
-    joint: l_outer
-    pid: {p: 10, i: 0, d: 0}
-  r_inner:
-    type: effort_controllers/JointPositionController
-    joint: r_inner
-    pid: {p: 10, i: 0, d: 0}
-  l_inner:
-    type: effort_controllers/JointPositionController
-    joint: l_inner
-    pid: {p: 10, i: 0, d: 0}
-  r_finger:
-    type: effort_controllers/JointPositionController
-    joint: r_finger
-    pid: {p: 50, i: 0, d: 0}
-  l_finger:
-    type: effort_controllers/JointPositionController
-    joint: l_finger
-    pid: {p: 50, i: 0, d: 0}
+r_outer:
+  type: effort_controllers/JointPositionController
+  joint: r_outer
+  pid: {p: 10, i: 0, d: 0}
+l_outer:
+  type: effort_controllers/JointPositionController
+  joint: l_outer
+  pid: {p: 10, i: 0, d: 0}
+r_inner:
+  type: effort_controllers/JointPositionController
+  joint: r_inner
+  pid: {p: 10, i: 0, d: 0}
+l_inner:
+  type: effort_controllers/JointPositionController
+  joint: l_inner
+  pid: {p: 10, i: 0, d: 0}
+r_finger:
+  type: effort_controllers/JointPositionController
+  joint: r_finger
+  pid: {p: 50, i: 0, d: 0}
+l_finger:
+  type: effort_controllers/JointPositionController
+  joint: l_finger
+  pid: {p: 50, i: 0, d: 0}

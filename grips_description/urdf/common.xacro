@@ -22,6 +22,26 @@
 			</inertial>
 		</link>
 	</macro>
+  <macro name="link_collision" params="name color mesh mass cog *collision *inertia">
+		<link name="${name}">
+			<visual>
+				<geometry>
+					<mesh filename="${mesh}" />
+				</geometry>
+				<material name="${color}" />
+			</visual>
+			<collision>
+				<geometry>
+					<xacro:insert_block name="collision" />
+				</geometry>
+			</collision>
+			<inertial>
+				<origin xyz="${cog}" rpy="0 0 0" />
+				<mass value="${mass}" />
+				<xacro:insert_block name="inertia" />
+			</inertial>
+		</link>
+	</macro>
 	<!-- Transmission's Macro -->
 	<macro name="simple_transmission" params="joint">
 		<transmission name="${joint}_tran">

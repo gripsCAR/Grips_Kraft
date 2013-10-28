@@ -102,13 +102,13 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/base.dae"/>
+        <mesh filename="package://grips_description/meshes/base/base.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/base.dae"/>
+        <mesh filename="package://grips_description/meshes/base/base_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -120,13 +120,13 @@
   <link name="manifold_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/manifold.dae"/>
+        <mesh filename="package://grips_description/meshes/manifold/manifold.dae"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/manifold.dae"/>
+        <mesh filename="package://grips_description/meshes/manifold/manifold_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -138,13 +138,13 @@
   <link name="upper_arm_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/upper_arm.dae"/>
+        <mesh filename="package://grips_description/meshes/upper_arm/upper_arm.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/upper_arm.dae"/>
+        <mesh filename="package://grips_description/meshes/upper_arm/upper_arm_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -156,13 +156,13 @@
   <link name="elbow_pivot_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/elbow_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/linkage/elbow_pivot.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/elbow_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/linkage/elbow_pivot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -174,13 +174,13 @@
   <link name="coupling_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/coupling.dae"/>
+        <mesh filename="package://grips_description/meshes/linkage/coupling.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/coupling.dae"/>
+        <mesh filename="package://grips_description/meshes/linkage/coupling.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -192,13 +192,13 @@
   <link name="forearm_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/forearm.dae"/>
+        <mesh filename="package://grips_description/meshes/forearm/forearm.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/forearm.dae"/>
+        <mesh filename="package://grips_description/meshes/forearm/forearm_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -210,13 +210,13 @@
   <link name="pitch_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/pitch.dae"/>
+        <mesh filename="package://grips_description/meshes/pitch/pitch.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/pitch.dae"/>
+        <mesh filename="package://grips_description/meshes/pitch/pitch_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -228,13 +228,13 @@
   <link name="yaw_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/yaw.dae"/>
+        <mesh filename="package://grips_description/meshes/yaw/yaw.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/yaw.dae"/>
+        <mesh filename="package://grips_description/meshes/yaw/yaw_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -247,13 +247,13 @@
   <link name="camera_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/camera.dae"/>
+        <mesh filename="package://grips_description/meshes/camera/camera.dae"/>
       </geometry>
       <material name="black"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/camera.dae"/>
+        <mesh filename="package://grips_description/meshes/camera/camera_collision.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -458,13 +458,13 @@
   <link name="gripper_base">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/gripper_base.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/gripper_base.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/gripper_base.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/gripper_base.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -476,13 +476,13 @@
   <link name="r_outer_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/outer_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/outer_pivot.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/outer_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/outer_pivot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -494,13 +494,13 @@
   <link name="l_outer_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/outer_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/outer_pivot.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/outer_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/outer_pivot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -512,13 +512,13 @@
   <link name="r_inner_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/r_inner_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/r_inner_pivot.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/r_inner_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/r_inner_pivot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -530,13 +530,13 @@
   <link name="l_inner_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/l_inner_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/l_inner_pivot.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/l_inner_pivot.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/l_inner_pivot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -548,13 +548,13 @@
   <link name="r_finger_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/r_finger.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/r_finger.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/r_finger.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/r_finger.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -566,13 +566,13 @@
   <link name="l_finger_link">
     <visual>
       <geometry>
-        <mesh filename="package://grips_description/meshes/l_finger.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/l_finger.dae"/>
       </geometry>
       <material name="metal_seamed"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://grips_description/meshes/l_finger.dae"/>
+        <mesh filename="package://grips_description/meshes/gripper/l_finger.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -694,6 +694,7 @@
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="ros_control">
       <robotNamespace>/grips_simple_gripper</robotNamespace>
+      <robotParam>/grips_simple_gripper/robot_description</robotParam>
     </plugin>
   </gazebo>
 </robot>
