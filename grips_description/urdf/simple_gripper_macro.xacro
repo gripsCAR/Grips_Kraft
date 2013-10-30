@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<robot name="simple_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <macro name="simple_gripper" params="name">
+    <!-- base link -->
+    <create_link name="${name}gripper_base" color="metal_seamed" mesh="${gripper_base_mesh}" cog="${gripper_base_cog}" mass="${gripper_base_mass}">
+      <base_inertia />
+    </create_link>
+    <!-- outer links -->
+    <create_link name="${name}r_outer" color="metal_seamed" mesh="${outer_mesh}" cog="${outer_cog}" mass="${outer_mass}">
+      <outer_inertia />
+    </create_link>
+    <create_link name="${name}l_outer" color="metal_seamed" mesh="${outer_mesh}" cog="${outer_cog}" mass="${outer_mass}">
+      <outer_inertia />
+    </create_link>
+    <!-- inner links -->
+    <create_link name="${name}r_inner" color="metal_seamed" mesh="${r_inner_mesh}" cog="${r_inner_cog}" mass="${inner_mass}">
+      <r_inner_inertia />
+    </create_link>
+    <create_link name="${name}l_inner" color="metal_seamed" mesh="${l_inner_mesh}" cog="${l_inner_cog}" mass="${inner_mass}">
+      <l_inner_inertia />
+    </create_link>
+    <!-- finger links -->
+    <create_link name="${name}r_finger" color="metal_seamed" mesh="${r_finger_mesh}" cog="${r_finger_cog}" mass="${finger_mass}">
+      <r_finger_inertia />
+    </create_link>
+    <create_link name="${name}l_finger" color="metal_seamed" mesh="${l_finger_mesh}" cog="${l_finger_cog}" mass="${finger_mass}">
+      <l_finger_inertia />
+    </create_link>
+
+    <!-- joints -->
+    <joint name="${name}r_inner" type="revolute">
+      <child link="${name}r_inner" />
+      <parent link="${name}gripper_base" />
+      <axis xyz="0 0 1" />
+      <origin xyz="31.737e-3 42.19e-3 0" rpy="0 0 0" />
+      <limit lower="-1.43" upper="0.4" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${inner_damping}" />
+    </joint>
+    <joint name="${name}l_inner" type="revolute">
+      <child link="${name}l_inner" />
+      <parent link="${name}gripper_base" />
+      <axis xyz="0 0 1" />
+      <origin xyz="-31.737e-3 42.19e-3 0" rpy="0 0 0" />
+      <limit lower="-0.4" upper="1.43" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${inner_damping}" />
+    </joint>
+    
+    <joint name="${name}r_outer" type="revolute">
+      <child link="${name}r_outer" />
+      <parent link="${name}gripper_base" />
+      <axis xyz="0 0 1" />
+      <origin xyz="58.93e-3 26.49e-3 0" rpy="0 0 0" />
+      <limit lower="-1.43" upper="0.4" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${outer_damping}" />
+    </joint>
+    <joint name="${name}l_outer" type="revolute">
+      <child link="${name}l_outer" />
+      <parent link="${name}gripper_base" />
+      <axis xyz="0 0 1" />
+      <origin xyz="-58.93e-3 26.49e-3 0" rpy="0 0 0" />
+      <limit lower="-0.4" upper="1.43" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${outer_damping}" />
+    </joint>
+
+    <joint name="${name}r_finger" type="revolute">
+      <child link="${name}r_finger" />
+      <parent link="${name}r_inner" />
+      <axis xyz="0 0 1" />
+      <origin xyz="0 63.45e-3 0" rpy="0 0 0" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${finger_damping}" />
+    </joint>
+    <joint name="${name}l_finger" type="revolute">
+      <child link="${name}l_finger" />
+      <parent link="${name}l_inner" />
+      <axis xyz="0 0 1" />
+      <origin xyz="0 63.45e-3 0" rpy="0 0 0" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="${gripper_effort}" velocity="${gripper_velocity}" />
+      <dynamics damping="${finger_damping}" />
+    </joint>
+
+    <!-- transmissions -->
+    <simple_transmission joint="${name}r_outer" />
+    <simple_transmission joint="${name}l_outer" />
+    <simple_transmission joint="${name}r_inner" />
+    <simple_transmission joint="${name}l_inner" />
+    <simple_transmission joint="${name}r_finger" />
+    <simple_transmission joint="${name}l_finger" />
+    
+    <!-- links -->
+    <gazebo reference="${name}gripper_base">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}r_outer">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}l_outer">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}r_inner">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}l_inner">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}r_finger">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+      <mu1>1.1</mu1>
+      <mu2>1.1</mu2>
+      <fdir1>0 0 1</fdir1>
+      <kp>1000000.0</kp>
+      <kd>10.0</kd>
+      <maxVel>0.1</maxVel>
+      <minDepth>0.001</minDepth>
+      <maxContacts>5</maxContacts>
+    </gazebo>
+    <gazebo reference="${name}l_finger">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+      <mu1>1.1</mu1>
+      <mu2>1.1</mu2>
+      <fdir1>0 0 1</fdir1>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <maxVel>0.1</maxVel>
+      <minDepth>0.001</minDepth>
+      <maxContacts>5</maxContacts>
+    </gazebo>	
+    <gazebo>
+      <gripper name="${name}grasping">
+        <grasp_check>
+          <attach_steps>1</attach_steps>		<!-- default: 20 -->
+          <detach_steps>1</detach_steps>		<!-- default: 40 -->
+          <min_contact_count>2</min_contact_count>
+        </grasp_check>
+        <gripper_link>${name}r_finger</gripper_link>
+        <gripper_link>${name}l_finger</gripper_link>
+        <palm_link>${name}gripper_base</palm_link>
+      </gripper>
+    </gazebo>
+  </macro>
+</robot>

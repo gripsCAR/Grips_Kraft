@@ -10,13 +10,13 @@
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="arm">
+        <joint name="anchor" />
         <joint name="SA" />
         <joint name="SE" />
         <joint name="linkage_tr" />
         <joint name="WP" />
         <joint name="WY" />
         <joint name="WR" />
-        <joint name="anchor" />
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="home" group="arm">
@@ -27,30 +27,76 @@
         <joint name="WY" value="0" />
         <joint name="linkage_tr" value="0" />
     </group_state>
-    <group_state name="random" group="arm">
-        <joint name="SA" value="0.1765" />
-        <joint name="SE" value="-0.3824" />
-        <joint name="WP" value="0.3827" />
-        <joint name="WR" value="0.7766" />
-        <joint name="WY" value="-0.4231" />
-        <joint name="linkage_tr" value="-0.2341" />
-    </group_state>
-    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
-    <passive_joint name="linkage_tl" />
-    <passive_joint name="linkage_bl" />
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="gripper" parent_link="end_effector" group="arm" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="base_link" link2="coupling_link" reason="Never" />
-    <disable_collisions link1="base_link" link2="forearm_link" reason="Never" />
-    <disable_collisions link1="base_link" link2="manifold_link" reason="Adjacent" />
-    <disable_collisions link1="base_link" link2="pitch_link" reason="Never" />
-    <disable_collisions link1="base_link" link2="yaw_link" reason="Never" />
-    <disable_collisions link1="coupling_link" link2="elbow_pivot_link" reason="Adjacent" />
-    <disable_collisions link1="coupling_link" link2="forearm_link" reason="Adjacent" />
-    <disable_collisions link1="forearm_link" link2="manifold_link" reason="Never" />
-    <disable_collisions link1="forearm_link" link2="pitch_link" reason="Adjacent" />
-    <disable_collisions link1="forearm_link" link2="upper_arm_link" reason="Adjacent" />
-    <disable_collisions link1="forearm_link" link2="yaw_link" reason="Never" />
-    <disable_collisions link1="manifold_link" link2="upper_arm_link" reason="Adjacent" />
-    <disable_collisions link1="pitch_link" link2="upper_arm_link" reason="Never" />
-    <disable_collisions link1="pitch_link" link2="yaw_link" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="coupling" reason="Never" />
+    <disable_collisions link1="base_link" link2="forearm" reason="Never" />
+    <disable_collisions link1="base_link" link2="manifold" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="pitch" reason="Never" />
+    <disable_collisions link1="camera" link2="forearm" reason="Never" />
+    <disable_collisions link1="camera" link2="gripper_base" reason="Never" />
+    <disable_collisions link1="camera" link2="l_finger" reason="Never" />
+    <disable_collisions link1="camera" link2="l_inner" reason="Never" />
+    <disable_collisions link1="camera" link2="l_outer" reason="Never" />
+    <disable_collisions link1="camera" link2="pitch" reason="Never" />
+    <disable_collisions link1="camera" link2="r_finger" reason="Never" />
+    <disable_collisions link1="camera" link2="r_inner" reason="Never" />
+    <disable_collisions link1="camera" link2="r_outer" reason="Never" />
+    <disable_collisions link1="camera" link2="yaw" reason="Adjacent" />
+    <disable_collisions link1="coupling" link2="elbow_pivot" reason="Adjacent" />
+    <disable_collisions link1="coupling" link2="forearm" reason="Adjacent" />
+    <disable_collisions link1="coupling" link2="gripper_base" reason="Never" />
+    <disable_collisions link1="coupling" link2="l_finger" reason="Never" />
+    <disable_collisions link1="coupling" link2="l_inner" reason="Never" />
+    <disable_collisions link1="coupling" link2="l_outer" reason="Never" />
+    <disable_collisions link1="coupling" link2="r_finger" reason="Never" />
+    <disable_collisions link1="coupling" link2="r_inner" reason="Never" />
+    <disable_collisions link1="coupling" link2="r_outer" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="l_outer" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="r_finger" reason="Never" />
+    <disable_collisions link1="forearm" link2="gripper_base" reason="Never" />
+    <disable_collisions link1="forearm" link2="l_finger" reason="Never" />
+    <disable_collisions link1="forearm" link2="l_inner" reason="Never" />
+    <disable_collisions link1="forearm" link2="l_outer" reason="Never" />
+    <disable_collisions link1="forearm" link2="manifold" reason="Never" />
+    <disable_collisions link1="forearm" link2="pitch" reason="Adjacent" />
+    <disable_collisions link1="forearm" link2="r_finger" reason="Never" />
+    <disable_collisions link1="forearm" link2="r_inner" reason="Never" />
+    <disable_collisions link1="forearm" link2="r_outer" reason="Never" />
+    <disable_collisions link1="forearm" link2="upper_arm" reason="Adjacent" />
+    <disable_collisions link1="forearm" link2="yaw" reason="Never" />
+    <disable_collisions link1="gripper_base" link2="l_finger" reason="Never" />
+    <disable_collisions link1="gripper_base" link2="l_inner" reason="Adjacent" />
+    <disable_collisions link1="gripper_base" link2="l_outer" reason="Adjacent" />
+    <disable_collisions link1="gripper_base" link2="pitch" reason="Never" />
+    <disable_collisions link1="gripper_base" link2="r_finger" reason="Never" />
+    <disable_collisions link1="gripper_base" link2="r_inner" reason="Adjacent" />
+    <disable_collisions link1="gripper_base" link2="r_outer" reason="Adjacent" />
+    <disable_collisions link1="gripper_base" link2="yaw" reason="Adjacent" />
+    <disable_collisions link1="l_finger" link2="l_inner" reason="Adjacent" />
+    <disable_collisions link1="l_finger" link2="pitch" reason="Never" />
+    <disable_collisions link1="l_finger" link2="r_inner" reason="Never" />
+    <disable_collisions link1="l_finger" link2="r_outer" reason="Never" />
+    <disable_collisions link1="l_finger" link2="yaw" reason="Never" />
+    <disable_collisions link1="l_inner" link2="pitch" reason="Never" />
+    <disable_collisions link1="l_inner" link2="r_finger" reason="Never" />
+    <disable_collisions link1="l_inner" link2="r_inner" reason="Never" />
+    <disable_collisions link1="l_inner" link2="r_outer" reason="Never" />
+    <disable_collisions link1="l_inner" link2="yaw" reason="Never" />
+    <disable_collisions link1="l_outer" link2="pitch" reason="Never" />
+    <disable_collisions link1="l_outer" link2="r_finger" reason="Never" />
+    <disable_collisions link1="l_outer" link2="r_inner" reason="Never" />
+    <disable_collisions link1="l_outer" link2="r_outer" reason="Never" />
+    <disable_collisions link1="l_outer" link2="yaw" reason="Never" />
+    <disable_collisions link1="manifold" link2="upper_arm" reason="Adjacent" />
+    <disable_collisions link1="pitch" link2="r_finger" reason="Never" />
+    <disable_collisions link1="pitch" link2="r_inner" reason="Never" />
+    <disable_collisions link1="pitch" link2="r_outer" reason="Never" />
+    <disable_collisions link1="pitch" link2="upper_arm" reason="Never" />
+    <disable_collisions link1="pitch" link2="yaw" reason="Adjacent" />
+    <disable_collisions link1="r_finger" link2="r_inner" reason="Adjacent" />
+    <disable_collisions link1="r_finger" link2="yaw" reason="Never" />
+    <disable_collisions link1="r_inner" link2="yaw" reason="Never" />
+    <disable_collisions link1="r_outer" link2="yaw" reason="Never" />
 </robot>

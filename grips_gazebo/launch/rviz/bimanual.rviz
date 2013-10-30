@@ -3,11 +3,7 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Global Options1
-        - /Status1
-        - /LeftScene1
-        - /LeftScene1/Scene Robot1
+      Expanded: ~
       Splitter Ratio: 0.449527
     Tree Height: 329
   - Class: rviz/Selection
@@ -28,7 +24,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: RightCamera
 Visualization Manager:
   Class: ""
   Displays:
@@ -60,81 +56,170 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
+        left_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_link:
+        left_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        coupling_link:
+        left_coupling:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        elbow_pivot_link:
+        left_elbow_pivot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        end_effector:
+        left_end_effector:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        forearm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_base:
+        left_forearm:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        l_finger_link:
+        left_gripper_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        l_inner_link:
+        left_l_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        l_outer_link:
+        left_l_inner:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        manifold_link:
+        left_l_outer:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        pitch_link:
+        left_manifold:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        r_finger_link:
+        left_pitch:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        r_inner_link:
+        left_r_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        r_outer_link:
+        left_r_inner:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        upper_arm_link:
+        left_r_outer:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_upper_arm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_yaw:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_coupling:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_elbow_pivot:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_end_effector:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_forearm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_gripper_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_l_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_l_inner:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_l_outer:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_manifold:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_pitch:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_r_finger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_r_inner:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_r_outer:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_upper_arm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_yaw:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -143,20 +228,15 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        yaw_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Name: LeftModel
-      Robot Description: left_arm/robot_description
-      TF Prefix: left_arm
+      Name: BimanualModel
+      Robot Description: robot_description
+      TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /left_arm/camera/image_raw
+      Image Topic: /right_camera/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -165,113 +245,9 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Value: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        coupling_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        elbow_pivot_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        end_effector:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        forearm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        l_finger_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        l_inner_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        l_outer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        manifold_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pitch_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        r_finger_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        r_inner_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        r_outer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        upper_arm_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        world:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        yaw_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-      Name: RightModel
-      Robot Description: right_arm/robot_description
-      TF Prefix: right_arm
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /right_arm/camera/image_raw
+      Image Topic: /right_camera/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -280,122 +256,10 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Value: true
-    - Class: moveit_rviz_plugin/PlanningScene
-      Enabled: true
-      Name: LeftScene
-      Planning Scene Topic: /left_arm/left_arm_collision_free/planning_scene
-      Robot Description: left_arm/robot_description
-      Scene Geometry:
-        Scene Alpha: 0.9
-        Scene Color: 50; 230; 50
-        Scene Display Time: 0.2
-        Show Scene Geometry: true
-        Voxel Coloring: Z-Axis
-        Voxel Rendering: Occupied Voxels
-      Scene Robot:
-        Attached Body Color: 150; 50; 150
-        Links:
-          All Links Enabled: true
-          Expand Joint Details: false
-          Expand Link Details: false
-          Expand Tree: false
-          Link Tree Style: Links in Alphabetic Order
-          base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          camera_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          coupling_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          elbow_pivot_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          end_effector:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          forearm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          gripper_base:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          l_finger_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          l_inner_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          l_outer_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          manifold_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          pitch_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          r_finger_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          r_inner_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          r_outer_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          upper_arm_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          world:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          yaw_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-        Robot Alpha: 0.5
-        Show Robot Collision: false
-        Show Robot Visual: true
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: left_arm/world
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -448,5 +312,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1627
-  X: 46
+  X: 53
   Y: 24

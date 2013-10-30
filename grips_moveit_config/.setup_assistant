@@ -1,8 +1,8 @@
 moveit_setup_assistant_config:
   URDF:
     package: grips_description
-    relative_path: robots/grips.urdf
+    relative_path: robots/grips.xacro
   SRDF:
     relative_path: config/grips.srdf
   CONFIG:
-    generated_timestamp: 1380792953
+    generated_timestamp: 1383150038
