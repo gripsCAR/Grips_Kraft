@@ -34,6 +34,6 @@ add_executable(collision_free_node src/collision_free_node.cpp)
 target_link_libraries(collision_free_node ${PROJECT_NAME}_collision_free ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(collision_free_node grips_msgs_gencpp) # wait for msgs to be built
 
-#~ add_executable(bimanual_planning_scene src/bimanual_planning_scene.cpp)
-#~ target_link_libraries(bimanual_planning_scene ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-#~ add_dependencies(bimanual_planning_scene grips_msgs_gencpp) # wait for msgs to be built
+add_executable(setup_bimanual_scene src/setup_bimanual_scene.cpp)
+target_link_libraries(setup_bimanual_scene ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(setup_bimanual_scene grips_msgs_gencpp) # wait for msgs to be built

@@ -2,7 +2,7 @@ joint_state_controller:
   type: joint_state_controller/JointStateController
   # Hz
   publish_rate: 1000
-# left arm
+# LEFT ARM
 left_SA:
   type: effort_controllers/JointPositionController
   joint: left_SA
@@ -35,8 +35,33 @@ left_linkage_bl:
   type: effort_controllers/JointPositionController
   joint: left_linkage_bl
   pid: {p: 100, i: 0, d: 1}
+# gripper
+left_r_outer:
+  type: effort_controllers/JointPositionController
+  joint: left_r_outer
+  pid: {p: 10, i: 0, d: 0}
+left_l_outer:
+  type: effort_controllers/JointPositionController
+  joint: l_outer
+  pid: {p: 10, i: 0, d: 0}
+left_r_inner:
+  type: effort_controllers/JointPositionController
+  joint: left_r_inner
+  pid: {p: 10, i: 0, d: 0}
+left_l_inner:
+  type: effort_controllers/JointPositionController
+  joint: left_l_inner
+  pid: {p: 10, i: 0, d: 0}
+left_r_finger:
+  type: effort_controllers/JointPositionController
+  joint: left_r_finger
+  pid: {p: 50, i: 0, d: 0}
+left_l_finger:
+  type: effort_controllers/JointPositionController
+  joint: left_l_finger
+  pid: {p: 50, i: 0, d: 0}
 
-# right arm
+# RIGHT ARM
 right_SA:
   type: effort_controllers/JointPositionController
   joint: right_SA
@@ -69,3 +94,28 @@ right_linkage_bl:
   type: effort_controllers/JointPositionController
   joint: right_linkage_bl
   pid: {p: 100, i: 0, d: 1}
+# gripper
+right_r_outer:
+  type: effort_controllers/JointPositionController
+  joint: right_r_outer
+  pid: {p: 10, i: 0, d: 0}
+right_l_outer:
+  type: effort_controllers/JointPositionController
+  joint: l_outer
+  pid: {p: 10, i: 0, d: 0}
+right_r_inner:
+  type: effort_controllers/JointPositionController
+  joint: right_r_inner
+  pid: {p: 10, i: 0, d: 0}
+right_l_inner:
+  type: effort_controllers/JointPositionController
+  joint: right_l_inner
+  pid: {p: 10, i: 0, d: 0}
+right_r_finger:
+  type: effort_controllers/JointPositionController
+  joint: right_r_finger
+  pid: {p: 50, i: 0, d: 0}
+right_l_finger:
+  type: effort_controllers/JointPositionController
+  joint: right_l_finger
+  pid: {p: 50, i: 0, d: 0}

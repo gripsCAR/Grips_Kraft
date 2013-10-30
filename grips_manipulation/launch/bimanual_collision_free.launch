@@ -1,14 +1,12 @@
 <launch>    
   <env name="ROSCONSOLE_CONFIG_FILE" value="$(find grips_manipulation)/launch/custom_rosconsole.conf"/>
   
-	<node name="left_arm_collision_free" pkg="grips_manipulation" type="collision_free_node" output="screen" ns="left_arm">
+	<node name="bimanual_collision_free" pkg="grips_manipulation" type="collision_free_node" output="screen">
     <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
   </node>
   
-  <node name="right_arm_collision_free" pkg="grips_manipulation" type="collision_free_node" output="screen" ns="right_arm">
-    <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
-  </node>
-  
-  <node name="bimanual_planning_scene" pkg="grips_manipulation" type="bimanual_planning_scene" output="screen">
-	
+<!--
+  <node name="bimanual_planning_scene" pkg="grips_manipulation" type="bimanual_planning_scene" output="screen"/>    	
+-->
+
 </launch>

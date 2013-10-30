@@ -23,7 +23,12 @@
       <ambient>0.3 0.3 0.3 1.0</ambient>
     </scene>
     <!-- Focus camera on the setup -->
-
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-0.821519 1.45483 2.69864 0 0.635643 -0.890988</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
     <!-- Light Source -->
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>

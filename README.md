@@ -1,7 +1,7 @@
 grips
 =====
 
-<img align="right" src="https://raw.github.com/fsuarez6/grips/hydro-devel/grips_description/resources/bimanual_gazebo.png" />
+<img align="right" src="./grips_description/resources/bimanual_gazebo.png" />
 
 ROS packages developed by the [Group of Robots and Intelligent Machines](http://www.romin.upm.es/) from the [Universidad Politécnica de Madrid](http://www.upm.es/internacional). This group is part of the [Centre for Automation and Robotics](http://www.car.upm-csic.es/) (CAR UPM-CSIC). On going development continues in the hydro-devel branch.
 
@@ -56,9 +56,9 @@ source /opt/ros/hydro/setup.bash
 ``` 
 You might want to add that line to your `~/.bashrc`
 
-Try any of the `.launch` files in the `grips_gazebo` package: (e.g. `cordless_drill.launch`)
+Try any of the `.launch` files in the `grips_gazebo` package: (e.g. `bimanual_setup.launch`)
 ```
-roslaunch grips_gazebo cordless_drill.launch
+roslaunch grips_gazebo bimanual_setup.launch
 ``` 
 
 ## Changelog
@@ -66,8 +66,13 @@ roslaunch grips_gazebo cordless_drill.launch
 * Initial Release
 
 ## Roadmap
+
 ### 0.2.0 (2013-11-11)
 * Include bimanual setup
+
+### 0.3.0 (2013-11-11)
+* Replace grips collision meshes by simplified primitives (boxes, cylinders, etc.)
+* Add collision avoidance capabilities during teleoperation
 
 ## Tutorials
 TODO
