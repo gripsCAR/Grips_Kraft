@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /LeftScene1
+        - /LeftScene1/Scene Robot1
       Splitter Ratio: 0.449527
     Tree Height: 329
   - Class: rviz/Selection
@@ -26,7 +28,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LeftCamera
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -278,6 +280,118 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Value: true
+    - Class: moveit_rviz_plugin/PlanningScene
+      Enabled: true
+      Name: LeftScene
+      Planning Scene Topic: /left_arm/left_arm_collision_free/planning_scene
+      Robot Description: left_arm/robot_description
+      Scene Geometry:
+        Scene Alpha: 0.9
+        Scene Color: 50; 230; 50
+        Scene Display Time: 0.2
+        Show Scene Geometry: true
+        Voxel Coloring: Z-Axis
+        Voxel Rendering: Occupied Voxels
+      Scene Robot:
+        Attached Body Color: 150; 50; 150
+        Links:
+          All Links Enabled: true
+          Expand Joint Details: false
+          Expand Link Details: false
+          Expand Tree: false
+          Link Tree Style: Links in Alphabetic Order
+          base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          coupling_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          elbow_pivot_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          end_effector:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          forearm_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          gripper_base:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          l_finger_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          l_inner_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          l_outer_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          manifold_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          pitch_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          r_finger_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          r_inner_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          r_outer_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          upper_arm_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          world:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          yaw_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+        Robot Alpha: 0.5
+        Show Robot Collision: false
+        Show Robot Visual: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -302,17 +416,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.16782
+      Distance: 3.07724
       Focal Point:
         X: 0.319904
         Y: 0.169822
         Z: 0.966467
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.415398
+      Pitch: 0.365398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.60859
+      Yaw: 5.7736
     Saved: ~
 Window Geometry:
   Displays:
@@ -334,5 +448,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1627
-  X: 53
+  X: 46
   Y: 24
