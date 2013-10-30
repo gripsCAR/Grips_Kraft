@@ -141,7 +141,7 @@
     </gazebo>
     <gazebo reference="${name}upper_arm">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
+      <selfCollide>true</selfCollide>
     </gazebo>
     <gazebo reference="${name}elbow_pivot">
       <material>Telerobcar/MetalSeamed</material>
@@ -153,20 +153,23 @@
     </gazebo>
     <gazebo reference="${name}forearm">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
+      <selfCollide>true</selfCollide>
     </gazebo>
     <gazebo reference="${name}pitch">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
+      <selfCollide>true</selfCollide>
     </gazebo>
     <gazebo reference="${name}yaw">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${name}end_effector">
+      <selfCollide>true</selfCollide>
     </gazebo>
     <!-- camera -->	
     <gazebo reference="${name}camera">
       <material>Gazebo/FlatBlack</material>
-      <selfCollide>false</selfCollide>
+      <selfCollide>true</selfCollide>
       <sensor type="camera" name="${name}camera">
         <update_rate>30.0</update_rate>
         <camera name="${name}camera">
