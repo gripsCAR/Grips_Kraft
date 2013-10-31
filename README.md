@@ -64,11 +64,10 @@ roslaunch grips_gazebo bimanual_setup.launch
 ## Changelog
 ### 0.1.0 (2013-10-28)
 * Initial Release
-
-## Roadmap
-
 ### 0.2.0 (2013-11-11)
 * Include bimanual setup
+
+## Roadmap
 
 ### 0.3.0 (2013-11-11)
 * Replace grips collision meshes by simplified primitives (boxes, cylinders, etc.)
