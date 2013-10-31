@@ -1,7 +1,7 @@
 grips
 =====
 
-<img align="right" src="./grips_description/resources/bimanual_gazebo.png" />
+<img align="right" src="./grips_description/resources/bimanual_gazebo.png" width="350" />
 
 ROS packages developed by the [Group of Robots and Intelligent Machines](http://www.romin.upm.es/) from the [Universidad Politécnica de Madrid](http://www.upm.es/internacional). This group is part of the [Centre for Automation and Robotics](http://www.car.upm-csic.es/) (CAR UPM-CSIC). On going development continues in the hydro-devel branch.
 
@@ -62,10 +62,11 @@ roslaunch grips_gazebo bimanual_setup.launch
 ``` 
 
 ## Changelog
-### 0.1.0 (2013-10-28)
-* Initial Release
 ### 0.2.0 (2013-11-11)
 * Include bimanual setup
+
+### 0.1.0 (2013-10-28)
+* Initial Release
 
 ## Roadmap
 
