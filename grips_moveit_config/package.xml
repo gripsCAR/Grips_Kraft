@@ -5,7 +5,7 @@
      An automatically generated package with all the configuration and launch files for using the grips with the MoveIt Motion Planning Framework
   </description>
   
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
   <license>BSD</license>
   <url type="website">https://github.com/fsuarez6/grips</url>

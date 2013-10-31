@@ -2,5 +2,5 @@
 Changelog for package grips_manipulation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2013-10-31)
+------------------
