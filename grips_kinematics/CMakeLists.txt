@@ -3,22 +3,24 @@ cmake_minimum_required(VERSION 2.8.3)
 project(grips_kinematics)
 
 find_package(catkin REQUIRED COMPONENTS 
-  grips_moveit_config 
-  moveit_core 
-  moveit_ros_planning 
-  moveit_ros_planning_interface 
+  grips_msgs
+  message_generation
+  moveit_core
+  moveit_ros_planning
+  moveit_ros_planning_interface
   pluginlib
   roscpp
   tf_conversions
   joint_limits_interface
-  grips_msgs
   #eigen_conversions
-  )
+)
 
-catkin_package(
-  LIBRARIES
-  DEPENDS
+catkin_package(LIBRARIES
+CATKIN_DEPENDS
   grips_description
+  grips_msgs
+  grips_moveit_config
+  message_runtime
   moveit_core
   pluginlib
   moveit_ros_planning_interface
@@ -26,8 +28,7 @@ catkin_package(
   roscpp
   tf_conversions
   joint_limits_interface
-  grips_msgs
-  )
+)
 
 catkin_python_setup()
 
@@ -44,7 +45,7 @@ find_package(LAPACK REQUIRED)
 
 add_executable(kinematic_services src/kinematic_services.cpp)
 target_link_libraries(kinematic_services ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-#~ add_dependencies(kinematic_services grips_msgs_gencpp)
+add_dependencies(kinematic_services grips_msgs_gencpp)
 
 #~ Kinematics Plugins
 

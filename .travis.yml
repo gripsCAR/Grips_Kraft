@@ -29,13 +29,11 @@ install: # Use this to install any prerequisites or dependencies necessary to ru
   # Download non-debian stuff
   - wstool merge https://raw.github.com/fsuarez6/grips/$TRAVIS_BRANCH/grips.rosinstall
   - wstool update
-  # Delete the baxter.rosinstall version of the repo and use the one of the branch we are testing
+  # Delete the grips.rosinstall version of the repo and use the one of the branch we are testing
   - rm -rf grips/
   - ln -s $CI_SOURCE_PATH . # Link the repo we are testing to the new workspace
   - cd ../
-  # Test manual install
-  #- sudo apt-get install ros-hydro-gazebo-ros ros-hydro-ros-controllers
-  # Install dependencies for source repos
+  # Install ros dependencies
   - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y
 before_script: # Use this to prepare your build for testing e.g. copy database configurations, environment variables, etc.
   - source /opt/ros/$ROS_DISTRO/setup.bash  

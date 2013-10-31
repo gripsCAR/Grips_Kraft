@@ -13,5 +13,6 @@
   <author>Francisco Suarez-Ruiz</author>
   
   <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>grips_msgs</run_depend>
 
 </package>

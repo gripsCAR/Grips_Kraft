@@ -1,0 +1,241 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="grips_cage">
+    <static>true</static>
+    <link name="link">
+      
+      <collision name="surface">
+        <pose>0 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.008 1.71</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="surface">
+        <pose>0 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.008 1.71</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/GreyTransparent</name>
+          </script>
+        </material>
+      </visual>
+      
+      <!-- Legs -->
+      <collision name="front_r_leg">
+        <pose>1.595 1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_r_leg">
+        <pose>1.595 1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="front_l_leg">
+        <pose>-1.595 1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_l_leg">
+        <pose>-1.595 1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+
+      <collision name="back_r_leg">
+        <pose>1.595 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_r_leg">
+        <pose>1.595 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_l_leg">
+        <pose>-1.595 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_l_leg">
+        <pose>-1.595 -1.045 1.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 0.09 2.2</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <!-- Arms -->
+      <collision name="front_arm">
+        <pose>0 1.045 2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_arm">
+        <pose>0 1.045 2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_top_arm">
+        <pose>0 -1.045 2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_top_arm">
+        <pose>0 -1.045 2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="back_bottom_arm">
+        <pose>0 -1.045 0.2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_bottom_arm">
+        <pose>0 -1.045 0.2 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.1 0.09 0.09</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="left_arm">
+        <pose>-1.595 0 1.91 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 2 0.09</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="left_arm">
+        <pose>-1.595 0 1.91 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 2 0.09</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+      <collision name="right_arm">
+        <pose>1.595 0 1.91 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 2 0.09</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="right_arm">
+        <pose>1.595 0 1.91 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.09 2 0.09</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/White</name>
+          </script>
+        </material>
+      </visual>
+      
+    </link>
+  </model>
+</sdf>

@@ -7,3 +7,19 @@ controller_list:
       - WP
       - WY
       - WR
+  - name: fake_left_arm_controller
+    joints:
+      - left_SA
+      - left_SE
+      - left_linkage_tr
+      - left_WP
+      - left_WY
+      - left_WR
+  - name: fake_right_arm_controller
+    joints:
+      - right_SA
+      - right_SE
+      - right_linkage_tr
+      - right_WP
+      - right_WY
+      - right_WR
