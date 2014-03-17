@@ -76,5 +76,3 @@ roslaunch grips_gazebo bimanual_setup.launch
 
 ## Tutorials
 TODO
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fsuarez6/grips/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
