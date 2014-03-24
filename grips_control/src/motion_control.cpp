@@ -88,6 +88,8 @@ class MotionControl
       // Get and print the name of the coordinate frame in which the transforms for this model are computed
       this->model_frame = this->kinematic_model->getModelFrame();
       ROS_INFO_STREAM("Model frame: " << this->model_frame);
+      // TODO: Why do I need to remove the slash from model_frame
+      this->model_frame.erase(0,1);
       // create a RobotState to keep track of the current robot pose
       this->kinematic_state.reset(new robot_state::RobotState(this->kinematic_model));
       if (!this->kinematic_state) {
@@ -135,6 +137,7 @@ class MotionControl
        * fk_metrics_0.2_    700.7 MB
        * fk_metrics_0.25_   190.8 MB
        * ik_metrics         32.2 MB   */
+      ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       std::string filename;
       filename = get_filename("fk_metrics_0.2_");
       try {
@@ -152,6 +155,7 @@ class MotionControl
       // of times the tree in the index should be recursively traversed
       this->index_pos = new flann::Index<flann::L2<float> > (this->metrics_db["positions"], flann::KDTreeIndexParams(4));
       this->index_pos->buildIndex();
+      ROS_INFO("[metrics database] successfully loaded");
       this->last_state_print = ros::Time::now();
       this->last_motion_print = ros::Time::now();
     }

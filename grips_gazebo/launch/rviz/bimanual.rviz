@@ -3,9 +3,7 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /PlanningScene1
-        - /PlanningScene1/Scene Geometry1
+      Expanded: ~
       Splitter Ratio: 0.449527
     Tree Height: 330
   - Class: rviz/Selection
@@ -26,7 +24,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: RightCamera
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -258,202 +256,6 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Value: true
-    - Class: moveit_rviz_plugin/PlanningScene
-      Enabled: true
-      Name: PlanningScene
-      Planning Scene Topic: /bimanual_collision_free/monitored_planning_scene
-      Robot Description: robot_description
-      Scene Geometry:
-        Scene Alpha: 0.5
-        Scene Color: 50; 230; 50
-        Scene Display Time: 0.2
-        Show Scene Geometry: true
-        Voxel Coloring: Z-Axis
-        Voxel Rendering: Occupied Voxels
-      Scene Robot:
-        Attached Body Color: 150; 50; 150
-        Links:
-          All Links Enabled: true
-          Expand Joint Details: false
-          Expand Link Details: false
-          Expand Tree: false
-          Link Tree Style: Links in Alphabetic Order
-          left_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_camera:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_coupling:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_elbow_pivot:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_end_effector:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          left_forearm:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_gripper_base:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_l_finger:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_l_inner:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_l_outer:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_manifold:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_pitch:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_r_finger:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_r_inner:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_r_outer:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_upper_arm:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          left_yaw:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_base_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_camera:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_coupling:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_elbow_pivot:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_end_effector:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          right_forearm:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_gripper_base:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_l_finger:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_l_inner:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_l_outer:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_manifold:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_pitch:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_r_finger:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_r_inner:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_r_outer:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_upper_arm:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          right_yaw:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          world:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-        Robot Alpha: 0.6
-        Show Robot Collision: false
-        Show Robot Visual: true
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -479,6 +281,11 @@ Visualization Manager:
     Current:
       Class: rviz/Orbit
       Distance: 4.10571
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
       Focal Point:
         X: 0.0903025
         Y: 0.013943
@@ -510,5 +317,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1627
-  X: 45
-  Y: -4
+  X: 53
+  Y: 24
