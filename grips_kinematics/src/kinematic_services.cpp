@@ -76,6 +76,8 @@ class KinematicServices {
 			// Get and print the name of the coordinate frame in which the transforms for this model are computed
 			this->model_frame = this->kinematic_model->getModelFrame();
 			ROS_INFO_STREAM("Model frame: " << this->model_frame);
+      // TODO: Why do I need to remove the slash from model_frame
+      this->model_frame.erase(0,1);
 			// create a RobotState to keep track of the current robot pose
 			this->kinematic_state.reset(new robot_state::RobotState(this->kinematic_model));
 			if (!this->kinematic_state) {

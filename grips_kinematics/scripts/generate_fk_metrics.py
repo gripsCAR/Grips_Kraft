@@ -16,7 +16,7 @@ class DatabaseMetrics:
 		self.reachabilitystats = None
 		self.reachabilitydensity3d = None
 		self.reachability3d = None
-		self.angledelta = 0.2
+		self.angledelta = 0.1
 		self.metrics = None
 		self.joint_states = None
 		# Subscribe to metrics_service
