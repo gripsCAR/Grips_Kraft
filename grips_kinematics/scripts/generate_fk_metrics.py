@@ -16,7 +16,7 @@ class DatabaseMetrics:
 		self.reachabilitystats = None
 		self.reachabilitydensity3d = None
 		self.reachability3d = None
-		self.angledelta = 0.1
+		self.angledelta = 0.15
 		self.metrics = None
 		self.joint_states = None
 		# Subscribe to metrics_service
@@ -118,7 +118,7 @@ class DatabaseMetrics:
 		# Get the joint limits
 		req = GetJointLimitsRequest()
 		req.header.stamp = rospy.Time.now()
-		req.header.frame_id = '/world'
+		req.header.frame_id = 'world'
 		req.name = self.joint_names
 		try:
 			res = self.limits_srv(req)
@@ -142,7 +142,7 @@ class DatabaseMetrics:
 		req = GetStateMetricsRequest()
 		for i, row in enumerate(itertools.product(*values)):
 			req.joint_states.header.stamp = rospy.Time.now()
-			req.joint_states.header.frame_id = '/world'
+			req.joint_states.header.frame_id = 'world'
 			req.joint_states.name = self.joint_names
 			req.joint_states.position = list(row)
 			req.joint_states.velocity = [0] * 6

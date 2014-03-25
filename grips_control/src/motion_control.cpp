@@ -137,9 +137,9 @@ class MotionControl
        * fk_metrics_0.2_    700.7 MB
        * fk_metrics_0.25_   190.8 MB
        * ik_metrics         32.2 MB   */
-      ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       std::string filename;
       filename = get_filename("fk_metrics_0.2_");
+      ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       try {
         flann::load_from_file(this->metrics_db["positions"], filename, "positions");
         flann::load_from_file(this->metrics_db["orientations"], filename, "orientations");
