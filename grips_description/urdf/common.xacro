@@ -8,7 +8,7 @@
   <!-- Auxiliar Values -->
 	<property name="pi" value="3.1415926535897931" />
 	<property name="max_effort" value="200" />
-  <property name="max_velocity" value="15" />
+  <property name="max_velocity" value="10" />
 	<!-- Links Mass -->
 	<property name="base_mass" value="1.208" />
 	<property name="manifold_mass" value="41.111" />

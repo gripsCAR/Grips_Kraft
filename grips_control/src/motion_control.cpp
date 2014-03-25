@@ -80,6 +80,15 @@ class MotionControl
         if (this->robot_namespace[0] == this->robot_namespace[1])
           this->robot_namespace.erase(0, 1);
       }
+      std::string kinematic_solver;
+			if (ros::param::get(this->robot_namespace + "/grips_motion_control/arm/kinematics_solver", kinematic_solver))
+				ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
+			else
+			{
+				ROS_ERROR("Missing kinematic solver parameter");
+				ros::shutdown();
+				return;
+			}
       // get the RobotModel loaded from urdf and srdf files
       this->kinematic_model = this->rm_loader.getModel();
       if (!this->kinematic_model) {
@@ -87,9 +96,10 @@ class MotionControl
       }
       // Get and print the name of the coordinate frame in which the transforms for this model are computed
       this->model_frame = this->kinematic_model->getModelFrame();
+      // Remove the slash from model_frame
+      if (this->model_frame.rfind("/") == 0)
+        this->model_frame.erase(0,1);
       ROS_INFO_STREAM("Model frame: " << this->model_frame);
-      // TODO: Why do I need to remove the slash from model_frame
-      this->model_frame.erase(0,1);
       // create a RobotState to keep track of the current robot pose
       this->kinematic_state.reset(new robot_state::RobotState(this->kinematic_model));
       if (!this->kinematic_state) {
@@ -127,19 +137,21 @@ class MotionControl
       topic_name = this->robot_namespace + "ik_motion_control";
       this->motion_control_sub = nh.subscribe(topic_name.c_str(), 1, &MotionControl::cb_ik_motion_control, this); 
       
-      topic_name = this->robot_namespace + "state";
+      topic_name = this->robot_namespace + "grips_state";
       this->state_publisher = nh.advertise<grips_msgs::GripsState>(topic_name.c_str(), 1);
       
       // Setup timer for publishing state at publish_frequency
       this->state_timer = nh.createTimer(ros::Duration(1.0/this->publish_frequency), &MotionControl::publish_state, this);
       
       /* Load the previously generated metrics. Available options:
+       * fk_metrics_0.15_    1500 MB
        * fk_metrics_0.2_    700.7 MB
        * fk_metrics_0.25_   190.8 MB
        * ik_metrics         32.2 MB   */
       std::string filename;
       filename = get_filename("fk_metrics_0.2_");
       ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
+      ros::Time flann_start_time = ros::Time::now();
       try {
         flann::load_from_file(this->metrics_db["positions"], filename, "positions");
         flann::load_from_file(this->metrics_db["orientations"], filename, "orientations");
@@ -155,7 +167,8 @@ class MotionControl
       // of times the tree in the index should be recursively traversed
       this->index_pos = new flann::Index<flann::L2<float> > (this->metrics_db["positions"], flann::KDTreeIndexParams(4));
       this->index_pos->buildIndex();
-      ROS_INFO("[metrics database] successfully loaded");
+      double elapsed_time = (ros::Time::now() - flann_start_time).toSec();
+      ROS_INFO("[metrics database] successfully loaded in %.2f seconds", elapsed_time);
       this->last_state_print = ros::Time::now();
       this->last_motion_print = ros::Time::now();
     }
@@ -203,7 +216,12 @@ class MotionControl
     
     void cb_ik_motion_control(const geometry_msgs::PoseStampedConstPtr& _msg)
     { 
-      // TODO: Validate that the header frame_id is the same as this->model_frame
+      // Validate the message frame_id
+			if (_msg->header.frame_id != this->model_frame)
+			{
+				ROS_WARN("cb_ik_motion_control: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), this->model_frame.c_str());
+				return;
+			}
       // Get the latest robot state
       std::vector<double> current_joint_values;
       this->kinematic_state->copyJointGroupPositions(this->joint_model_group, current_joint_values);
@@ -212,8 +230,8 @@ class MotionControl
       for(std::size_t i=0; i < this->joint_names.size(); ++i)
         current_str << current_joint_values[i] << " ";
       current_str << "]";
-      // Here 1 is the number of random restart and 0.01 is the allowed time after each restart
-      bool found_ik = this->kinematic_state->setFromIK(this->joint_model_group, _msg->pose, 1, 0.01);
+      // Here 1 is the number of random restart and 0.001s is the allowed time after each restart
+      bool found_ik = this->kinematic_state->setFromIK(this->joint_model_group, _msg->pose, 1, 0.001);
       // Get the new joint states for the arm
       std::vector<double> new_joint_values;
       if (found_ik)
@@ -221,9 +239,8 @@ class MotionControl
       else
       {
         ROS_DEBUG("Did not find IK solution");
-        // Determine the closest XYZ points in the reachability database
-        // nn: 13 since max reachability: 0.180555 and rot samples: 72
-        int nn = 13;
+        // Determine nn closest XYZ points in the reachability database
+        int nn = 100;
         flann::Matrix<float> query_pos(new float[3], 1, 3);
         query_pos[0][0] = _msg->pose.position.x;
         query_pos[0][1] = _msg->pose.position.y;

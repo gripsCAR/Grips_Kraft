@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /TF1/Frames1
+        - /Pose1
       Splitter Ratio: 0.449527
     Tree Height: 491
   - Class: rviz/Selection
@@ -92,17 +93,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        l_finger_link:
+        l_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        l_inner_link:
+        l_inner:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        l_outer_link:
+        l_outer:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -117,17 +118,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        r_finger_link:
+        r_finger:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        r_inner_link:
+        r_inner:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        r_outer_link:
+        r_outer:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -178,7 +179,7 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05
       Shape: Axes
-      Topic: /grips_simple_gripper/ik_motion_control
+      Topic: /ik_motion_control
       Value: true
     - Class: rviz/Image
       Enabled: true
@@ -196,7 +197,7 @@ Visualization Manager:
       Marker Topic: /visualization_marker
       Name: Marker
       Namespaces:
-        {}
+        position_region: true
       Queue Size: 100
       Value: true
   Enabled: true
@@ -224,6 +225,11 @@ Visualization Manager:
     Current:
       Class: rviz/Orbit
       Distance: 1.70079
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
       Focal Point:
         X: 0.104524
         Y: 0.142548
@@ -253,5 +259,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1627
-  X: 53
+  X: 46
   Y: 24

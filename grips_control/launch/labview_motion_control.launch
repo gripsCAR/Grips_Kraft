@@ -1,0 +1,38 @@
+<launch>
+  <arg name="robot_name" value="grips" />
+  <arg name="show_rviz" default="true"/>
+	
+  <!-- upload robot and semantic description that corresponds to the URDF -->
+  <include file="$(find grips_description)/launch/upload_grips.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+  
+  <!-- the semantic description that corresponds to the URDF -->
+	<param name="robot_description_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
+	 
+  <!-- motion control using ik plugin defined in kinematics.yaml -->
+	<node name="$(arg robot_name)_motion_control" pkg="grips_control" type="motion_control" respawn="false" output="screen">
+    <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
+	</node>
+  
+  <!-- labview server -->
+	<node name="labview_server" pkg="grips_control" type="labview_server.py" output="screen"> 
+  <param name="write_ip" type="string" value="192.168.0.4"/>
+		<param name="read_port" type="int" value="5555"/>
+    <param name="write_port" type="int" value="5050"/>    
+    <param name="planning_group" type="string" value="arm" />
+    <param name="publish_frequency" type="double" value="1000.0" />
+    <param name="joint_states_topic" type="string" value="/joint_states"/>
+	</node>
+  
+  <!-- Show in Rviz -->
+	<group if="$(arg show_rviz)">
+    <!-- start robot state publisher -->
+    <node name="$(arg robot_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+    </node>
+    <!-- Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/grips.rviz"/>
+	</group>
+	
+</launch>
