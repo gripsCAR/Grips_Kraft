@@ -144,12 +144,12 @@ class MotionControl
       this->state_timer = nh.createTimer(ros::Duration(1.0/this->publish_frequency), &MotionControl::publish_state, this);
       
       /* Load the previously generated metrics. Available options:
-       * fk_metrics_0.15_    1500 MB
+       * fk_metrics_0.15_   3600  MB
        * fk_metrics_0.2_    700.7 MB
        * fk_metrics_0.25_   190.8 MB
-       * ik_metrics         32.2 MB   */
+       * ik_metrics         32.2  MB   */
       std::string filename;
-      filename = get_filename("fk_metrics_0.2_");
+      filename = get_filename("fk_metrics_0.15_");
       ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       ros::Time flann_start_time = ros::Time::now();
       try {
@@ -240,7 +240,7 @@ class MotionControl
       {
         ROS_DEBUG("Did not find IK solution");
         // Determine nn closest XYZ points in the reachability database
-        int nn = 100;
+        int nn = 1000;
         flann::Matrix<float> query_pos(new float[3], 1, 3);
         query_pos[0][0] = _msg->pose.position.x;
         query_pos[0][1] = _msg->pose.position.y;

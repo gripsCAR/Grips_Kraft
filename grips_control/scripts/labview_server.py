@@ -71,10 +71,12 @@ class LabviewServer:
       recv_msg = JointState()
       data = server.recv_timeout()
       if data:
+        # Serialize received UDP message
         recv_msg.deserialize(data)
-        #~ print recv_msg
+        # Add header for robot_state_publisher
         self.joint_msg.header.seq = recv_msg.header.seq
         self.joint_msg.header.stamp = rospy.Time.now()
+        # Populate the joint_msg with the receiver positions
         for j, name in enumerate(self.joint_msg.name):
           if name in recv_msg.name:
             self.joint_msg.position[j] = recv_msg.position[recv_msg.name.index(name)]
