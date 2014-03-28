@@ -228,7 +228,7 @@
     <parent link="forearm"/>
     <axis xyz="1 0 0"/>
     <origin rpy="0 0 0" xyz="0 0.26109 7.5e-3"/>
-    <limit effort="200" lower="-1.1" upper="0.581" velocity="10"/>
+    <limit effort="200" lower="-0.581" upper="1.1" velocity="10"/>
     <dynamics damping="5"/>
   </joint>
   <joint name="WY" type="revolute">
