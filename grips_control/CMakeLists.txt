@@ -35,3 +35,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 add_executable(motion_control src/motion_control.cpp)
 target_link_libraries(motion_control ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${HDF5_LIBRARIES})
 add_dependencies(motion_control grips_msgs_gencpp)
+
+add_executable(build_metrics_index src/build_metrics_index.cpp)
+target_link_libraries(build_metrics_index ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${HDF5_LIBRARIES})
+add_dependencies(build_metrics_index grips_msgs_gencpp)
