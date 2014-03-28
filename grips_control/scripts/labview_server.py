@@ -3,6 +3,7 @@ import rospy, time, math
 # Sockets
 import socket, struct
 # Messages
+from StringIO import StringIO
 from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import JointState
@@ -25,7 +26,7 @@ class TextColors:
 
 class LabviewServer:
   joint_names = ['SA', 'SE', 'WP', 'WR', 'WY', 'l_finger', 'l_inner', 'l_outer', 'linkage_bl', 'linkage_tl', 'linkage_tr', 'r_finger', 'r_inner', 'r_outer']
-  cmd_names = ['SA','SE','linkage_tr','WP','WY','WR','GRIP']
+  cmd_names = ['SA','SE','EL','WP','WY','WR','GRIP']
   def __init__(self): 
     # Read all the parameters from the parameter server
     self.publish_frequency = self.read_parameter('~publish_frequency', 1000.0)
@@ -45,13 +46,13 @@ class LabviewServer:
     # Set-up publishers/subscribers
     self.joint_pub = rospy.Publisher(self.js_topic, JointState)
     tmp = list(self.cmd_names)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_SA)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_SE)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_EL)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_WP)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_WY)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_WR)
-    rospy.Subscriber('/%s/command' % tmp.pop(0), Float64, self.cb_GRIP)
+    rospy.Subscriber('/SA/command', Float64, self.cb_SA)
+    rospy.Subscriber('/SE/command', Float64, self.cb_SE)
+    rospy.Subscriber('/linkage_tr/command', Float64, self.cb_EL)
+    rospy.Subscriber('/WP/command', Float64, self.cb_WP)
+    rospy.Subscriber('/WY/command', Float64, self.cb_WY)
+    rospy.Subscriber('/WR/command', Float64, self.cb_WR)
+    rospy.Subscriber('/GRIP/command', Float64, self.cb_GRIP)
     # Register rospy shutdown hook
     rospy.on_shutdown(self.shutdown_hook)
     # Initial values
@@ -61,8 +62,8 @@ class LabviewServer:
     self.joint_msg = JointState()
     self.joint_msg.name = self.joint_names
     self.joint_msg.position = [0] * len(self.joint_names)
-    #~ self.joint_msg.velocity = [0] * len(self.joint_names)
-    #~ self.joint_msg.effort = [0] * len(self.joint_names)
+    self.joint_msg.velocity = [0] * len(self.joint_names)
+    self.joint_msg.effort = [0] * len(self.joint_names)
     # Start the timer that will send the commands to labview 
     self.cmd_timer = rospy.Timer(rospy.Duration(1.0/self.publish_frequency), self.cb_write_commands)
   
@@ -95,7 +96,7 @@ class LabviewServer:
       return
     # Serialize cmd_msg
     file_str = StringIO()
-    cmd_msg.serialize(file_str)
+    self.cmd_msg.serialize(file_str)
     # Send over udp the cmd_msg sensor_msgs/JointState
     self.write_socket.sendto(file_str.getvalue(), (self.write_ip, self.write_port))
     
@@ -106,7 +107,12 @@ class LabviewServer:
     self.cmd_msg.position[1] = msg.data
   
   def cb_EL(self, msg):
-    self.cmd_msg.position[2] = msg.data
+    # Convert the value from linkage_tr to EL
+    if self.cmd_msg.position[1] == None:
+      return
+    TR = msg.data;
+    SE = self.cmd_msg.position[1];
+    self.cmd_msg.position[2] = TR + SE + math.pi
   
   def cb_WP(self, msg):
     self.cmd_msg.position[3] = msg.data

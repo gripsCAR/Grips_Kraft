@@ -64,14 +64,16 @@ class MotionControl
       joint_model_group(0)
     { 
       // Get parameters from the server
-      if (!nh_private.hasParam("planning_group")) {
-        ros::param::param(std::string("~planning_group"), this->planning_group, std::string("arm"));
-        ROS_WARN("Parameter [~planning_group] not found, using default: arm");
-      }
-      if (!nh_private.hasParam("publish_frequency")) {
-        nh_private.param(std::string("publish_frequency"), this->publish_frequency, 1000.0);;
-        ROS_WARN_STREAM("Parameter [~publish_frequency] not found, using default: " << this->publish_frequency << " Hz");
-      }
+      std::string database;
+      nh_private.param(std::string("planning_group"), this->planning_group, std::string("arm"));
+      nh_private.param(std::string("publish_frequency"), this->publish_frequency, 1000.0);
+      nh_private.param(std::string("metrics_database"), database, std::string("ik_metrics"));
+      if (!nh_private.hasParam("planning_group"))
+        ROS_WARN_STREAM("Parameter [~planning_group] not found, using default: " << this->planning_group);
+      if (!nh_private.hasParam("publish_frequency"))
+        ROS_WARN_STREAM("Parameter [~publish_frequency] not found, using default: " << this->publish_frequency << " Hz");      
+      if (!nh_private.hasParam("metrics_database"))
+        ROS_WARN_STREAM("Parameter [~metrics_database] not found, using default: " << database);
       // get robot namespace
       this->robot_namespace = ros::this_node::getNamespace();
       if (this->robot_namespace.rfind("/") != this->robot_namespace.length()-1)
@@ -144,12 +146,12 @@ class MotionControl
       this->state_timer = nh.createTimer(ros::Duration(1.0/this->publish_frequency), &MotionControl::publish_state, this);
       
       /* Load the previously generated metrics. Available options:
-       * fk_metrics_0.15_   3600  MB
-       * fk_metrics_0.2_    700.7 MB
-       * fk_metrics_0.25_   190.8 MB
-       * ik_metrics         32.2  MB   */
+       * fk_metrics_0.15_   3600  MB    ~150  sec.
+       * fk_metrics_0.2_    700.7 MB    ~24   sec.
+       * fk_metrics_0.25_   190.8 MB    ~6.82 sec.
+       * ik_metrics         32.2  MB    ~1    sec. */
       std::string filename;
-      filename = get_filename("fk_metrics_0.15_");
+      filename = get_filename(database);
       ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       ros::Time flann_start_time = ros::Time::now();
       try {
@@ -163,8 +165,7 @@ class MotionControl
         ros::shutdown();
         return;
       }
-      // Construct a randomized kd-trees. KDTreeIndexParams are the number
-      // of times the tree in the index should be recursively traversed
+      // construct an randomized kd-tree index using 4 kd-trees
       this->index_pos = new flann::Index<flann::L2<float> > (this->metrics_db["positions"], flann::KDTreeIndexParams(4));
       this->index_pos->buildIndex();
       double elapsed_time = (ros::Time::now() - flann_start_time).toSec();
@@ -247,10 +248,12 @@ class MotionControl
         query_pos[0][2] = _msg->pose.position.z;
         flann::Matrix<int> indices(new int[query_pos.rows*nn], query_pos.rows, nn);
         flann::Matrix<float> dists(new float[query_pos.rows*nn], query_pos.rows, nn);
-        this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(query_pos.cols));
+        // do a knn search, using 128 checks
+        this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(128));
         // Check that we found something
-        if (indices.cols <= 0)
-          return;
+        if (indices.cols <= 0) {
+          ROS_INFO_STREAM("Didn't find any shit. Query: " << _msg->pose.position);
+          return; }
         std::vector<float> q_delta(nn);
         Eigen::Quaterniond q_actual(this->tip_pose.rotation());
         Eigen::Quaterniond q;
@@ -264,17 +267,29 @@ class MotionControl
           q.z() = this->metrics_db["orientations"][i][3];
           q_delta[i] = 1 - pow(q.dot(q_actual), 2.0);         
           ROS_DEBUG_STREAM("Quaternion delta: " << q_delta[i]);
+          /*if (q_delta[i] < 0.2) {
+            double joint_error, joint_max_error = -DBL_MAX;
+            for(std::size_t j=0; j < this->joint_names.size(); ++j)
+            {
+              joint_error = fabs(current_joint_values[i] - this->metrics_db["joint_states"][indices[0][i]][j]);
+              if (joint_error > joint_max_error)
+                joint_max_error = joint_max_error;
+            }
+            if (joint_max_error < 0.2)
+              break;
+          }*/
         }
-        std::size_t min_idx = std::min_element(q_delta.begin(), q_delta.end()) - q_delta.begin();
-        float min_dist = q_delta[min_idx];
-        if (min_dist > 0.2)
+        std::size_t pivot_idx = std::min_element(q_delta.begin(), q_delta.end()) - q_delta.begin();
+        float pivot_delta = q_delta[pivot_idx];
+        ROS_DEBUG_STREAM("Index [" << pivot_idx << "] Distance [" << dists[0][pivot_idx] << "] q_delta [" << pivot_delta << "]");
+        if (pivot_delta > 0.2)
           return;
         // Populate the new joint_values
         std::ostringstream new_str;
         new_str << "new_joint_values : [";
-        for(std::size_t i=0; i < this->joint_names.size(); i++)
+        for(std::size_t i=0; i < this->joint_names.size(); ++i)
         {
-          new_joint_values.push_back(this->metrics_db["joint_states"][indices[0][min_idx]][i]);
+          new_joint_values.push_back(this->metrics_db["joint_states"][indices[0][pivot_idx]][i]);
           new_str << new_joint_values[i] << " ";            
         }
         new_str << "]";
@@ -284,7 +299,7 @@ class MotionControl
         {
           this->last_motion_print = ros::Time::now();
           ROS_DEBUG_STREAM(current_str.str());
-          ROS_DEBUG_STREAM("Index [" << min_idx << "] Distance [" << min_dist << "]");
+          ROS_DEBUG_STREAM("Index [" << pivot_idx << "] Distance [" << dists[0][pivot_idx] << "]");
           ROS_DEBUG_STREAM(new_str.str());
         }
       }

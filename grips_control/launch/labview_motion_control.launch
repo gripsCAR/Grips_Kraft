@@ -1,19 +1,19 @@
 <launch>
   <arg name="robot_name" value="grips" />
   <arg name="show_rviz" default="true"/>
+  <arg name="metrics_database" default="fk_metrics_0.25_"/>
 	
   <!-- upload robot and semantic description that corresponds to the URDF -->
   <include file="$(find grips_description)/launch/upload_grips.launch">
     <arg name="robot_name" value="$(arg robot_name)" />
   </include>
   
-  <!-- the semantic description that corresponds to the URDF -->
-	<param name="robot_description_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
-	 
+  
   <!-- motion control using ik plugin defined in kinematics.yaml -->
-	<node name="$(arg robot_name)_motion_control" pkg="grips_control" type="motion_control" respawn="false" output="screen">
-    <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
-	</node>
+  <include file="$(find grips_control)/launch/motion_control.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="metrics_database" value="$(arg metrics_database)" />
+  </include>
   
   <!-- labview server -->
 	<node name="labview_server" pkg="grips_control" type="labview_server.py" output="screen"> 
