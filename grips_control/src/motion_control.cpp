@@ -83,14 +83,14 @@ class MotionControl
           this->robot_namespace.erase(0, 1);
       }
       std::string kinematic_solver;
-			if (ros::param::get(this->robot_namespace + "/grips_motion_control/arm/kinematics_solver", kinematic_solver))
-				ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
-			else
-			{
-				ROS_ERROR("Missing kinematic solver parameter");
-				ros::shutdown();
-				return;
-			}
+      if (ros::param::get(this->robot_namespace + "/grips_motion_control/arm/kinematics_solver", kinematic_solver))
+        ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
+      else
+      {
+        ROS_ERROR("Missing kinematic solver parameter");
+        ros::shutdown();
+        return;
+      }
       // get the RobotModel loaded from urdf and srdf files
       this->kinematic_model = this->rm_loader.getModel();
       if (!this->kinematic_model) {
@@ -218,11 +218,11 @@ class MotionControl
     void cb_ik_motion_control(const geometry_msgs::PoseStampedConstPtr& _msg)
     { 
       // Validate the message frame_id
-			if (_msg->header.frame_id != this->model_frame)
-			{
-				ROS_WARN("cb_ik_motion_control: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), this->model_frame.c_str());
-				return;
-			}
+      if (_msg->header.frame_id != this->model_frame)
+      {
+        ROS_WARN("cb_ik_motion_control: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), this->model_frame.c_str());
+        return;
+      }
       // Get the latest robot state
       std::vector<double> current_joint_values;
       this->kinematic_state->copyJointGroupPositions(this->joint_model_group, current_joint_values);
