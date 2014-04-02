@@ -5,4 +5,4 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/grips.srdf
   CONFIG:
-    generated_timestamp: 1383150038
+    generated_timestamp: 1396449432

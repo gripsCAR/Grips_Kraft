@@ -53,7 +53,7 @@
       <parent link="${name}base_link" />
       <axis xyz="0 0 1" />
       <origin xyz="0 0 15.24e-3" rpy="0 0 0" />
-      <limit lower="${-pi/2}" upper="${pi/2}" effort="${max_effort}" velocity="${max_velocity}" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="${max_effort}" velocity="${80*pi/180}" />
       <dynamics damping="${SA_damping}"/>
     </joint>
     <joint name="${name}SE" type="revolute">
@@ -61,7 +61,7 @@
       <parent link="${name}manifold" />
       <axis xyz="1 0 0" />
       <origin xyz="0 0 0.33812" rpy="0 0 0" />
-      <limit lower="${-pi/2}" upper="${pi/6}" effort="${max_effort}" velocity="${max_velocity}" />
+      <limit lower="${-pi/2}" upper="${pi/6}" effort="${max_effort}" velocity="${65*pi/180}" />
       <dynamics damping="${SE_damping}" friction="10"/>
     </joint>
     <joint name="${name}linkage_tr" type="revolute">
@@ -69,7 +69,7 @@
       <parent link="${name}upper_arm" />
       <axis xyz="1 0 0" />
       <origin xyz="0 -9.82e-3 0.52167" rpy="0 0 0" />
-      <limit lower="-1.28" upper="${pi/3}" effort="${max_effort}" velocity="${max_velocity}" />
+      <limit lower="-1.28" upper="${pi/3}" effort="${max_effort}" velocity="${50*pi/180}" />
       <dynamics damping="10"/>
     </joint>
     <joint name="${name}WP" type="revolute">
@@ -77,7 +77,7 @@
       <parent link="${name}forearm" />
       <axis xyz="1 0 0" />
       <origin xyz="0 0.26109 7.5e-3" rpy="0 0 0" />
-      <limit lower="-0.581" upper="1.1" effort="${max_effort}" velocity="${max_velocity}" />
+      <limit lower="-0.581" upper="1.1" effort="${max_effort}" velocity="${100*pi/180}" />
       <dynamics damping="${WP_damping}"/>
     </joint>
     <joint name="${name}WY" type="revolute">
@@ -85,7 +85,7 @@
       <parent link="${name}pitch" />
       <axis xyz="0 0 1" />
       <origin xyz="0 0.13322 0" rpy="0 0 0" />
-      <limit lower="-1.01" upper="0.675" effort="${max_effort}" velocity="${max_velocity}" />
+      <limit lower="-1.01" upper="0.675" effort="${max_effort}" velocity="${115*pi/180}" />
       <dynamics damping="${WY_damping}"/>
     </joint>
     <joint name="${name}WR" type="continuous">
@@ -93,7 +93,7 @@
       <parent link="${name}yaw" />
       <axis xyz="0 1 0" />
       <origin xyz="-0.787e-3 0.190892 0.051331" rpy="0 0 0" />
-      <limit effort="${max_effort}" velocity="200" />
+      <limit effort="${max_effort}" velocity="${200*pi/180}" />
       <dynamics damping="${WR_damping}"/>
     </joint>
     <joint name="${name}camera_joint" type="fixed">
@@ -141,7 +141,7 @@
     </gazebo>
     <gazebo reference="${name}upper_arm">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}elbow_pivot">
       <material>Telerobcar/MetalSeamed</material>
@@ -153,23 +153,23 @@
     </gazebo>
     <gazebo reference="${name}forearm">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}pitch">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}yaw">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}end_effector">
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <!-- camera -->	
     <gazebo reference="${name}camera">
       <material>Gazebo/FlatBlack</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
       <sensor type="camera" name="${name}camera">
         <update_rate>30.0</update_rate>
         <camera name="${name}camera">

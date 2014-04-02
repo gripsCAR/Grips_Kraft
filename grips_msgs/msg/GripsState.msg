@@ -1,5 +1,5 @@
-std_msgs/Header 				header
+std_msgs/Header       header
 
-geometry_msgs/Pose  		pose					# meters
+geometry_msgs/Pose    pose          # meters
 
-geometry_msgs/Wrench  	wrench				# TODO
+geometry_msgs/Wrench  wrench        # TODO

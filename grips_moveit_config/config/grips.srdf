@@ -53,8 +53,6 @@
     <disable_collisions link1="coupling" link2="r_finger" reason="Never" />
     <disable_collisions link1="coupling" link2="r_inner" reason="Never" />
     <disable_collisions link1="coupling" link2="r_outer" reason="Never" />
-    <disable_collisions link1="elbow_pivot" link2="l_outer" reason="Never" />
-    <disable_collisions link1="elbow_pivot" link2="r_finger" reason="Never" />
     <disable_collisions link1="forearm" link2="gripper_base" reason="Never" />
     <disable_collisions link1="forearm" link2="l_finger" reason="Never" />
     <disable_collisions link1="forearm" link2="l_inner" reason="Never" />

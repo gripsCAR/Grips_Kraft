@@ -1,15 +1,15 @@
 <launch>
   <!-- launch file arguments -->
-	<arg name="robot_name" default="grips" />
+  <arg name="robot_name" default="grips" />
   <arg name="metrics_database" default="ik_metrics"/>
   
-	<!-- the semantic description that corresponds to the URDF -->
-	<param name="robot_description_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
-	 
+  <!-- the semantic description that corresponds to the URDF -->
+  <param name="robot_description_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
+   
   <!-- motion control using ik plugin defined in kinematics.yaml -->
-	<node name="$(arg robot_name)_motion_control" pkg="grips_control" type="motion_control" respawn="false" output="screen">
+  <node name="motion_control" pkg="grips_control" type="motion_control" ns="$(arg robot_name)" output="screen">
     <param name="metrics_database" type="string" value="$(arg metrics_database)"/>
     <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
-	</node>
-	
+  </node>
+  
 </launch>

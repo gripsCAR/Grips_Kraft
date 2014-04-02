@@ -1,92 +1,31 @@
 joint_limits:
-  WR:
-    has_velocity_limits: true
-    max_velocity: 200
-    has_acceleration_limits: false
-    max_acceleration: 0
   SE:
     has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  SA:
-    has_velocity_limits: true
-    max_velocity: 15
+    max_velocity: 1.1344640138
     has_acceleration_limits: false
     max_acceleration: 0
   linkage_tr:
     has_velocity_limits: true
-    max_velocity: 15
+    max_velocity: 0.872664625997
     has_acceleration_limits: false
     max_acceleration: 0
-  WY:
+  SA:
     has_velocity_limits: true
-    max_velocity: 15
+    max_velocity: 1.3962634016
+    has_acceleration_limits: false
+    max_acceleration: 0
+  WR:
+    has_velocity_limits: true
+    max_velocity: 3.49065850399
     has_acceleration_limits: false
     max_acceleration: 0
   WP:
     has_velocity_limits: true
-    max_velocity: 15
+    max_velocity: 1.74532925199
     has_acceleration_limits: false
     max_acceleration: 0
-
-  right_linkage_tr:
+  WY:
     has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_SE:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_SA:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_linkage_tr:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_SE:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_WR:
-    has_velocity_limits: true
-    max_velocity: 200
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_WY:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_WR:
-    has_velocity_limits: true
-    max_velocity: 200
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_WP:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  left_WY:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_SA:
-    has_velocity_limits: true
-    max_velocity: 15
-    has_acceleration_limits: false
-    max_acceleration: 0
-  right_WP:
-    has_velocity_limits: true
-    max_velocity: 15
+    max_velocity: 2.00712863979
     has_acceleration_limits: false
     max_acceleration: 0

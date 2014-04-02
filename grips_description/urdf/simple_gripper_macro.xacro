@@ -90,7 +90,7 @@
     <!-- links -->
     <gazebo reference="${name}gripper_base">
       <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>true</selfCollide>
+      <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}r_outer">
       <material>Telerobcar/MetalSeamed</material>

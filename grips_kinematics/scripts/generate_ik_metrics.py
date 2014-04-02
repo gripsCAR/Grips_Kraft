@@ -35,7 +35,7 @@ class DatabaseMetrics:
       if f['version'].value != self.get_version():
         self.logerror('File version is wrong %s!=%s ', f['version'], self.get_version())
         return False
-      self.reachabilitystats = f['reachabilitystats'].value[:1001,:]
+      self.reachabilitystats = f['reachabilitystats'].value
       self.reachabilitydensity3d = f['reachabilitydensity3d']
       self.reachability3d = f['reachability3d']
       self.pointscale = f['pointscale'].value

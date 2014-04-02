@@ -28,9 +28,11 @@ class MotionControl
     ros::NodeHandle                           nh, nh_private;
     std::vector<ros::Publisher>               control_publisher;
     ros::Publisher                            state_publisher;
+    ros::Publisher                            pose_publisher;
     ros::Subscriber                           joint_states_sub;
     ros::Subscriber                           motion_control_sub;
     ros::Timer                                state_timer;
+    ros::Timer                                pose_timer;
     // Kinematics
     robot_model_loader::RobotModelLoader      rm_loader;
     robot_model::RobotModelPtr                kinematic_model;
@@ -40,8 +42,8 @@ class MotionControl
     // Joint limits
     std::map<std::string, joint_limits_interface::JointLimits> urdf_limits;
     // flann
-    flann::Index<flann::L2<float> >*         index_pos;
-    flann::Index<flann::L2<float> >*         index_rot;
+    flann::Index<flann::L2<float> >*          index_pos;
+    flann::Index<flann::L2<float> >*          index_rot;
     std::map<std::string, flann::Matrix<float> >  metrics_db;
     // Time
     ros::Time                                 last_state_print;
@@ -54,7 +56,8 @@ class MotionControl
     std::string                               model_frame; 
     std::string                               tip_link;
     std::string                               base_link;
-    double                                   publish_frequency;
+    double                                    publish_frequency;
+    double                                     position_error;
     
   public:
     MotionControl(): 
@@ -68,12 +71,15 @@ class MotionControl
       nh_private.param(std::string("planning_group"), this->planning_group, std::string("arm"));
       nh_private.param(std::string("publish_frequency"), this->publish_frequency, 1000.0);
       nh_private.param(std::string("metrics_database"), database, std::string("ik_metrics"));
+      nh_private.param(std::string("position_error"), this->position_error, 0.05);
       if (!nh_private.hasParam("planning_group"))
         ROS_WARN_STREAM("Parameter [~planning_group] not found, using default: " << this->planning_group);
       if (!nh_private.hasParam("publish_frequency"))
         ROS_WARN_STREAM("Parameter [~publish_frequency] not found, using default: " << this->publish_frequency << " Hz");      
       if (!nh_private.hasParam("metrics_database"))
         ROS_WARN_STREAM("Parameter [~metrics_database] not found, using default: " << database);
+      if (!nh_private.hasParam("position_error"))
+        ROS_WARN_STREAM("Parameter [~position_error] not found, using default: " << this->position_error << " m.");
       // get robot namespace
       this->robot_namespace = ros::this_node::getNamespace();
       if (this->robot_namespace.rfind("/") != this->robot_namespace.length()-1)
@@ -83,11 +89,11 @@ class MotionControl
           this->robot_namespace.erase(0, 1);
       }
       std::string kinematic_solver;
-      if (ros::param::get(this->robot_namespace + "/grips_motion_control/arm/kinematics_solver", kinematic_solver))
+      if (ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", kinematic_solver))
         ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
       else
       {
-        ROS_ERROR("Missing kinematic solver parameter");
+        ROS_ERROR_STREAM("Missing kinematic solver parameter: " << kinematic_solver);
         ros::shutdown();
         return;
       }
@@ -136,20 +142,23 @@ class MotionControl
       topic_name = this->robot_namespace + "joint_states";
       this->joint_states_sub = nh.subscribe(topic_name.c_str(), 1, &MotionControl::cb_joint_states, this);
       
-      topic_name = this->robot_namespace + "ik_motion_control";
-      this->motion_control_sub = nh.subscribe(topic_name.c_str(), 1, &MotionControl::cb_ik_motion_control, this); 
+      topic_name = this->robot_namespace + "ik_command";
+      this->motion_control_sub = nh.subscribe(topic_name.c_str(), 1, &MotionControl::cb_ik_command, this); 
       
-      topic_name = this->robot_namespace + "grips_state";
+      topic_name = this->robot_namespace + "state";
       this->state_publisher = nh.advertise<grips_msgs::GripsState>(topic_name.c_str(), 1);
+      
+      topic_name = this->robot_namespace + "pose";
+      this->pose_publisher = nh.advertise<geometry_msgs::PoseStamped>(topic_name.c_str(), 1);
       
       // Setup timer for publishing state at publish_frequency
       this->state_timer = nh.createTimer(ros::Duration(1.0/this->publish_frequency), &MotionControl::publish_state, this);
       
+      // Setup timer for publishing pose at 60 Hz
+      this->pose_timer = nh.createTimer(ros::Duration(1.0/60), &MotionControl::publish_pose, this);
+      
       /* Load the previously generated metrics. Available options:
-       * fk_metrics_0.15_   3600  MB    ~150  sec.
-       * fk_metrics_0.2_    700.7 MB    ~24   sec.
-       * fk_metrics_0.25_   190.8 MB    ~6.82 sec.
-       * ik_metrics         32.2  MB    ~1    sec. */
+       * ik_metrics         69.9  MB    ~4    sec. */
       std::string filename;
       filename = get_filename(database);
       ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
@@ -182,13 +191,24 @@ class MotionControl
         delete[] this->metrics_db[it->first].ptr();
     }
     
+    void publish_pose(const ros::TimerEvent& _event) 
+    {
+      geometry_msgs::PoseStamped pose_msg;
+      pose_msg.header.frame_id = this->model_frame;
+      tf::poseEigenToMsg(this->tip_pose, pose_msg.pose);
+      pose_msg.header.stamp = ros::Time::now();      
+      // publish pose only (for rviz visualization)
+      this->pose_publisher.publish(pose_msg);
+    }
+    
     void publish_state(const ros::TimerEvent& _event) 
     {
       grips_msgs::GripsState state_msg;
       state_msg.header.frame_id = this->model_frame;
       tf::poseEigenToMsg(this->tip_pose, state_msg.pose);
-      state_msg.header.stamp = ros::Time::now();      
-      this->state_publisher.publish(state_msg);     
+      state_msg.header.stamp = ros::Time::now();
+      // publish the GripsState msg
+      this->state_publisher.publish(state_msg);
     }
     
     void cb_joint_states(const sensor_msgs::JointStateConstPtr& _msg) 
@@ -215,12 +235,12 @@ class MotionControl
       }
     }
     
-    void cb_ik_motion_control(const geometry_msgs::PoseStampedConstPtr& _msg)
+    void cb_ik_command(const geometry_msgs::PoseStampedConstPtr& _msg)
     { 
       // Validate the message frame_id
       if (_msg->header.frame_id != this->model_frame)
       {
-        ROS_WARN("cb_ik_motion_control: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), this->model_frame.c_str());
+        ROS_WARN("cb_ik_command: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), this->model_frame.c_str());
         return;
       }
       // Get the latest robot state
@@ -235,61 +255,78 @@ class MotionControl
       bool found_ik = this->kinematic_state->setFromIK(this->joint_model_group, _msg->pose, 1, 0.001);
       // Get the new joint states for the arm
       std::vector<double> new_joint_values;
+      bool valid_ik = false;
       if (found_ik)
+      {
         this->kinematic_state->copyJointGroupPositions(this->joint_model_group, new_joint_values);
-      else
+        // Check that the IK doesn't overcome the position_error
+        Eigen::Affine3d T_model, T_end, T_goal, T_ik;
+        T_model = this->kinematic_state->getGlobalLinkTransform(this->model_frame);
+        T_end = this->kinematic_state->getGlobalLinkTransform(this->tip_link);
+        T_ik= T_model.inverse() * T_end;
+        tf::poseMsgToEigen(_msg->pose, T_goal);
+        double dx = T_goal.translation().x() - T_ik.translation().x();
+        double dy = T_goal.translation().y() - T_ik.translation().y();
+        double dz = T_goal.translation().z() - T_ik.translation().z();
+        double ik_error = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
+        ROS_DEBUG_STREAM("ik_error: " << ik_error);
+        if (ik_error < this->position_error)
+          valid_ik = true;
+      }
+      if (!valid_ik)
       {
         ROS_DEBUG("Did not find IK solution");
         // Determine nn closest XYZ points in the reachability database
-        int nn = 1000;
+        int max_nn = 1000, nearest_neighbors;
         flann::Matrix<float> query_pos(new float[3], 1, 3);
         query_pos[0][0] = _msg->pose.position.x;
         query_pos[0][1] = _msg->pose.position.y;
         query_pos[0][2] = _msg->pose.position.z;
-        flann::Matrix<int> indices(new int[query_pos.rows*nn], query_pos.rows, nn);
-        flann::Matrix<float> dists(new float[query_pos.rows*nn], query_pos.rows, nn);
+        flann::Matrix<int> indices(new int[query_pos.rows*max_nn], query_pos.rows, max_nn);
+        flann::Matrix<float> dists(new float[query_pos.rows*max_nn], query_pos.rows, max_nn);
         // do a knn search, using 128 checks
-        this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(128));
+        //~ this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(128));
+        nearest_neighbors = indices.cols;
+        float radius = pow(this->position_error, 2);
+        nearest_neighbors = this->index_pos->radiusSearch(query_pos, indices, dists, radius, flann::SearchParams(128));
         // Check that we found something
-        if (indices.cols <= 0) {
+        if (nearest_neighbors <= 0) {
           ROS_INFO_STREAM("Didn't find any shit. Query: " << _msg->pose.position);
           return; }
-        std::vector<float> q_delta(nn);
+        nearest_neighbors = fmin(nearest_neighbors, max_nn);
+        std::vector<float> score(nearest_neighbors), d_q(nearest_neighbors), 
+                           d_j(nearest_neighbors), d_xyz(nearest_neighbors);
         Eigen::Quaterniond q_actual(this->tip_pose.rotation());
-        Eigen::Quaterniond q;
-        
-        for (std::size_t i=0; i < nn; i++)
+        Eigen::Quaterniond q;        
+        for (std::size_t i=0; i < nearest_neighbors; i++)
         {
           // http://math.stackexchange.com/questions/90081/quaternion-distance
           q.w() = this->metrics_db["orientations"][i][0];
           q.x() = this->metrics_db["orientations"][i][1];
           q.y() = this->metrics_db["orientations"][i][2];
           q.z() = this->metrics_db["orientations"][i][3];
-          q_delta[i] = 1 - pow(q.dot(q_actual), 2.0);         
-          ROS_DEBUG_STREAM("Quaternion delta: " << q_delta[i]);
-          /*if (q_delta[i] < 0.2) {
-            double joint_error, joint_max_error = -DBL_MAX;
-            for(std::size_t j=0; j < this->joint_names.size(); ++j)
-            {
-              joint_error = fabs(current_joint_values[i] - this->metrics_db["joint_states"][indices[0][i]][j]);
-              if (joint_error > joint_max_error)
-                joint_max_error = joint_max_error;
-            }
-            if (joint_max_error < 0.2)
-              break;
-          }*/
+          d_q[i] = 1 - pow(q.dot(q_actual), 2.0);
+          d_xyz[i] = sqrtf(dists[0][i]);
+          d_j[i] = 0;
+          for(std::size_t j=0; j < this->joint_names.size(); ++j)
+          {
+            float j_error = fabs(current_joint_values[i] - this->metrics_db["joint_states"][indices[0][i]][j]);
+            d_j[i] = fmax(d_j[i], j_error);
+          }
+          //~ score[i] = d_q[i] + d_xyz[i] + d_j[i];
+          score[i] = d_q[i] + d_j[i]/3.0;
         }
-        std::size_t pivot_idx = std::min_element(q_delta.begin(), q_delta.end()) - q_delta.begin();
-        float pivot_delta = q_delta[pivot_idx];
-        ROS_DEBUG_STREAM("Index [" << pivot_idx << "] Distance [" << dists[0][pivot_idx] << "] q_delta [" << pivot_delta << "]");
-        if (pivot_delta > 0.2)
+        std::size_t choice_idx = std::min_element(score.begin(), score.end()) - score.begin();        
+        //~ if (score[choice_idx] > 0.2)
           return;
+        ROS_INFO("nn [%d] choice [%d] score [%f] d_q [%f] d_xyz [%f] d_j [%f]", nearest_neighbors, 
+                    (int)choice_idx, score[choice_idx], d_q[choice_idx], d_xyz[choice_idx], d_j[choice_idx]);
         // Populate the new joint_values
         std::ostringstream new_str;
         new_str << "new_joint_values : [";
         for(std::size_t i=0; i < this->joint_names.size(); ++i)
         {
-          new_joint_values.push_back(this->metrics_db["joint_states"][indices[0][pivot_idx]][i]);
+          new_joint_values.push_back(this->metrics_db["joint_states"][indices[0][choice_idx]][i]);
           new_str << new_joint_values[i] << " ";            
         }
         new_str << "]";
@@ -299,7 +336,7 @@ class MotionControl
         {
           this->last_motion_print = ros::Time::now();
           ROS_DEBUG_STREAM(current_str.str());
-          ROS_DEBUG_STREAM("Index [" << pivot_idx << "] Distance [" << dists[0][pivot_idx] << "]");
+          ROS_DEBUG_STREAM("Index [" << choice_idx << "] Distance [" << dists[0][choice_idx] << "]");
           ROS_DEBUG_STREAM(new_str.str());
         }
       }
@@ -332,7 +369,7 @@ class MotionControl
     std::string get_filename(const std::string& database)
     {
       std::string folder_key, file_key;
-      folder_key = "4d0a3b5d2c41e86313f1a9bfdbc7746e/";
+      folder_key = "f4025675e127122e084d959288e4555d/";
       file_key = ".27d697e7d8a999dfc3b0a3305edb1ee6.pp";
       std::ostringstream filename;
       filename << getenv("HOME") << "/.openrave/robot." << folder_key 
