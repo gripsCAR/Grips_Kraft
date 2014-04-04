@@ -255,25 +255,9 @@ class MotionControl
       bool found_ik = this->kinematic_state->setFromIK(this->joint_model_group, _msg->pose, 1, 0.001);
       // Get the new joint states for the arm
       std::vector<double> new_joint_values;
-      bool valid_ik = false;
       if (found_ik)
-      {
         this->kinematic_state->copyJointGroupPositions(this->joint_model_group, new_joint_values);
-        // Check that the IK doesn't overcome the position_error
-        Eigen::Affine3d T_model, T_end, T_goal, T_ik;
-        T_model = this->kinematic_state->getGlobalLinkTransform(this->model_frame);
-        T_end = this->kinematic_state->getGlobalLinkTransform(this->tip_link);
-        T_ik= T_model.inverse() * T_end;
-        tf::poseMsgToEigen(_msg->pose, T_goal);
-        double dx = T_goal.translation().x() - T_ik.translation().x();
-        double dy = T_goal.translation().y() - T_ik.translation().y();
-        double dz = T_goal.translation().z() - T_ik.translation().z();
-        double ik_error = sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
-        ROS_DEBUG_STREAM("ik_error: " << ik_error);
-        if (ik_error < this->position_error)
-          valid_ik = true;
-      }
-      if (!valid_ik)
+      else
       {
         ROS_DEBUG("Did not find IK solution");
         // Determine nn closest XYZ points in the reachability database
@@ -314,11 +298,11 @@ class MotionControl
             d_j[i] = fmax(d_j[i], j_error);
           }
           //~ score[i] = d_q[i] + d_xyz[i] + d_j[i];
-          score[i] = d_q[i] + d_j[i]/3.0;
+          score[i] = 2*d_q[i] + 3*d_j[i];
         }
         std::size_t choice_idx = std::min_element(score.begin(), score.end()) - score.begin();        
-        //~ if (score[choice_idx] > 0.2)
-          return;
+        /*if (score[choice_idx] > 0.3)
+          return;*/
         ROS_INFO("nn [%d] choice [%d] score [%f] d_q [%f] d_xyz [%f] d_j [%f]", nearest_neighbors, 
                     (int)choice_idx, score[choice_idx], d_q[choice_idx], d_xyz[choice_idx], d_j[choice_idx]);
         // Populate the new joint_values

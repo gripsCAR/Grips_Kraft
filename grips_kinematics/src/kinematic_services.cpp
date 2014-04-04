@@ -41,16 +41,12 @@ class KinematicServices {
     
   public:
     KinematicServices(): 
-      nh_private ("~"), 
-      // TODO: The robot description shouldn't be hard coded
-      rm_loader("/grips/robot_description"),
-      joint_model_group(0)
+      nh_private ("~")
     { 
       // Get parameters from the server
-      if (!nh_private.hasParam("planning_group")) {
-        ros::param::param(std::string("~planning_group"), this->planning_group, std::string("arm"));
-        ROS_WARN("Parameter [~planning_group] not found, using default: arm");
-      }
+      nh_private.param(std::string("planning_group"), this->planning_group, std::string("arm"));
+      if (!nh_private.hasParam("planning_group"))
+        ROS_WARN_STREAM("Parameter [~planning_group] not found, using default: " << this->planning_group);
       // Get robot namespace
       this->robot_namespace = ros::this_node::getNamespace();
       if (this->robot_namespace.rfind("/") != this->robot_namespace.length()-1)
@@ -60,21 +56,25 @@ class KinematicServices {
           this->robot_namespace.erase(0, 1);
       }
       std::string kinematic_solver;
-      if (ros::param::get(this->robot_namespace + "/kinematic_srv/arm/kinematics_solver", kinematic_solver))
+      if (ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", kinematic_solver))
         ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
       else
       {
-        ROS_ERROR("Missing kinematic solver parameter");
+        ROS_ERROR_STREAM("Missing kinematic solver parameter: " << kinematic_solver);
         ros::shutdown();
         return;
       }
-      // get the RobotModel loaded from urdf and srdf files
+      // Get the RobotModel loaded from urdf and srdf files
       this->kinematic_model = this->rm_loader.getModel();
-      if (!this->kinematic_model) {
-        ROS_ERROR("Could not load robot description");
-      }
+      if (!this->kinematic_model)
+        ROS_ERROR("Could not load robot_description");
+      else
+        ROS_INFO_STREAM("robot_description loaded from: " << this->rm_loader.getRobotDescription ());
       // Get and print the name of the coordinate frame in which the transforms for this model are computed
       this->model_frame = this->kinematic_model->getModelFrame();
+      // Remove the slash from model_frame
+      if (this->model_frame.rfind("/") == 0)
+        this->model_frame.erase(0,1);
       ROS_INFO_STREAM("Model frame: " << this->model_frame);
       // create a RobotState to keep track of the current robot pose
       this->kinematic_state.reset(new robot_state::RobotState(this->kinematic_model));
@@ -84,16 +84,21 @@ class KinematicServices {
       this->kinematic_state->setToDefaultValues();
       // Setup the joint group
       this->joint_model_group = this->kinematic_model->getJointModelGroup(this->planning_group);
-      // Get the names of the joints in the arm
-      const std::vector<std::string> &tmp = this->joint_model_group->getJointModelNames();
+      // Get the names of the controllable joints in the arm
+      this->joint_names = this->joint_model_group->getActiveJointModelNames();
+      for(std::size_t i = 0; i < this->joint_names.size(); ++i)
+        ROS_DEBUG("Joint [%d]: %s", int(i), this->joint_names[i].c_str());
       // Get the tip and base link
       this->base_link = "base_link";
       this->tip_link = this->joint_model_group->getLinkModelNames().back();
       ROS_INFO_STREAM("Tip Link: " << this->tip_link);
-      // TODO: Here should read ONLY controllable joints (anchor is been added)
-      for(std::size_t i = 1; i < tmp.size(); ++i) {
-        this->joint_names.push_back(tmp[i]);
-        ROS_DEBUG("Joint [%d]: %s", int(i), this->joint_names.back().c_str());
+      // Get the joint limits
+      typedef std::map<std::string, boost::shared_ptr<urdf::Joint> >::iterator it_type;
+      for(it_type it = this->rm_loader.getURDF()->joints_.begin(); it != this->rm_loader.getURDF()->joints_.end(); it++)
+      {
+        joint_limits_interface::getJointLimits(it->second, this->urdf_limits[it->first]);
+        ROS_DEBUG_STREAM("Joint " << it->first << ": " << this->urdf_limits[it->first].min_position << " " << this->urdf_limits[it->first].max_position);
+        ROS_DEBUG_STREAM("Joint " << it->first << " max_velocity: " << this->urdf_limits[it->first].max_velocity);
       }
       
       // Setup the kinematic metrics
@@ -107,14 +112,6 @@ class KinematicServices {
       this->ik_service = nh_private.advertiseService("get_ik_metrics", &KinematicServices::get_ik_metrics, this);
       this->fk_service = nh_private.advertiseService("get_fk_metrics", &KinematicServices::get_fk_metrics, this);
       this->limits_service = nh_private.advertiseService("get_joint_limits", &KinematicServices::get_joint_limits, this);
-      
-      // Get the joint limits
-      typedef std::map<std::string, boost::shared_ptr<urdf::Joint> >::iterator it_type;
-      for(it_type it = this->rm_loader.getURDF()->joints_.begin(); it != this->rm_loader.getURDF()->joints_.end(); it++)
-      {
-        joint_limits_interface::getJointLimits(it->second, this->urdf_limits[it->first]);
-        ROS_DEBUG_STREAM("Joint " << it->first << ": " << this->urdf_limits[it->first].min_position << " " << this->urdf_limits[it->first].max_position);
-      }     
     }
     
     bool get_ik_metrics(grips_msgs::GetPoseMetrics::Request &request, grips_msgs::GetPoseMetrics::Response &response)
