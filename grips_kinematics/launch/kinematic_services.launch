@@ -7,7 +7,7 @@
       <arg name="robot_name" value="$(arg robot_name)" />
     </include>
     <!-- Start the kinematic services -->
-    <node name="grips_kinematic_services" pkg="grips_kinematics" type="kinematic_services" respawn="false" output="screen">
+    <node name="kinematic_services" pkg="grips_kinematics" type="kinematic_services" respawn="false" output="screen">
       <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
     </node>
   </group>

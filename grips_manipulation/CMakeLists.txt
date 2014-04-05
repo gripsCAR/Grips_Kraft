@@ -13,6 +13,7 @@ find_package(Boost REQUIRED system thread)
 
 add_library(${PROJECT_NAME}_collision_free src/collision_free_motion.cpp)
 target_link_libraries(${PROJECT_NAME}_collision_free ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(${PROJECT_NAME}_collision_free grips_msgs_gencpp) # wait for msgs to be built
 
 catkin_package(
 LIBRARIES

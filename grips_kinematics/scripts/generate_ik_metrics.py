@@ -21,7 +21,7 @@ class DatabaseMetrics:
     self.joint_states = None
     self.file_id = None
     # Subscribe to kinematic services
-    self.metrics_srv_name = self.read_parameter('metrics_service', '/grips/kinematic_srv/get_ik_metrics')
+    self.metrics_srv_name = self.read_parameter('metrics_service', '/grips/kinematic_services/get_ik_metrics')
     self.loginfo('Waiting for %s service' % self.metrics_srv_name)
     rospy.wait_for_service(self.metrics_srv_name)
     self.metrics_srv = rospy.ServiceProxy(self.metrics_srv_name, GetPoseMetrics)
@@ -136,7 +136,7 @@ class DatabaseMetrics:
       calculated = 0
       for i, row in enumerate(self.reachabilitystats):
         req.header.stamp = rospy.Time.now()
-        req.header.frame_id = '/world'
+        req.header.frame_id = 'world'
         req.link_name = 'end_effector'
         req.pose = self.array2pose(row)
         try:
@@ -154,7 +154,7 @@ class DatabaseMetrics:
         if rospy.is_shutdown():
           return
       # Show the result in the console
-      calculated = len(self.metrics[:, 0].nonzero()[0])
+      calculated = len(self.metrics[:, 1].nonzero()[0])
       self.loginfo('Done: %d metrics were calculated' % calculated)
       if calculated > 0:
         minval, maxval = self.min_max_nonzero(self.metrics[:, 0])

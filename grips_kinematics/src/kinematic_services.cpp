@@ -1,231 +1,138 @@
 #include <ros/ros.h>
 
-// MoveIt!
-#include <moveit/robot_model_loader/robot_model_loader.h>
-#include <moveit/robot_model/robot_model.h>
-#include <moveit/robot_state/robot_state.h>
-#include <moveit/kinematics_metrics/kinematics_metrics.h>
-#include <eigen_conversions/eigen_msg.h>
-
 // Services
 #include "grips_msgs/GetPoseMetrics.h"
 #include "grips_msgs/GetStateMetrics.h"
 #include "grips_msgs/GetJointLimits.h"
 
-// Joint limits
-#include <joint_limits_interface/joint_limits_urdf.h>
+// Grips kinematic Interface
+#include "grips_kinematics/kinematic_interface.hpp"
+
+using namespace grips_kinematics;
 
 class KinematicServices {
   private:
     // Ros
-    ros::NodeHandle                           nh, nh_private;
-    ros::ServiceServer                        ik_service;
-    ros::ServiceServer                        fk_service;
-    ros::ServiceServer                        limits_service;
-    // Kinematics
-    robot_model_loader::RobotModelLoader      rm_loader;
-    robot_model::RobotModelPtr                kinematic_model;
-    robot_state::RobotStatePtr                kinematic_state;
-    robot_state::JointModelGroup*             joint_model_group;
-    // Joint limits
-    std::map<std::string, joint_limits_interface::JointLimits> urdf_limits;
-    //Metric calculations
-    kinematics_metrics::KinematicsMetricsPtr  kinematics_metrics;
+    ros::NodeHandle           nh_, nh_private_;
+    ros::ServiceServer        ik_service_;
+    ros::ServiceServer        fk_service_;
+    ros::ServiceServer        limits_service_;
     // Misc
-    std::vector<std::string>                  joint_names;
-    std::string                               robot_namespace;
-    std::string                               planning_group; 
-    std::string                               model_frame; 
-    std::string                               tip_link;
-    std::string                               base_link;
+    std::string               robot_namespace_;
+    std::vector<std::string>  joint_names_;
+    std::string               model_frame_; 
+    std::string               tip_link_;
+    std::string               base_link_;
+    // Kinematics
+    KinematicInterfacePtr   kinematic_interface_;
     
   public:
     KinematicServices(): 
-      nh_private ("~")
+      nh_private_("~")
     { 
-      // Get parameters from the server
-      nh_private.param(std::string("planning_group"), this->planning_group, std::string("arm"));
-      if (!nh_private.hasParam("planning_group"))
-        ROS_WARN_STREAM("Parameter [~planning_group] not found, using default: " << this->planning_group);
       // Get robot namespace
-      this->robot_namespace = ros::this_node::getNamespace();
-      if (this->robot_namespace.rfind("/") != this->robot_namespace.length()-1)
-        this->robot_namespace.append("/");
-      if (this->robot_namespace.length() > 1) {
-        if (this->robot_namespace[0] == this->robot_namespace[1])
-          this->robot_namespace.erase(0, 1);
-      }
-      std::string kinematic_solver;
-      if (ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", kinematic_solver))
-        ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
-      else
-      {
-        ROS_ERROR_STREAM("Missing kinematic solver parameter: " << kinematic_solver);
-        ros::shutdown();
-        return;
-      }
-      // Get the RobotModel loaded from urdf and srdf files
-      this->kinematic_model = this->rm_loader.getModel();
-      if (!this->kinematic_model)
-        ROS_ERROR("Could not load robot_description");
-      else
-        ROS_INFO_STREAM("robot_description loaded from: " << this->rm_loader.getRobotDescription ());
-      // Get and print the name of the coordinate frame in which the transforms for this model are computed
-      this->model_frame = this->kinematic_model->getModelFrame();
-      // Remove the slash from model_frame
-      if (this->model_frame.rfind("/") == 0)
-        this->model_frame.erase(0,1);
-      ROS_INFO_STREAM("Model frame: " << this->model_frame);
-      // create a RobotState to keep track of the current robot pose
-      this->kinematic_state.reset(new robot_state::RobotState(this->kinematic_model));
-      if (!this->kinematic_state) {
-        ROS_ERROR("Could not get RobotState from Model");
-      }
-      this->kinematic_state->setToDefaultValues();
-      // Setup the joint group
-      this->joint_model_group = this->kinematic_model->getJointModelGroup(this->planning_group);
-      // Get the names of the controllable joints in the arm
-      this->joint_names = this->joint_model_group->getActiveJointModelNames();
-      for(std::size_t i = 0; i < this->joint_names.size(); ++i)
-        ROS_DEBUG("Joint [%d]: %s", int(i), this->joint_names[i].c_str());
-      // Get the tip and base link
-      this->base_link = "base_link";
-      this->tip_link = this->joint_model_group->getLinkModelNames().back();
-      ROS_INFO_STREAM("Tip Link: " << this->tip_link);
-      // Get the joint limits
-      typedef std::map<std::string, boost::shared_ptr<urdf::Joint> >::iterator it_type;
-      for(it_type it = this->rm_loader.getURDF()->joints_.begin(); it != this->rm_loader.getURDF()->joints_.end(); it++)
-      {
-        joint_limits_interface::getJointLimits(it->second, this->urdf_limits[it->first]);
-        ROS_DEBUG_STREAM("Joint " << it->first << ": " << this->urdf_limits[it->first].min_position << " " << this->urdf_limits[it->first].max_position);
-        ROS_DEBUG_STREAM("Joint " << it->first << " max_velocity: " << this->urdf_limits[it->first].max_velocity);
-      }
-      
-      // Setup the kinematic metrics
-      this->kinematics_metrics.reset(new kinematics_metrics::KinematicsMetrics(this->kinematic_model));
-      /* Multiplier for JointLimitsPenalty.  Set penalty_multiplier to 0
-      if you don't want this to have any effect on the metrics*/
-      this->kinematics_metrics->setPenaltyMultiplier(0.0);
-      
+      robot_namespace_ = ros::this_node::getNamespace();
+      // Kinematic interface
+      kinematic_interface_.reset(new KinematicInterface());
+      joint_names_ = kinematic_interface_->getActiveJointModelNames();
+      model_frame_ = kinematic_interface_->getModelFrame();
       // Advertise services
       ROS_INFO("Advertising services");
-      this->ik_service = nh_private.advertiseService("get_ik_metrics", &KinematicServices::get_ik_metrics, this);
-      this->fk_service = nh_private.advertiseService("get_fk_metrics", &KinematicServices::get_fk_metrics, this);
-      this->limits_service = nh_private.advertiseService("get_joint_limits", &KinematicServices::get_joint_limits, this);
+      ik_service_ = nh_private_.advertiseService("get_ik_metrics", &KinematicServices::getIkMetrics, this);
+      fk_service_ = nh_private_.advertiseService("get_fk_metrics", &KinematicServices::getFkMetrics, this);
+      limits_service_ = nh_private_.advertiseService("get_joint_limits", &KinematicServices::getJointLimits, this);
     }
     
-    bool get_ik_metrics(grips_msgs::GetPoseMetrics::Request &request, grips_msgs::GetPoseMetrics::Response &response)
+    bool getIkMetrics(grips_msgs::GetPoseMetrics::Request &request, grips_msgs::GetPoseMetrics::Response &response)
     {
-      // TODO: Validate that frame_id = this->model_frame
-      // TODO: Validate that link_name = this->tip_link
-      Eigen::Affine3d T_base, T_end, T;
-      tf::poseMsgToEigen(request.pose, T_end);
-      T_base = this->kinematic_state->getGlobalLinkTransform(this->base_link);
-      T = T_base * T_end;
-      // Here 3 is the number of random restart and 0.005 is the allowed time after each restart
-      response.found_ik = this->kinematic_state->setFromIK(this->joint_model_group, T_end, 3, 0.01);
-      
+      // Validate that frame_id = model_frame_
+      if (request.header.frame_id != model_frame_)
+      {
+        ROS_WARN("frame_id [%s] received. Expected [%s]", request.header.frame_id.c_str(), model_frame_.c_str());
+        return true;
+      }
+      response.found_ik = kinematic_interface_->setEndEffectorPose(request.pose, 3, 0.01);
       // If IK not found return with default values
       if (!response.found_ik)
         return true;
       
       // Populate the joint_states
-      response.joint_states.name.resize(this->joint_names.size());
-      response.joint_states.position.resize(this->joint_names.size());
+      response.joint_states.name.resize(joint_names_.size());
+      response.joint_states.position.resize(joint_names_.size());
       std::vector<double> joint_values;
-      this->kinematic_state->copyJointGroupPositions(this->joint_model_group, joint_values);
-      for(std::size_t i = 0; i < this->joint_names.size(); ++i)
+      kinematic_interface_->getJointPositions(joint_values);
+      for(std::size_t i = 0; i < joint_names_.size(); ++i)
       {
-        response.joint_states.name[i] = this->joint_names[i];
+        response.joint_states.name[i] = joint_names_[i];
         response.joint_states.position[i] = joint_values[i];
       }
       
       response.found_group = true;
-      // Calculate the metrics
-      double manipulability_index, manipulability;
-      if (this->kinematics_metrics->getManipulabilityIndex(*this->kinematic_state, this->planning_group, manipulability_index))
-        response.manipulability_index = manipulability_index;
-      else
-        response.found_group = false;
-      if (this->kinematics_metrics->getManipulability(*this->kinematic_state, this->planning_group, manipulability))
-        response.manipulability = manipulability;
-      else
-        response.found_group = false;
-      
-      return true;
+      // TODO: Calculate the metrics
+      response.manipulability_index = 1.0;
+      response.manipulability = 1.0;
     }
     
-    bool get_fk_metrics(grips_msgs::GetStateMetrics::Request &request, grips_msgs::GetStateMetrics::Response &response)
+    bool getFkMetrics(grips_msgs::GetStateMetrics::Request &request, grips_msgs::GetStateMetrics::Response &response)
     {
-      // Validate that frame_id = this->model_frame
-      if (request.joint_states.header.frame_id != this->model_frame)
+      // Validate that frame_id = model_frame_
+      if (request.joint_states.header.frame_id != model_frame_)
       {
-        ROS_WARN("frame_id [%s] received. Expected [%s]", request.joint_states.header.frame_id.c_str(), this->model_frame.c_str());
+        ROS_WARN("frame_id [%s] received. Expected [%s]", request.joint_states.header.frame_id.c_str(), model_frame_.c_str());
         response.found_group = false;
         return true;
       }
       // Populate the joint_values
       bool changed = false;
-      std::vector<double> joint_values(this->joint_names.size());
-      for(std::size_t i=0; i < this->joint_names.size(); ++i)
+      std::vector<double> joint_values(joint_names_.size());
+      for(std::size_t i=0; i < joint_names_.size(); ++i)
       {
         for(std::size_t j=0; j < request.joint_states.position.size(); ++j)
         {
           // If at least 1 joint state has been send we accept this request
-          if (this->joint_names[i] == request.joint_states.name[j])
+          if (joint_names_[i] == request.joint_states.name[j])
           {
             changed = true;
             joint_values[i] = request.joint_states.position[j];
             break;
           }
         }
-        ROS_DEBUG("Joint [%s]: %f", this->joint_names[i].c_str(), joint_values[i]);
+        ROS_DEBUG("Joint [%s]: %f", joint_names_[i].c_str(), joint_values[i]);
       }
       if (!changed)
         ROS_WARN("Unknown [joint_states.name] values");
       // Do FK
-      this->kinematic_state->setJointGroupPositions(this->joint_model_group, joint_values);
+      kinematic_interface_->setJointPositions(joint_values);
       Eigen::Affine3d T_end;
-      T_end = this->kinematic_state->getGlobalLinkTransform(this->tip_link);
+      T_end = kinematic_interface_->getEndEffectorTransform();
       ROS_DEBUG_STREAM("\n" << T_end.matrix());
       tf::poseEigenToMsg(T_end, response.pose);
       response.found_group = true;
-      /* Calculate the metrics
+      
+      // Calculate the metrics
       double manipulability_index, manipulability;
-      if (this->kinematics_metrics->getManipulabilityIndex(*this->kinematic_state, this->planning_group, manipulability_index))
+      if (kinematic_interface_->getManipulabilityIndex(manipulability_index) && kinematic_interface_->getManipulability(manipulability))
+      {
         response.manipulability_index = manipulability_index;
+        response.manipulability = manipulability;
+      }
       else
         response.found_group = false;
-      if (this->kinematics_metrics->getManipulability(*this->kinematic_state, this->planning_group, manipulability))
-        response.manipulability = manipulability;
-      else
-        response.found_group = false;*/
+        
       return true;
     }
     
-    bool get_joint_limits(grips_msgs::GetJointLimits::Request &request, grips_msgs::GetJointLimits::Response &response)
+    bool getJointLimits(grips_msgs::GetJointLimits::Request &request, grips_msgs::GetJointLimits::Response &response)
     {
-      std::string joint;
-      for(int i = 0; i < request.name.size(); ++i)
-      {
-        joint = request.name[i];
-        if ( this->urdf_limits.find(joint) == this->urdf_limits.end() )
-          ROS_WARN("Joint [%s] not found in the urdf", request.name[i].c_str());
-        else {
-          response.name.push_back(joint);
-          response.min_position.push_back(this->urdf_limits[joint].min_position);
-          response.max_position.push_back(this->urdf_limits[joint].max_position);
-          response.max_velocity.push_back(this->urdf_limits[joint].max_velocity);
-        }
-      }
+      // TODO: Implement this method
       return true;      
     }
 };
 
 int main(int argc, char **argv)
 {
-  ros::init (argc, argv, "grips_kinematic_services");
-  KinematicServices k_srv;
+  ros::init (argc, argv, "kinematic_services");
+  KinematicServices server;
   ros::spin();
   ros::shutdown();
   return 0;

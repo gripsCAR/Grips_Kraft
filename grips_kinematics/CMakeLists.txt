@@ -2,9 +2,15 @@ cmake_minimum_required(VERSION 2.8.3)
 
 project(grips_kinematics)
 
+# Names
+set(KIN_INTERFACE grips_kinematic_interface)
+set(LIB_6D_NAME   grips_transform6d_ikfast_plugin)
+set(LIB_5D_1_NAME grips_translationdirection5d_1_plugin)
+set(LIB_5D_2_NAME grips_translationdirection5d_2_plugin)
+set(LIB_ITERATIVE grips_iterative_coupling_plugin)
+
 find_package(catkin REQUIRED COMPONENTS 
   grips_msgs
-  message_generation
   moveit_core
   moveit_ros_planning
   moveit_ros_planning_interface
@@ -15,19 +21,22 @@ find_package(catkin REQUIRED COMPONENTS
   #eigen_conversions
 )
 
-catkin_package(LIBRARIES
-CATKIN_DEPENDS
-  grips_description
-  grips_msgs
-  grips_moveit_config
-  message_runtime
-  moveit_core
-  pluginlib
-  moveit_ros_planning_interface
-  interactive_markers
-  roscpp
-  tf_conversions
-  joint_limits_interface
+catkin_package( 
+  LIBRARIES 
+    ${KIN_INTERFACE}
+  INCLUDE_DIRS
+    include
+  CATKIN_DEPENDS
+    grips_description
+    grips_msgs
+    grips_moveit_config
+    moveit_core
+    pluginlib
+    moveit_ros_planning_interface
+    interactive_markers
+    roscpp
+    tf_conversions
+    joint_limits_interface
 )
 
 catkin_python_setup()
@@ -35,25 +44,23 @@ catkin_python_setup()
 include_directories(include)
 
 find_package(Eigen REQUIRED)
+find_package(LAPACK REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
 include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
-find_package(LAPACK REQUIRED)
+# Libraries
+add_library(${KIN_INTERFACE} src/kinematic_interface.cpp)
+target_link_libraries(${KIN_INTERFACE} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 
+# Nodes
 add_executable(kinematic_services src/kinematic_services.cpp)
-target_link_libraries(kinematic_services ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(kinematic_services ${KIN_INTERFACE} ${catkin_LIBRARIES})
 add_dependencies(kinematic_services grips_msgs_gencpp)
 
-#~ Kinematics Plugins
-
-set(LIB_6D_NAME grips_transform6d_ikfast_plugin)
-set(LIB_5D_1_NAME grips_translationdirection5d_1_plugin)
-set(LIB_5D_2_NAME grips_translationdirection5d_2_plugin)
-set(LIB_ITERATIVE grips_iterative_coupling_plugin)
-
+# Kinematics Plugins
 add_library(${LIB_6D_NAME} src/grips_transform6d_ikfast_plugin.cpp)
 target_link_libraries(${LIB_6D_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 

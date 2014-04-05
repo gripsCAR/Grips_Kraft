@@ -1,20 +1,20 @@
-std_msgs/Header 				header
+std_msgs/Header         header
 
 # The name of the link for which we are computing IK
 string link_name
 
-# The pose of the 			link
-geometry_msgs/Pose 			pose
+# The pose of the       link
+geometry_msgs/Pose      pose
 
 ---
-# True if the ik was 		found
-bool 										found_ik
+# True if the ik was found
+bool                    found_ik
 
 # If false, something went wrong with the kinematics
-bool 										found_group
+bool                    found_group
 
 # The returned metrics
-sensor_msgs/JointState 	joint_states
-float64 								manipulability
-float64 								manipulability_index
-float64 								max_payload
+sensor_msgs/JointState  joint_states
+float64                 manipulability
+float64                 manipulability_index
+float64                 max_payload
