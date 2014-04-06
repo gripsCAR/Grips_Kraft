@@ -1,12 +1,12 @@
 #include <ros/ros.h>
 
 // Services
-#include "grips_msgs/GetPoseMetrics.h"
-#include "grips_msgs/GetStateMetrics.h"
-#include "grips_msgs/GetJointLimits.h"
+#include <grips_msgs/GetPoseMetrics.h>
+#include <grips_msgs/GetStateMetrics.h>
+#include <grips_msgs/GetJointLimits.h>
 
 // Grips kinematic Interface
-#include "grips_kinematics/kinematic_interface.hpp"
+#include <grips_kinematics/kinematic_interface.hpp>
 
 using namespace grips_kinematics;
 
@@ -24,7 +24,8 @@ class KinematicServices {
     std::string               tip_link_;
     std::string               base_link_;
     // Kinematics
-    KinematicInterfacePtr   kinematic_interface_;
+    KinematicInterfacePtr     kinematic_interface_;
+    std::map<std::string, joint_limits_interface::JointLimits> urdf_limits_;
     
   public:
     KinematicServices(): 
@@ -36,6 +37,7 @@ class KinematicServices {
       kinematic_interface_.reset(new KinematicInterface());
       joint_names_ = kinematic_interface_->getActiveJointModelNames();
       model_frame_ = kinematic_interface_->getModelFrame();
+      urdf_limits_ = kinematic_interface_->getJointLimits();
       // Advertise services
       ROS_INFO("Advertising services");
       ik_service_ = nh_private_.advertiseService("get_ik_metrics", &KinematicServices::getIkMetrics, this);
@@ -124,8 +126,20 @@ class KinematicServices {
     
     bool getJointLimits(grips_msgs::GetJointLimits::Request &request, grips_msgs::GetJointLimits::Response &response)
     {
-      // TODO: Implement this method
-      return true;      
+      std::string joint;
+      for(int i = 0; i < request.name.size(); ++i)
+      {
+        joint = request.name[i];
+        if ( urdf_limits_.find(joint) == urdf_limits_.end() )
+          ROS_WARN("Joint [%s] not found in the urdf", request.name[i].c_str());
+        else {
+          response.name.push_back(joint);
+          response.min_position.push_back(urdf_limits_[joint].min_position);
+          response.max_position.push_back(urdf_limits_[joint].max_position);
+          response.max_velocity.push_back(urdf_limits_[joint].max_velocity);
+        }
+      }
+      return true;
     }
 };
 

@@ -94,6 +94,11 @@ namespace grips_kinematics
     for(it_type it = rm_loader_.getURDF()->joints_.begin(); it != rm_loader_.getURDF()->joints_.end(); it++)
     {
       joint_limits_interface::getJointLimits(it->second, urdf_limits_[it->first]);
+      if (!urdf_limits_[it->first].has_position_limits)
+      {
+        urdf_limits_[it->first].min_position = -M_PI;
+        urdf_limits_[it->first].max_position = M_PI;
+      }
       ROS_DEBUG_STREAM("Joint " << it->first << ": " << urdf_limits_[it->first].min_position << " " << urdf_limits_[it->first].max_position);
       ROS_DEBUG_STREAM("Joint " << it->first << " max_velocity: " << urdf_limits_[it->first].max_velocity);
     }    

@@ -53,6 +53,9 @@ namespace grips_kinematics
       
       const std::string& getModelFrame() const { return model_frame_; };
       
+      const std::map<std::string, joint_limits_interface::JointLimits>& getJointLimits() const 
+      { return urdf_limits_; };
+      
       const Eigen::Affine3d& getEndEffectorTransform()
       { return kinematic_state_->getGlobalLinkTransform(tip_link_); };
       
