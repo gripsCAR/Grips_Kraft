@@ -39,7 +39,8 @@ class MotionControl
     ros::Timer                                state_timer_;
     ros::Timer                                pose_timer_;
     // Kinematics
-    KinematicInterfacePtr                     kinematic_interface_;
+    KinematicInterfacePtr                     fk_kinematics_;
+    KinematicInterfacePtr                     ik_kinematics_;
     Eigen::Affine3d                           end_effector_pose_;
     std::map<std::string, joint_limits_interface::JointLimits> urdf_limits_;
     // flann
@@ -75,11 +76,19 @@ class MotionControl
       
       // Get robot namespace
       robot_namespace_ = ros::this_node::getNamespace();
-      // Kinematic interface
-      kinematic_interface_.reset(new KinematicInterface());
-      joint_names_ = kinematic_interface_->getActiveJointModelNames();
-      model_frame_ = kinematic_interface_->getModelFrame();
-      urdf_limits_ = kinematic_interface_->getJointLimits();
+      if (robot_namespace_.rfind("/") != robot_namespace_.length()-1)
+        robot_namespace_.append("/");
+      if (robot_namespace_.length() > 1) 
+      {
+        if (robot_namespace_[0] == robot_namespace_[1])
+          robot_namespace_.erase(0, 1);
+      }
+      // Kinematic interfaces
+      fk_kinematics_.reset(new KinematicInterface());
+      ik_kinematics_.reset(new KinematicInterface());
+      joint_names_ = fk_kinematics_->getActiveJointModelNames();
+      model_frame_ = fk_kinematics_->getModelFrame();
+      urdf_limits_ = fk_kinematics_->getJointLimits();
       
       // Setup publishers and subscribers
       std::string topic_name;
@@ -169,12 +178,13 @@ class MotionControl
         }
       }
       // Do FK
-      kinematic_interface_->setJointPositions(joint_values);
+      fk_kinematics_->setJointPositions(joint_values);
       Eigen::Affine3d T_base, T_end;
       // Obtain the transform of the end_effector with respect to the model_frame_
-      T_base = kinematic_interface_->getGlobalLinkTransform("base_link");
-      T_end = kinematic_interface_->getEndEffectorTransform();
-      end_effector_pose_ = T_base.inverse() * T_end;
+      //~ T_base = fk_kinematics_->getGlobalLinkTransform(model_frame_);
+      //~ T_end = fk_kinematics_->getEndEffectorTransform();
+      //~ end_effector_pose_ = T_base.inverse() * T_end;
+      end_effector_pose_ = fk_kinematics_->getEndEffectorTransform();
       
       // Debug
       if (ros::Time::now() - last_state_print_  >= ros::Duration(1.0))
@@ -191,23 +201,34 @@ class MotionControl
       {
         ROS_WARN("ikCommandCB: frame_id [%s] received. Expected [%s]", _msg->header.frame_id.c_str(), model_frame_.c_str());
         return;
-      }
+      }      
       // Get the latest robot state
       std::vector<double> current_joint_values;
-      kinematic_interface_->getJointPositions(current_joint_values);
+      ik_kinematics_->getJointPositions(current_joint_values);
       std::ostringstream current_str;     
       current_str << "current_joint_values : [";
       for(std::size_t i=0; i < joint_names_.size(); ++i)
         current_str << current_joint_values[i] << " ";
       current_str << "]";
       // Here 1 is the number of random restart and 0.001s is the allowed time after each restart
-      bool found_ik = kinematic_interface_->setEndEffectorPose(_msg->pose, 1, 0.001);
+      bool found_ik = ik_kinematics_->setEndEffectorPose(_msg->pose, 1, 0.001);
       // Get the new joint states for the arm
       std::vector<double> new_joint_values;
       if (found_ik)
-        kinematic_interface_->getJointPositions(new_joint_values);
+        ik_kinematics_->getJointPositions(new_joint_values);
       else
       {
+        // Check that the IK command has changed enought
+        Eigen::Affine3d goal_pose, current_pose = ik_kinematics_->getEndEffectorTransform();
+        tf::poseMsgToEigen(_msg->pose, goal_pose);
+        double x_dist = goal_pose.translation().x() - current_pose.translation().x();
+        double y_dist = goal_pose.translation().y() - current_pose.translation().y();
+        double z_dist = goal_pose.translation().z() - current_pose.translation().z();
+        double xyz_dist = sqrt(pow(x_dist,2) + pow(y_dist,2) + pow(z_dist,2));
+        
+        if (xyz_dist < position_error_)
+          return;
+        
         ROS_DEBUG("Did not find IK solution");
         // Determine nn closest XYZ points in the reachability database
         int max_nn = 1000, nearest_neighbors;
@@ -218,7 +239,7 @@ class MotionControl
         flann::Matrix<int> indices(new int[query_pos.rows*max_nn], query_pos.rows, max_nn);
         flann::Matrix<float> dists(new float[query_pos.rows*max_nn], query_pos.rows, max_nn);
         // do a knn search, using 128 checks
-        //~ this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(128));
+        // this->index_pos->knnSearch(query_pos, indices, dists, nn, flann::SearchParams(128));
         nearest_neighbors = indices.cols;
         float radius = pow(position_error_, 2);
         nearest_neighbors = position_index_->radiusSearch(query_pos, indices, dists, radius, flann::SearchParams(128));
@@ -231,7 +252,7 @@ class MotionControl
                            d_j(nearest_neighbors), d_xyz(nearest_neighbors);
         Eigen::Quaterniond q_actual(end_effector_pose_.rotation());
         Eigen::Quaterniond q;        
-        for (std::size_t i=0; i < nearest_neighbors; i++)
+        for (std::size_t i=0; i < nearest_neighbors; ++i)
         {
           // http://math.stackexchange.com/questions/90081/quaternion-distance
           q.w() = metrics_db_["orientations"][i][0];
@@ -246,13 +267,13 @@ class MotionControl
             float j_error = fabs(current_joint_values[i] - metrics_db_["joint_states"][indices[0][i]][j]);
             d_j[i] = fmax(d_j[i], j_error);
           }
-          //~ score[i] = d_q[i] + d_xyz[i] + d_j[i];
-          score[i] = 2*d_q[i] + 3*d_j[i];
+          // score[i] = d_q[i] + d_xyz[i] + d_j[i];
+          score[i] = 0.5*d_q[i] + 0.5*d_j[i];
         }
-        std::size_t choice_idx = std::min_element(score.begin(), score.end()) - score.begin();        
-        /*if (score[choice_idx] > 0.3)
-          return;*/
-        ROS_INFO("nn [%d] choice [%d] score [%f] d_q [%f] d_xyz [%f] d_j [%f]", nearest_neighbors, 
+        std::size_t choice_idx = std::min_element(score.begin(), score.end()) - score.begin();
+        //~ if (score[choice_idx] > 0.1)
+          //~ return;
+        ROS_DEBUG("nn [%d] choice [%d] score [%f] d_q [%f] d_xyz [%f] d_j [%f]", nearest_neighbors, 
                     (int)choice_idx, score[choice_idx], d_q[choice_idx], d_xyz[choice_idx], d_j[choice_idx]);
         // Populate the new joint_values
         std::ostringstream new_str;
@@ -263,7 +284,7 @@ class MotionControl
           new_str << new_joint_values[i] << " ";            
         }
         new_str << "]";
-        kinematic_interface_->setJointPositions(new_joint_values);
+        ik_kinematics_->setJointPositions(new_joint_values);
         // Debugging
         if (ros::Time::now() - last_motion_print_  >= ros::Duration(1.0))
         {

@@ -42,8 +42,8 @@ namespace grips_kinematics
     public:
       KinematicInterface();
       ~KinematicInterface();
-      bool setEndEffectorPose(const Eigen::Affine3d &pose, unsigned int attempts = 1, double timeout = 0.001);
-      bool setEndEffectorPose(const geometry_msgs::Pose &pose, unsigned int attempts = 1, double timeout = 0.001);
+      bool setEndEffectorPose(const Eigen::Affine3d &pose, unsigned int attempts = 0, double timeout = 0.0);
+      bool setEndEffectorPose(const geometry_msgs::Pose &pose, unsigned int attempts = 0, double timeout = 0.0);
       void getJointPositions(std::vector<double> &joint_positions);
       void setJointPositions(std::vector<double>& joint_positions);
       bool getManipulabilityIndex(double &manipulability_index) const;
