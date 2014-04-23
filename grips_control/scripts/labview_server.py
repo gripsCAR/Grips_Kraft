@@ -28,6 +28,7 @@ class LabviewServer:
   joint_names = ['SA', 'SE', 'WP', 'WR', 'WY', 'l_finger', 'l_inner', 'l_outer', 'linkage_bl', 'linkage_tl', 'linkage_tr', 'r_finger', 'r_inner', 'r_outer']
   cmd_names = ['SA','SE','EL','WP','WY','WR','GRIP']
   def __init__(self): 
+    self.ns = rospy.get_namespace()
     # Read all the parameters from the parameter server
     self.publish_frequency = self.read_parameter('~publish_frequency', 1000.0)
     # UDP
@@ -35,7 +36,7 @@ class LabviewServer:
     self.write_ip = self.read_parameter('~write_ip', '192.168.0.4')
     self.write_port = int(self.read_parameter('~write_port', 5050))
     # Topics
-    self.js_topic = self.read_parameter('~joint_states_topic', '/joint_states')
+    self.js_topic = self.read_parameter('~joint_states_topic', '%sjoint_states' % self.ns)
     # Set up read socket
     self.read_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     self.read_socket.bind(('', self.read_port))
@@ -46,13 +47,13 @@ class LabviewServer:
     # Set-up publishers/subscribers
     self.joint_pub = rospy.Publisher(self.js_topic, JointState)
     tmp = list(self.cmd_names)
-    rospy.Subscriber('/SA/command', Float64, self.cb_SA)
-    rospy.Subscriber('/SE/command', Float64, self.cb_SE)
-    rospy.Subscriber('/linkage_tr/command', Float64, self.cb_EL)
-    rospy.Subscriber('/WP/command', Float64, self.cb_WP)
-    rospy.Subscriber('/WY/command', Float64, self.cb_WY)
-    rospy.Subscriber('/WR/command', Float64, self.cb_WR)
-    rospy.Subscriber('/GRIP/command', Float64, self.cb_GRIP)
+    rospy.Subscriber('%sSA/command' % self.ns, Float64, self.cb_SA)
+    rospy.Subscriber('%sSE/command' % self.ns, Float64, self.cb_SE)
+    rospy.Subscriber('%slinkage_tr/command' % self.ns, Float64, self.cb_EL)
+    rospy.Subscriber('%sWP/command' % self.ns, Float64, self.cb_WP)
+    rospy.Subscriber('%sWY/command' % self.ns, Float64, self.cb_WY)
+    rospy.Subscriber('%sWR/command' % self.ns, Float64, self.cb_WR)
+    rospy.Subscriber('%sGRIP/command' % self.ns, Float64, self.cb_GRIP)
     # Register rospy shutdown hook
     rospy.on_shutdown(self.shutdown_hook)
     # Initial values
