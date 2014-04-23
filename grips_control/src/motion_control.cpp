@@ -114,7 +114,7 @@ class MotionControl
       /* Load the previously generated metrics. Available options:
        * ik_metrics         684  MB    ~30    sec. */
       std::string filename;
-      filename = get_filename(database);
+      filename = getFilename(database);
       ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
       ros::Time flann_start_time = ros::Time::now();
       try {
@@ -129,8 +129,13 @@ class MotionControl
         return;
       }
       // construct an randomized kd-tree index using 4 kd-trees
-      position_index_ = new flann::Index<flann::L2<float> > (metrics_db_["positions"], flann::KDTreeIndexParams(4));
-      position_index_->buildIndex();
+      std::ostringstream index_file;
+      index_file << getFolderName() << "ik_metrics_index.dat";
+      flann::SavedIndexParams saved_params = flann::SavedIndexParams(index_file.str());
+      position_index_ = new flann::Index<flann::L2<float> > (metrics_db_["positions"], saved_params);
+      
+      //position_index_ = new flann::Index<flann::L2<float> > (metrics_db_["positions"], flann::KDTreeIndexParams(4));
+      //position_index_->buildIndex();
       double elapsed_time = (ros::Time::now() - flann_start_time).toSec();
       ROS_INFO("[metrics database] successfully loaded in %.2f seconds", elapsed_time);
       last_state_print_ = ros::Time::now();
@@ -245,7 +250,7 @@ class MotionControl
         nearest_neighbors = position_index_->radiusSearch(query_pos, indices, dists, radius, flann::SearchParams(128));
         // Check that we found something
         if (nearest_neighbors <= 0) {
-          ROS_INFO_STREAM("Didn't find any shit. Query: " << _msg->pose.position);
+          ROS_INFO_THROTTLE(60, "Didn't find any shit. Query: [%.3f, %.3f, %.3f]", _msg->pose.position.x, _msg->pose.position.y, _msg->pose.position.z);
           return; }
         nearest_neighbors = fmin(nearest_neighbors, max_nn);
         std::vector<float> score(nearest_neighbors), d_q(nearest_neighbors), 
@@ -321,14 +326,21 @@ class MotionControl
       
     }
     
-    std::string get_filename(const std::string& database)
+    std::string getFolderName()
     {
-      std::string folder_key, file_key;
+      std::string folder_key;
       folder_key = "f4025675e127122e084d959288e4555d/";
+      std::ostringstream folder_name;
+      folder_name << getenv("HOME") << "/.openrave/robot." << folder_key;
+      return folder_name.str();
+    }
+
+    std::string getFilename(const std::string& database)
+    {
+      std::string file_key;
       file_key = ".27d697e7d8a999dfc3b0a3305edb1ee6.pp";
       std::ostringstream filename;
-      filename << getenv("HOME") << "/.openrave/robot." << folder_key 
-                << database << file_key;
+      filename << getFolderName() << database << file_key;
       return filename.str();
     }
 };

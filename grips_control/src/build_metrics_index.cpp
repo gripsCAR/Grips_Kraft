@@ -7,14 +7,21 @@
 
 using namespace flann;
 
-std::string get_filename(const std::string& database)
+std::string getFolderName()
 {
-  std::string folder_key, file_key;
-  folder_key = "4d0a3b5d2c41e86313f1a9bfdbc7746e/";
+  std::string folder_key;
+  folder_key = "f4025675e127122e084d959288e4555d/";
+  std::ostringstream folder_name;
+  folder_name << getenv("HOME") << "/.openrave/robot." << folder_key;
+  return folder_name.str();
+}
+
+std::string getFilename(const std::string& database)
+{
+  std::string file_key;
   file_key = ".27d697e7d8a999dfc3b0a3305edb1ee6.pp";
   std::ostringstream filename;
-  filename << getenv("HOME") << "/.openrave/robot." << folder_key 
-            << database << file_key;
+  filename << getFolderName() << database << file_key;
   return filename.str();
 }
 
@@ -30,7 +37,7 @@ int main(int argc, char** argv)
     ROS_WARN_STREAM("Parameter [~metrics_database] not found, using default: " << database_name);
 
   std::string filename;
-  filename = get_filename(database_name);
+  filename = getFilename(database_name);
   ROS_INFO_STREAM("Loading [metrics database] from:\n" << filename);
   ros::Time flann_start_time = ros::Time::now();
   Matrix<float> positions_mat;
@@ -47,7 +54,8 @@ int main(int argc, char** argv)
   index.buildIndex();
   double elapsed_time = (ros::Time::now() - flann_start_time).toSec();
   ROS_INFO("[metrics database] successfully loaded in %.2f seconds", elapsed_time);
-
+  
+  // example of a query
   int nn = 100; 
   flann::Matrix<float> query(new float[3], 1, 3);
   query[0][0] = 0.075;
@@ -57,7 +65,13 @@ int main(int argc, char** argv)
   Matrix<float> dists(new float[query.rows*nn], query.rows, nn);
   // do a knn search, using 128 checks
   index.knnSearch(query, indices, dists, nn, flann::SearchParams(128));
-  ROS_INFO("Indices rows [%d] cols [%d]", indices.rows, indices.cols);
+  ROS_INFO("Example query: [%.3f, %.1f, %.1f] found [%d] nearest_neighbors", query[0][0], query[0][1], query[0][2], (int)indices.cols);
+  
+  // save the index
+  std::ostringstream index_file;
+  index_file << getFolderName() << "ik_metrics_index.dat";
+  index.save(index_file.str());
+  ROS_INFO_STREAM("Saved [metrics index] to:\n" << index_file.str());
 
   delete[] positions_mat.ptr();
   delete[] query.ptr();

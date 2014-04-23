@@ -2,7 +2,7 @@
   <!-- launch file arguments -->
   <arg name="robot_name" default="grips" />
   <arg name="metrics_database" default="ik_metrics"/>
-  <arg name="position_error" default="position_error"/>
+  <arg name="position_error" default="0.05"/>
   
   <!-- the semantic description that corresponds to the URDF -->
   <param name="robot_description_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
