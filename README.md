@@ -24,7 +24,11 @@ ROS packages developed by the [Group of Robots and Intelligent Machines](http://
 ### Basic Requirements
 
   1. Install [ROS Hydro](http://wiki.ros.org/hydro/Installation/Ubuntu) (**Desktop Install** Recommended)
-  2. Install [Gazebo 2.0](http://gazebosim.org/wiki/2.0/install)
+  2. Install [Gazebo 1.9](http://gazebosim.org/wiki/1.9/install)
+  
+```
+sudo apt-get install ros-hydro-desktop gazebo
+``` 
 
 ### Repository Installation
 
