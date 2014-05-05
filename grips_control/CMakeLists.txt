@@ -7,6 +7,10 @@ find_package(catkin REQUIRED COMPONENTS
   grips_moveit_config
   control_msgs
   controller_manager
+  joint_limits_interface
+  transmission_interface
+  joint_state_controller
+  position_controllers
   eigen_conversions
   message_generation
 )
