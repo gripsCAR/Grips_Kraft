@@ -16,10 +16,10 @@
     </include>
     
     <!-- labview server -->
-    <node name="labview_server" pkg="grips_control" type="labview_server.py" output="screen"> 
-    <param name="write_ip" type="string" value="192.168.0.4"/>
-      <param name="read_port" type="int" value="5555"/>
-      <param name="write_port" type="int" value="5050"/>    
+    <node name="labview_hardware_interface" pkg="grips_control" type="labview_hardware_interface.py" output="screen"> 
+      <param name="write_ip" type="string" value="192.168.0.4"/>
+      <param name="read_port" type="int" value="5051"/>
+      <param name="write_port" type="int" value="5052"/>    
       <param name="planning_group" type="string" value="arm" />
       <param name="publish_frequency" type="double" value="1000.0" />
     </node>

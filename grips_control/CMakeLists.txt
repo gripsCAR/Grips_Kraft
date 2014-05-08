@@ -2,17 +2,17 @@ cmake_minimum_required(VERSION 2.8.3)
 project(grips_control)
 
 find_package(catkin REQUIRED COMPONENTS 
+  control_msgs
+  controller_manager
+  eigen_conversions
   grips_kinematics
   grips_msgs
   grips_moveit_config
-  control_msgs
-  controller_manager
   joint_limits_interface
-  transmission_interface
   joint_state_controller
-  position_controllers
-  eigen_conversions
   message_generation
+  position_controllers
+  transmission_interface
 )
 
 catkin_python_setup()
@@ -25,6 +25,7 @@ CATKIN_DEPENDS
   grips_moveit_config
   eigen_conversions
   message_runtime
+  labview_bridge
 )
 
 find_package(Eigen REQUIRED)

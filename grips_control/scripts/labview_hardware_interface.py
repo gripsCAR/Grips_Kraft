@@ -7,43 +7,15 @@ from StringIO import StringIO
 from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import JointState
+from labview_bridge import LabviewServer
 
-class TextColors:
-  HEADER = '\033[95m'
-  OKBLUE = '\033[94m'
-  OKGREEN = '\033[92m'
-  WARNING = '\033[93m'
-  FAIL = '\033[91m'
-  ENDC = '\033[0m'
-
-  def disable(self):
-    self.HEADER = ''
-    self.OKBLUE = ''
-    self.OKGREEN = ''
-    self.WARNING = ''
-    self.FAIL = ''
-    self.ENDC = ''
-
-class LabviewServer:
+class HardwareInterface(LabviewServer):
   joint_names = ['SA', 'SE', 'WP', 'WR', 'WY', 'l_finger', 'l_inner', 'l_outer', 'linkage_bl', 'linkage_tl', 'linkage_tr', 'r_finger', 'r_inner', 'r_outer']
   cmd_names = ['SA','SE','EL','WP','WY','WR','GRIP']
   def __init__(self): 
-    self.ns = rospy.get_namespace()
-    # Read all the parameters from the parameter server
-    self.publish_frequency = self.read_parameter('~publish_frequency', 1000.0)
-    # UDP
-    self.read_port = int(self.read_parameter('~read_port', 5555))
-    self.write_ip = self.read_parameter('~write_ip', '192.168.0.4')
-    self.write_port = int(self.read_parameter('~write_port', 5050))
+    LabviewServer.__init__(self)
     # Topics
     self.js_topic = self.read_parameter('~joint_states_topic', '%sjoint_states' % self.ns)
-    # Set up read socket
-    self.read_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    self.read_socket.bind(('', self.read_port))
-    rospy.loginfo('UDP Socket listening on port [%d]' % (self.read_port))
-    # Set up write socket
-    self.write_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    rospy.loginfo('UDP Socket sending to [udp://%s:%d]' % (self.write_ip, self.write_port))
     # Set-up publishers/subscribers
     self.joint_pub = rospy.Publisher(self.js_topic, JointState)
     tmp = list(self.cmd_names)
@@ -54,8 +26,6 @@ class LabviewServer:
     rospy.Subscriber('%sWY/command' % self.ns, Float64, self.cb_WY)
     rospy.Subscriber('%sWR/command' % self.ns, Float64, self.cb_WR)
     rospy.Subscriber('%sGRIP/command' % self.ns, Float64, self.cb_GRIP)
-    # Register rospy shutdown hook
-    rospy.on_shutdown(self.shutdown_hook)
     # Initial values
     self.cmd_msg = JointState()
     self.cmd_msg.name = self.cmd_names
@@ -67,11 +37,17 @@ class LabviewServer:
     self.joint_msg.effort = [0] * len(self.joint_names)
     # Start the timer that will send the commands to labview 
     self.cmd_timer = rospy.Timer(rospy.Duration(1.0/self.publish_frequency), self.cb_write_commands)
+    
+  def shutdown_hook(self):
+    # Parent class clean-up
+    LabviewServer.shutdown_hook(self)
+    # Stop the publisher timer
+    self.cmd_timer.shutdown()
   
   def execute(self):
     while not rospy.is_shutdown():
       recv_msg = JointState()
-      data = server.recv_timeout()
+      data = self.recv_timeout()
       if data:
         # Serialize received UDP message
         recv_msg.deserialize(data)
@@ -125,43 +101,10 @@ class LabviewServer:
     self.cmd_msg.position[5] = msg.data
   
   def cb_GRIP(self, msg):
-    self.cmd_msg.position[6] = msg.data
+    self.cmd_msg.position[6] = msg.data    
 
-  def shutdown_hook(self):
-    # Stop the publisher timer
-    self.cmd_timer.shutdown()
-  
-  def read_parameter(self, name, default):
-    if not rospy.has_param(name):
-      rospy.logwarn('Parameter [%s] not found, using default: %s' % (name, default))
-    return rospy.get_param(name, default)
-    
-  def loginfo(self, msg):
-    rospy.logwarn(self.colors.OKBLUE + str(msg) + self.colors.ENDC)
-    
-  def recv_timeout(self, timeout=0.001):
-    self.read_socket.setblocking(0)
-    total_data=[]
-    data=''
-    begin=time.time()
-    while 1:
-      #if you got some data, then timeout break 
-      if total_data and time.time()-begin>timeout:
-        break
-      #if you got no data at all, wait a little longer
-      elif time.time()-begin>timeout*2:
-        break
-      try:
-        data=self.read_socket.recv(8192)
-        if data:
-          total_data.append(data)
-          begin=time.time()
-      except:
-        pass
-    return ''.join(total_data)
-    
-    
+
 if __name__ == '__main__':
-  rospy.init_node('labview_server')
-  server = LabviewServer()
-  server.execute()
+  rospy.init_node('labview_hardware_interface')
+  interface = HardwareInterface()
+  interface.execute()

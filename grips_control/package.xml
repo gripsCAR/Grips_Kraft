@@ -36,6 +36,7 @@
   <run_depend>eigen_conversions</run_depend>
   <run_depend>grips_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
+  <run_depend>labview_bridge</run_depend>
 
   <export>
   </export>
