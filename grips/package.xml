@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>grips</name>
+  <description> the grips metapackage </description>
+  
+  <version>0.2.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <run_depend>grips_control</run_depend>
+  <run_depend>grips_description</run_depend>
+  <run_depend>grips_gazebo</run_depend>
+  <run_depend>grips_kinematics</run_depend>
+  <run_depend>grips_manipulation</run_depend>
+  <run_depend>grips_moveit_config</run_depend>
+  <run_depend>grips_msgs</run_depend>
+  <run_depend>grips_worlds</run_depend>
+  
+  <export>
+     <metapackage/> 
+  </export>
+  
+</package>
