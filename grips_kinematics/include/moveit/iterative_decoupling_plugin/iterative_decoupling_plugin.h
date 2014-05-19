@@ -34,8 +34,8 @@
 
 /* Author: Francisco Suarez-Ruiz */
 
-#ifndef MOVEIT_ROS_PLANNING_ITERATIVE_COUPLING_PLUGIN_
-#define MOVEIT_ROS_PLANNING_ITERATIVE_COUPLING_PLUGIN_
+#ifndef MOVEIT_ROS_PLANNING_ITERATIVE_DECOUPLING_PLUGIN_
+#define MOVEIT_ROS_PLANNING_ITERATIVE_DECOUPLING_PLUGIN_
 
 // ROS
 #include <ros/ros.h>
@@ -59,19 +59,19 @@
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 
-namespace iterative_coupling_plugin
+namespace iterative_decoupling_plugin
 {
 /**
  * @brief Specific implementation of kinematics using KDL. This version can be used with any robot.
  */
-  class IterativeCouplingPlugin : public kinematics::KinematicsBase
+  class IterativeDecouplingPlugin : public kinematics::KinematicsBase
   {
     public:
 
     /**
      *  @brief Default constructor
      */
-    IterativeCouplingPlugin();
+    IterativeDecouplingPlugin();
 
     virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
                                const std::vector<double> &ik_seed_state,

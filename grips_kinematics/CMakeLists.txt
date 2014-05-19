@@ -7,7 +7,7 @@ set(KIN_INTERFACE grips_kinematic_interface)
 set(LIB_6D_NAME   grips_transform6d_ikfast_plugin)
 set(LIB_5D_1_NAME grips_translationdirection5d_1_plugin)
 set(LIB_5D_2_NAME grips_translationdirection5d_2_plugin)
-set(LIB_ITERATIVE grips_iterative_coupling_plugin)
+set(LIB_ITERATIVE grips_iterative_decoupling_plugin)
 
 find_package(catkin REQUIRED COMPONENTS 
   grips_msgs
@@ -70,7 +70,7 @@ target_link_libraries(${LIB_5D_1_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${
 add_library(${LIB_5D_2_NAME} src/grips_translationdirection5d_2_plugin.cpp)
 target_link_libraries(${LIB_5D_2_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 
-add_library(${LIB_ITERATIVE} src/iterative_coupling_plugin.cpp)
+add_library(${LIB_ITERATIVE} src/iterative_decoupling_plugin.cpp)
 target_link_libraries(${LIB_ITERATIVE} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${LAPACK_LIBRARIES})
 
 install(TARGETS ${LIB_6D_NAME} LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})

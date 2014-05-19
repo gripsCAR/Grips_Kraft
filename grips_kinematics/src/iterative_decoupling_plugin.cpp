@@ -34,7 +34,7 @@
 
 /* Author: Francisco Suarez-Ruiz */
 
-#include <moveit/iterative_coupling_plugin/iterative_coupling_plugin.h>
+#include <moveit/iterative_decoupling_plugin/iterative_decoupling_plugin.h>
 #include <class_loader/class_loader.h>
 
 //#include <tf/transform_datatypes.h>
@@ -53,14 +53,14 @@
 const double LIMIT_TOLERANCE = .0000001;
 
 //register the plugin as a KinematicsBase implementation
-CLASS_LOADER_REGISTER_CLASS(iterative_coupling_plugin::IterativeCouplingPlugin, kinematics::KinematicsBase)
+CLASS_LOADER_REGISTER_CLASS(iterative_decoupling_plugin::IterativeDecouplingPlugin, kinematics::KinematicsBase)
 
-namespace iterative_coupling_plugin
+namespace iterative_decoupling_plugin
 {
 
-  IterativeCouplingPlugin::IterativeCouplingPlugin():active_(false) {}
+  IterativeDecouplingPlugin::IterativeDecouplingPlugin():active_(false) {}
 
-void IterativeCouplingPlugin::getRandomConfiguration(KDL::JntArray &jnt_array, bool lock_redundancy) const
+void IterativeDecouplingPlugin::getRandomConfiguration(KDL::JntArray &jnt_array, bool lock_redundancy) const
 {
   std::vector<double> jnt_array_vector(dimension_, 0.0);
   state_->setToRandomPositions(joint_model_group_);
@@ -71,7 +71,7 @@ void IterativeCouplingPlugin::getRandomConfiguration(KDL::JntArray &jnt_array, b
   }
 }
 
-void IterativeCouplingPlugin::getRandomConfiguration(const KDL::JntArray &seed_state,
+void IterativeDecouplingPlugin::getRandomConfiguration(const KDL::JntArray &seed_state,
                                                  const std::vector<double> &consistency_limits,
                                                  KDL::JntArray &jnt_array,
                                                  bool lock_redundancy) const
@@ -86,7 +86,7 @@ void IterativeCouplingPlugin::getRandomConfiguration(const KDL::JntArray &seed_s
     jnt_array(i) = values[i];
 }
 
-bool IterativeCouplingPlugin::checkConsistency(const KDL::JntArray& seed_state,
+bool IterativeDecouplingPlugin::checkConsistency(const KDL::JntArray& seed_state,
                                            const std::vector<double> &consistency_limits,
                                            const KDL::JntArray& solution) const
 {
@@ -96,7 +96,7 @@ bool IterativeCouplingPlugin::checkConsistency(const KDL::JntArray& seed_state,
   return true;
 }
 
-bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
+bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
                                      const std::string& group_name,
                                      const std::string& base_frame,
                                      const std::string& tip_frame,
@@ -124,7 +124,7 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
 
   if (!urdf_model || !srdf)
   {
-    ROS_ERROR_NAMED("icp","URDF and SRDF must be loaded for KDL kinematics solver to work.");
+    ROS_ERROR_NAMED("idp","URDF and SRDF must be loaded for KDL kinematics solver to work.");
     return false;
   }
 
@@ -136,12 +136,12 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
   
   if(!joint_model_group->isChain())
   {
-    ROS_ERROR_NAMED("icp","Group '%s' is not a chain", group_name.c_str());
+    ROS_ERROR_NAMED("idp","Group '%s' is not a chain", group_name.c_str());
     return false;
   }
   if(!joint_model_group->isSingleDOFJoints())
   {
-    ROS_ERROR_NAMED("icp","Group '%s' includes joints that have more than 1 DOF", group_name.c_str());
+    ROS_ERROR_NAMED("idp","Group '%s' includes joints that have more than 1 DOF", group_name.c_str());
     return false;
   }
 
@@ -149,7 +149,7 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
 
   if (!kdl_parser::treeFromUrdfModel(*urdf_model, kdl_tree))
   {
-    ROS_ERROR_NAMED("icp","Could not initialize tree object");
+    ROS_ERROR_NAMED("idp","Could not initialize tree object");
     return false;
   }
 
@@ -167,7 +167,7 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
 
   if(!joint_model_group->hasLinkModel(tip_frame_))
   {
-    ROS_ERROR_NAMED("icp","Could not find tip name in joint group '%s'", group_name.c_str());
+    ROS_ERROR_NAMED("idp","Could not find tip name in joint group '%s'", group_name.c_str());
     return false;
   }
   ik_chain_info_.link_names.push_back(tip_frame_);
@@ -182,7 +182,7 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
     joint_min_(i) = ik_chain_info_.limits[i].min_position;
     joint_max_(i) = ik_chain_info_.limits[i].max_position;
     this->inc_max_(i) = 0.05;
-    ROS_INFO_NAMED("icp","%s:\t%f\t%f", 
+    ROS_INFO_NAMED("idp","%s:\t%f\t%f", 
         ik_chain_info_.joint_names[i+1].c_str(), joint_min_(i), joint_max_(i));
   }
 
@@ -194,14 +194,14 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
   private_handle.param("max_solver_iterations", max_solver_iterations, 500);
   private_handle.param("epsilon", epsilon, 1e-5);
   private_handle.param(group_name+"/position_only_ik", position_ik, false);
-  ROS_DEBUG_NAMED("icp","Looking in private handle: %s for param name: %s",
+  ROS_DEBUG_NAMED("idp","Looking in private handle: %s for param name: %s",
             private_handle.getNamespace().c_str(),
             (group_name+"/position_only_ik").c_str());
 
   if(position_ik)
-    ROS_INFO_NAMED("icp","Using position only ik");
+    ROS_INFO_NAMED("idp","Using position only ik");
     
-  ROS_INFO_NAMED("icp","max_solver_iterations: %d", max_solver_iterations);
+  ROS_INFO_NAMED("idp","max_solver_iterations: %d", max_solver_iterations);
 
   // Setup the joint state group
   state_.reset(new robot_state::RobotState(robot_model_));
@@ -213,11 +213,11 @@ bool IterativeCouplingPlugin::initialize(const std::string &robot_description,
   epsilon_ = epsilon;
 
   active_ = true;
-  ROS_DEBUG_NAMED("icp","KDL solver initialized");
+  ROS_DEBUG_NAMED("idp","KDL solver initialized");
   return true;
 }
 
-int IterativeCouplingPlugin::getJointIndex(const std::string &name) const
+int IterativeDecouplingPlugin::getJointIndex(const std::string &name) const
 {
   for (unsigned int i=0; i < ik_chain_info_.joint_names.size(); i++) {
     if (ik_chain_info_.joint_names[i] == name)
@@ -226,12 +226,12 @@ int IterativeCouplingPlugin::getJointIndex(const std::string &name) const
   return -1;
 }
 
-bool IterativeCouplingPlugin::timedOut(const ros::WallTime &start_time, double duration) const
+bool IterativeDecouplingPlugin::timedOut(const ros::WallTime &start_time, double duration) const
 {
   return ((ros::WallTime::now()-start_time).toSec() >= duration);
 }
 
-bool IterativeCouplingPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
                                         const std::vector<double> &ik_seed_state,
                                         std::vector<double> &solution,
                                         moveit_msgs::MoveItErrorCodes &error_code,
@@ -250,7 +250,7 @@ bool IterativeCouplingPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
                           options);
 }
 
-bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
                                            std::vector<double> &solution,
@@ -270,7 +270,7 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
                           options);
 }
 
-bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
                                            const std::vector<double> &consistency_limits,
@@ -289,7 +289,7 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
                           options);
 }
 
-bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
                                            std::vector<double> &solution,
@@ -308,7 +308,7 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
                           options);
 }
 
-bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
                                            const std::vector<double> &consistency_limits,
@@ -327,7 +327,7 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
                           options);
 }
 
-bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
+bool IterativeDecouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            double timeout,
                                            std::vector<double> &solution,
@@ -339,7 +339,7 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
   ros::WallTime n1 = ros::WallTime::now();
   if(!active_)
   {
-    ROS_ERROR_NAMED("icp","kinematics not active");
+    ROS_ERROR_NAMED("idp","kinematics not active");
     error_code.val = error_code.NO_IK_SOLUTION;
     return false;
   }
@@ -383,39 +383,39 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
   unsigned int counter(0);
   while(1)
   {
-    // ROS_INFO_NAMED("icp","Iteration: %d, time: %f, Timeout: %f",counter,(ros::WallTime::now()-n1).toSec(),timeout);
+    // ROS_INFO_NAMED("idp","Iteration: %d, time: %f, Timeout: %f",counter,(ros::WallTime::now()-n1).toSec(),timeout);
     counter++;
     if(timedOut(n1,timeout))
     {
-      ROS_DEBUG_NAMED("icp","IK timed out");
+      ROS_DEBUG_NAMED("idp","IK timed out");
       error_code.val = error_code.TIMED_OUT;
       return false;
     }
     int ik_valid = this->iterativeIK(jnt_pos_in, pose_desired, jnt_pos_out);
-    ROS_DEBUG_NAMED("icp","IK valid: %d", ik_valid);
+    ROS_DEBUG_NAMED("idp","IK valid: %d", ik_valid);
     if(!consistency_limits.empty())
     {
       this->getRandomConfiguration(jnt_seed_state, consistency_limits, jnt_pos_in, options.lock_redundant_joints);
       if( (ik_valid < 0 && !options.return_approximate_solution) || !checkConsistency(jnt_seed_state, consistency_limits, jnt_pos_out))
       {
-        ROS_DEBUG_NAMED("icp","Could not find IK solution: does not match consistency limits");
+        ROS_DEBUG_NAMED("idp","Could not find IK solution: does not match consistency limits");
         continue;
       }
     }
     else
     {
       this->getRandomConfiguration(jnt_pos_in, options.lock_redundant_joints);
-      ROS_DEBUG_NAMED("icp","New random configuration");
+      ROS_DEBUG_NAMED("idp","New random configuration");
       for(unsigned int j=0; j < dimension_; j++)
-        ROS_DEBUG_NAMED("icp","%d %f", j, jnt_pos_in(j));
+        ROS_DEBUG_NAMED("idp","%d %f", j, jnt_pos_in(j));
 
       if(ik_valid < 0 && !options.return_approximate_solution)
       {
-        ROS_DEBUG_NAMED("icp","Could not find IK solution");
+        ROS_DEBUG_NAMED("idp","Could not find IK solution");
         continue;
       }
     }
-    ROS_DEBUG_NAMED("icp","Found IK solution");
+    ROS_DEBUG_NAMED("idp","Found IK solution");
     for(unsigned int j=0; j < dimension_; j++)
       solution[j] = jnt_pos_out(j);
     if(!solution_callback.empty())
@@ -425,29 +425,29 @@ bool IterativeCouplingPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pos
 
     if(error_code.val == error_code.SUCCESS)
     {
-      ROS_DEBUG_STREAM_NAMED("icp", "Solved after " << counter << " iterations");
+      ROS_DEBUG_STREAM_NAMED("idp", "Solved after " << counter << " iterations");
       return true;
     }
   }
-  ROS_DEBUG_NAMED("icp","An IK that satisifes the constraints and is collision free could not be found");
+  ROS_DEBUG_NAMED("idp","An IK that satisifes the constraints and is collision free could not be found");
   error_code.val = error_code.NO_IK_SOLUTION;
   return false;
 }
 
-bool IterativeCouplingPlugin::getPositionFK(const std::vector<std::string> &link_names,
+bool IterativeDecouplingPlugin::getPositionFK(const std::vector<std::string> &link_names,
                                         const std::vector<double> &joint_angles,
                                         std::vector<geometry_msgs::Pose> &poses) const
 {
   ros::WallTime n1 = ros::WallTime::now();
   if(!active_)
   {
-    ROS_ERROR_NAMED("icp","kinematics not active");
+    ROS_ERROR_NAMED("idp","kinematics not active");
     return false;
   }
   poses.resize(link_names.size());
   if(joint_angles.size() != dimension_)
   {
-    ROS_ERROR_NAMED("icp","Joint angles vector must have size: %d",dimension_);
+    ROS_ERROR_NAMED("idp","Joint angles vector must have size: %d",dimension_);
     return false;
   }
 
@@ -462,17 +462,17 @@ bool IterativeCouplingPlugin::getPositionFK(const std::vector<std::string> &link
   return valid;
 }
 
-const std::vector<std::string>& IterativeCouplingPlugin::getJointNames() const
+const std::vector<std::string>& IterativeDecouplingPlugin::getJointNames() const
 {
   return ik_chain_info_.joint_names;
 }
 
-const std::vector<std::string>& IterativeCouplingPlugin::getLinkNames() const
+const std::vector<std::string>& IterativeDecouplingPlugin::getLinkNames() const
 {
   return ik_chain_info_.link_names;
 }
 
-int IterativeCouplingPlugin::ComputeFK_0_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_6) const
+int IterativeDecouplingPlugin::ComputeFK_0_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_6) const
 {
   double q1 = jnt_pos_in(0);
   double q2 = jnt_pos_in(1);
@@ -497,7 +497,7 @@ int IterativeCouplingPlugin::ComputeFK_0_6(const KDL::JntArray &jnt_pos_in, Eige
   return 1;
 }
 
-int IterativeCouplingPlugin::ComputeFK_0_3(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_3) const
+int IterativeDecouplingPlugin::ComputeFK_0_3(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_3) const
 {
   double q1 = jnt_pos_in(0);
   double q2 = jnt_pos_in(1);
@@ -518,7 +518,7 @@ int IterativeCouplingPlugin::ComputeFK_0_3(const KDL::JntArray &jnt_pos_in, Eige
   return 1;
 }
 
-int IterativeCouplingPlugin::ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T3_6) const
+int IterativeDecouplingPlugin::ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T3_6) const
 {
   double q1 = jnt_pos_in(3);
   double q2 = jnt_pos_in(4);
@@ -540,21 +540,21 @@ int IterativeCouplingPlugin::ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Eige
   return 1;
 }
 
-bool IterativeCouplingPlugin::validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const
+bool IterativeDecouplingPlugin::validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const
 {
   Eigen::Matrix3d R;
-  ROS_DEBUG_STREAM_NAMED("icp","Tsol:\n" << Tsol.matrix());
-  ROS_DEBUG_STREAM_NAMED("icp","Tgoal:\n" << Tgoal.matrix());
+  ROS_DEBUG_STREAM_NAMED("idp","Tsol:\n" << Tsol.matrix());
+  ROS_DEBUG_STREAM_NAMED("idp","Tgoal:\n" << Tgoal.matrix());
   R = Tsol.rotation() - Tgoal.rotation();
   double rot_error = std::max(fabs(R.minCoeff()), fabs(R.maxCoeff()));
   Eigen::Vector3d P;
   P = Tsol.translation() - Tgoal.translation();
   double pos_error = std::max(fabs(P.minCoeff()), fabs(P.maxCoeff()));
-  ROS_DEBUG_NAMED("icp", "pos_error [%f] rot_error [%f]", pos_error, rot_error);
+  ROS_DEBUG_NAMED("idp", "pos_error [%f] rot_error [%f]", pos_error, rot_error);
   return ((rot_error <= this->rot_eps) && (pos_error <= this->pos_eps));
 }
 
-double IterativeCouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const
+double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const
 {
   double delta, max_delta = DBL_MIN;
   for(size_t i=0; i< this->dimension_; ++i)
@@ -575,7 +575,7 @@ double IterativeCouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q
   return max_delta;
 }
 
-int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const
+int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const
 {
   int iter = 0, ik_iterations = -1;
   KDL::JntArray q_old(dimension_), q_new(dimension_);
@@ -588,7 +588,7 @@ int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL:
   Eigen::Vector3d Pe0_3;
   // Populate the Goal Transformation 
   tf::transformKDLToEigen(p_in, Tg0_6);
-  ROS_DEBUG_STREAM_NAMED("icp","Tg0_6:\n" << Tg0_6.matrix());
+  ROS_DEBUG_STREAM_NAMED("idp","Tg0_6:\n" << Tg0_6.matrix());
   // Initial values of q2, q3
   q2_0 = M_PI_2 + atan2(a1,d2);
   q3_0 = atan2(a2,d3) + atan2(d2, a1);
@@ -598,7 +598,7 @@ int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL:
     this->ComputeFK_0_3(q_old, Tc0_3);
     this->ComputeFK_3_6(q_old, Tc3_6);
     Pe0_3 = Tg0_6.translation() - Tc0_3.rotation() * Tc3_6.translation();
-    ROS_DEBUG_STREAM_NAMED("icp","Pe0_3:\n" << Pe0_3);
+    ROS_DEBUG_STREAM_NAMED("idp","Pe0_3:\n" << Pe0_3);
     // Calculate the new q1, q2, q3
     px = Pe0_3(0); py = Pe0_3(1); pz = Pe0_3(2);
     L2 = sqrt(pow(d2,2) + pow(a1,2));
@@ -625,14 +625,14 @@ int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL:
         q_new(i) = q_old(i) + inc_new(i);
       }
     }
-    ROS_DEBUG_NAMED("icp","[px, py, pz]: [%f, %f, %f]", px, py, pz);
-    ROS_DEBUG_NAMED("icp","C3: %f, S3: %f, ", C3, S3);
+    ROS_DEBUG_NAMED("idp","[px, py, pz]: [%f, %f, %f]", px, py, pz);
+    ROS_DEBUG_NAMED("idp","C3: %f, S3: %f, ", C3, S3);
     // Calculate the new middle point Tn0_3
     this->ComputeFK_0_3(q_new, Tn0_3);
-    ROS_DEBUG_STREAM_NAMED("icp","Tn0_3:\n" << Tn0_3.matrix());
+    ROS_DEBUG_STREAM_NAMED("idp","Tn0_3:\n" << Tn0_3.matrix());
     // Estimate the orientation R4_6
     Re4_6 = Tn0_3.rotation().inverse() * Tg0_6.rotation();
-    ROS_DEBUG_STREAM_NAMED("icp","Re4_6:\n" << Re4_6);
+    ROS_DEBUG_STREAM_NAMED("idp","Re4_6:\n" << Re4_6);
     // Calculate the new q4, q5, q6
     q_new(3) = atan2(Re4_6(2,1), Re4_6(1,1));
     S5 = -Re4_6(0,1);
@@ -652,9 +652,9 @@ int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL:
     }
     
     error = harmonize(q_new, q_old);
-    ROS_DEBUG_NAMED("icp","q_new: [%f, %f, %f, %f, %f, %f]", q_new(0), q_new(1), q_new(2), q_new(3), q_new(4), q_new(5));
-    ROS_DEBUG_NAMED("icp","q_old: [%f, %f, %f, %f, %f, %f]", q_old(0), q_old(1), q_old(2), q_old(3), q_old(4), q_old(5));
-    ROS_DEBUG_NAMED("icp", "Error: %f", error);
+    ROS_DEBUG_NAMED("idp","q_new: [%f, %f, %f, %f, %f, %f]", q_new(0), q_new(1), q_new(2), q_new(3), q_new(4), q_new(5));
+    ROS_DEBUG_NAMED("idp","q_old: [%f, %f, %f, %f, %f, %f]", q_old(0), q_old(1), q_old(2), q_old(3), q_old(4), q_old(5));
+    ROS_DEBUG_NAMED("idp", "Error: %f", error);
     iter++;
     this->ComputeFK_0_6(q_new, Tsol);
     bool ik_found = this->validSolution(Tsol, Tg0_6);
@@ -668,7 +668,7 @@ int IterativeCouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL:
         {
           // One element of solution is not within limits
           obeys_limits = false;
-          ROS_DEBUG_STREAM_NAMED("icp","Not in limits! " << i << " value " << q_new(i) << " has limit being  " << joint_min_(i) << " to " << joint_max_(i));
+          ROS_DEBUG_STREAM_NAMED("idp","Not in limits! " << i << " value " << q_new(i) << " has limit being  " << joint_min_(i) << " to " << joint_max_(i));
           break;
         }
       }

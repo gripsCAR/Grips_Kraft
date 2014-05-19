@@ -42,6 +42,6 @@
     <moveit_core plugin="${prefix}/grips_transform6d_ikfast_plugin.xml"/>
     <moveit_core plugin="${prefix}/grips_translationdirection5d_1_plugin.xml"/>
     <moveit_core plugin="${prefix}/grips_translationdirection5d_2_plugin.xml"/>
-    <moveit_core plugin="${prefix}/iterative_coupling_plugin.xml"/>
+    <moveit_core plugin="${prefix}/iterative_decoupling_plugin.xml"/>
   </export>
 </package>

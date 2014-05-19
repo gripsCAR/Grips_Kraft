@@ -53,7 +53,9 @@ class KinematicServices {
         ROS_WARN("frame_id [%s] received. Expected [%s]", request.header.frame_id.c_str(), model_frame_.c_str());
         return true;
       }
-      response.found_ik = kinematic_interface_->setEndEffectorPose(request.pose, 3, 0.01);
+      ros::Time begin = ros::Time::now();
+      response.found_ik = kinematic_interface_->setEndEffectorPose(request.pose);
+      response.duration = ros::Time::now() - begin;
       // If IK not found return with default values
       if (!response.found_ik)
         return true;
