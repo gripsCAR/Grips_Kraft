@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2012, Willow Garage, Inc.
+ *  Copyright (c) 2014, F Suarez-Ruiz
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -201,6 +201,8 @@ namespace iterative_decoupling_plugin
 		double harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const;
   
 		bool validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const;
+    
+    bool obeysLimits(const KDL::JntArray &jnt_pos) const;
 		
 		int iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const;
 

@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2012, Willow Garage, Inc.
+ *  Copyright (c) 2014, F Suarez-Ruiz
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -119,8 +119,6 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
   this->a2 = 7.5e-3; 
   this->a3 = 0.051331; 
   this->a4 = 0.787e-3;
-  this->pos_eps = 1e-3;       // meters
-  this->rot_eps = 0.2;        // ??
 
   if (!urdf_model || !srdf)
   {
@@ -193,6 +191,8 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
 
   private_handle.param("max_solver_iterations", max_solver_iterations, 500);
   private_handle.param("epsilon", epsilon, 1e-5);
+  private_handle.param("pos_epsilon", this->pos_eps, 1e-3); // meters
+  private_handle.param("rot_epsilon", this->rot_eps, 0.2); // meters
   private_handle.param(group_name+"/position_only_ik", position_ik, false);
   ROS_DEBUG_NAMED("idp","Looking in private handle: %s for param name: %s",
             private_handle.getNamespace().c_str(),
@@ -202,6 +202,7 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
     ROS_INFO_NAMED("idp","Using position only ik");
     
   ROS_INFO_NAMED("idp","max_solver_iterations: %d", max_solver_iterations);
+  ROS_INFO_NAMED("idp","pos_epsilon: [%f], rot_epsilon: [%f]", this->pos_eps, this->rot_eps);
 
   // Setup the joint state group
   state_.reset(new robot_state::RobotState(robot_model_));
@@ -542,16 +543,20 @@ int IterativeDecouplingPlugin::ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Ei
 
 bool IterativeDecouplingPlugin::validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const
 {
-  Eigen::Matrix3d R;
+  /*Eigen::Matrix3d R;
   ROS_DEBUG_STREAM_NAMED("idp","Tsol:\n" << Tsol.matrix());
   ROS_DEBUG_STREAM_NAMED("idp","Tgoal:\n" << Tgoal.matrix());
   R = Tsol.rotation() - Tgoal.rotation();
-  double rot_error = std::max(fabs(R.minCoeff()), fabs(R.maxCoeff()));
+  double rot_error = std::max(fabs(R.minCoeff()), fabs(R.maxCoeff()));*/
+  Eigen::Quaterniond q_sol(Tsol.rotation());
+  Eigen::Quaterniond q_goal(Tgoal.rotation());
+  double rot_error = 1 - pow(q_goal.dot(q_sol), 2.0);
   Eigen::Vector3d P;
   P = Tsol.translation() - Tgoal.translation();
   double pos_error = std::max(fabs(P.minCoeff()), fabs(P.maxCoeff()));
   ROS_DEBUG_NAMED("idp", "pos_error [%f] rot_error [%f]", pos_error, rot_error);
   return ((rot_error <= this->rot_eps) && (pos_error <= this->pos_eps));
+  //~ return ((pos_error <= this->pos_eps));
 }
 
 double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const
@@ -593,7 +598,7 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
   q2_0 = M_PI_2 + atan2(a1,d2);
   q3_0 = atan2(a2,d3) + atan2(d2, a1);
   while (iter < this->max_solver_iterations_)
-  {		
+  {
     // Estimate the middle point Pe0_3
     this->ComputeFK_0_3(q_old, Tc0_3);
     this->ComputeFK_3_6(q_old, Tc3_6);
@@ -608,6 +613,7 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     S3 = sqrt(1-pow(C3,2));
     if (fabs(C3) <= 1)
     {
+      // Due to the range of q3, gamma will always be within the 1rst and 2nd quadrants
       gamma = atan2(S3, C3);
       beta = atan2(pz-d1, sqrt(pow(px,2)+pow(py,2)));
       alpha = atan2(L3*sin(gamma), L2 - L3*cos(gamma));
@@ -635,8 +641,9 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     ROS_DEBUG_STREAM_NAMED("idp","Re4_6:\n" << Re4_6);
     // Calculate the new q4, q5, q6
     q_new(3) = atan2(Re4_6(2,1), Re4_6(1,1));
-    S5 = -Re4_6(0,1);
-    q_new(4) = atan2(S5, sqrt(1-pow(S5,2)));
+    /* S5 = -Re4_6(0,1);
+    q_new(4) = atan2(S5, sqrt(1-pow(S5,2)));*/
+    q_new(4) = asin(-Re4_6(0,1));
     q_new(5) = atan2(Re4_6(0,2), Re4_6(0,0));
     
     // Regulate the delta at each iteration (improves convergency)
@@ -661,18 +668,7 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     
     if (ik_found)
     {
-      bool obeys_limits = true;
-      for(size_t i = 0; i < this->dimension_; i++)
-      {
-        if( (q_new(i) < (this->joint_min_(i)-LIMIT_TOLERANCE)) || (q_new(i) > (this->joint_max_(i)+LIMIT_TOLERANCE)) )
-        {
-          // One element of solution is not within limits
-          obeys_limits = false;
-          ROS_DEBUG_STREAM_NAMED("idp","Not in limits! " << i << " value " << q_new(i) << " has limit being  " << joint_min_(i) << " to " << joint_max_(i));
-          break;
-        }
-      }
-      if(obeys_limits)
+      //if(obeysLimits(q_new))
         ik_iterations = iter;
       break;
     }
@@ -680,6 +676,22 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
   }
   q_out = q_new;
   return ik_iterations;
+}
+
+bool IterativeDecouplingPlugin::obeysLimits(const KDL::JntArray &jnt_pos) const
+{
+  bool obeys_limits = true;
+  for(size_t i = 0; i < this->dimension_; i++)
+  {
+    if( (jnt_pos(i) < (this->joint_min_(i)-LIMIT_TOLERANCE)) || (jnt_pos(i) > (this->joint_max_(i)+LIMIT_TOLERANCE)) )
+    {
+      // One element of solution is not within limits
+      obeys_limits = false;
+      ROS_DEBUG_STREAM_NAMED("idp","Not in limits! " << i << " value " << jnt_pos(i) << " has limit being  " << joint_min_(i) << " to " << joint_max_(i));
+      break;
+    }
+  }
+  return obeys_limits;
 }
 
 } // namespace

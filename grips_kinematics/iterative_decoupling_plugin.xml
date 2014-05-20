@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <library path="lib/libgrips_iterative_decoupling_plugin">
-  <class name="grips_arm_kinematics/IterativeDeouplingPlugin" type="iterative_decoupling_plugin::IterativeDecouplingPlugin" base_class_type="kinematics::KinematicsBase">
+  <class name="grips_arm_kinematics/IterativeDecouplingPlugin" type="iterative_decoupling_plugin::IterativeDecouplingPlugin" base_class_type="kinematics::KinematicsBase">
     <description>iterative_coupling_plugin</description>
   </class>
 </library>
