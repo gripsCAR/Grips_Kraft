@@ -174,12 +174,15 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
   joint_min_.resize(this->dimension_);
   joint_max_.resize(this->dimension_);
   this->inc_max_.resize(this->dimension_);
+  
+  double angle_inc;
+  private_handle.param("max_angle_inc", angle_inc, 0.05);
 
   for(unsigned int i=0; i < ik_chain_info_.limits.size(); i++)
   {
     joint_min_(i) = ik_chain_info_.limits[i].min_position;
     joint_max_(i) = ik_chain_info_.limits[i].max_position;
-    this->inc_max_(i) = 0.05;
+    this->inc_max_(i) = angle_inc;
     ROS_INFO_NAMED("idp","%s:\t%f\t%f", 
         ik_chain_info_.joint_names[i+1].c_str(), joint_min_(i), joint_max_(i));
   }
@@ -192,7 +195,7 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
   private_handle.param("max_solver_iterations", max_solver_iterations, 500);
   private_handle.param("epsilon", epsilon, 1e-5);
   private_handle.param("pos_epsilon", this->pos_eps, 1e-3); // meters
-  private_handle.param("rot_epsilon", this->rot_eps, 0.2); // meters
+  private_handle.param("rot_epsilon", this->rot_eps, 0.2); // factor from 0-1
   private_handle.param(group_name+"/position_only_ik", position_ik, false);
   ROS_DEBUG_NAMED("idp","Looking in private handle: %s for param name: %s",
             private_handle.getNamespace().c_str(),
@@ -202,7 +205,7 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
     ROS_INFO_NAMED("idp","Using position only ik");
     
   ROS_INFO_NAMED("idp","max_solver_iterations: %d", max_solver_iterations);
-  ROS_INFO_NAMED("idp","pos_epsilon: [%f], rot_epsilon: [%f]", this->pos_eps, this->rot_eps);
+  ROS_INFO_NAMED("idp","pos_epsilon: [%.3f], rot_epsilon: [%.3f], max_inc: [%.3f]", this->pos_eps, this->rot_eps, angle_inc);
 
   // Setup the joint state group
   state_.reset(new robot_state::RobotState(robot_model_));
@@ -573,6 +576,14 @@ double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray 
       q_new(i) -= 2*M_PI;
     while(q_new(i) < -2*M_PI)
       q_new(i) += 2*M_PI;
+    
+    // Force to be within the joint limits
+    /*if(q_new(i) < (this->joint_min_(i)-LIMIT_TOLERANCE))
+      q_new(i) = this->joint_min_(i);
+    
+    if(q_new(i) > (this->joint_max_(i)+LIMIT_TOLERANCE))
+      q_new(i) = this->joint_max_(i);*/
+      
     delta = fabs(q_old(i) - q_new(i));
     if (delta > max_delta)
       max_delta = delta;
@@ -625,8 +636,10 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
         inc_new(i) = q_new(i) - q_old(i);
         if (inc_new(i) > inc_max(i))
           inc_new(i) = inc_max(i);
-        if (inc_new(i) == -inc_old(i))
-          inc_max(i) /= 2;
+        if (inc_new(i) < -inc_max(i))
+          inc_new(i) = -inc_max(i);
+        /*if (inc_new(i) == -inc_old(i))
+          inc_max(i) /= 2;*/
         inc_old(i) = inc_new(i);
         q_new(i) = q_old(i) + inc_new(i);
       }
@@ -652,14 +665,16 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
       inc_new(i) = q_new(i) - q_old(i);
       if (inc_new(i) > inc_max(i))
         inc_new(i) = inc_max(i);
-      if (inc_new(i) == -inc_old(i))
-        inc_max(i) /= 2;
+      if (inc_new(i) < -inc_max(i))
+        inc_new(i) = -inc_max(i);
+      /*if (inc_new(i) == -inc_old(i))
+        inc_max(i) /= 2;*/
       inc_old(i) = inc_new(i);
       q_new(i) = q_old(i) + inc_new(i);
     }
     
-    error = harmonize(q_new, q_old);
-    ROS_DEBUG_NAMED("idp","q_new: [%f, %f, %f, %f, %f, %f]", q_new(0), q_new(1), q_new(2), q_new(3), q_new(4), q_new(5));
+    error = harmonize(q_old, q_new);
+    ROS_DEBUG_NAMED("idp","q_new: [%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]", q_new(0), q_new(1), q_new(2), q_new(3), q_new(4), q_new(5));
     ROS_DEBUG_NAMED("idp","q_old: [%f, %f, %f, %f, %f, %f]", q_old(0), q_old(1), q_old(2), q_old(3), q_old(4), q_old(5));
     ROS_DEBUG_NAMED("idp", "Error: %f", error);
     iter++;
@@ -668,9 +683,13 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     
     if (ik_found)
     {
-      //if(obeysLimits(q_new))
+      if(obeysLimits(q_new))
+      {
         ik_iterations = iter;
-      break;
+        break;
+      }
+      else
+        getRandomConfiguration(q_new, true);
     }
     q_old = q_new;
   }

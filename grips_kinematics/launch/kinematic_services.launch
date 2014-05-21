@@ -9,9 +9,10 @@
     <!-- Start the kinematic services -->
     <node name="kinematic_services" pkg="grips_kinematics" type="kinematic_services" respawn="false" output="screen">
       <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml"/>
-      <param name="max_solver_iterations" value="500"/>
-      <param name="pos_epsilon" type="double" value="0.01"/>  <!-- meters -->
+      <param name="max_solver_iterations" value="1000"/>
+      <param name="pos_epsilon" type="double" value="0.025"/>  <!-- meters -->
       <param name="rot_epsilon" type="double" value="0.2"/>   <!-- to be determined -->
+      <param name="max_angle_inc" type="double" value="0.05"/>
     </node>
   </group>
   
