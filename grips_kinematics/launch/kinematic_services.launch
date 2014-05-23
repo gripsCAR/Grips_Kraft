@@ -1,5 +1,6 @@
 <launch>
   <arg name="robot_name" value="grips" />
+  <arg name="max_angle_inc" default="0.05" />
   
   <group ns="$(arg robot_name)">
     <!-- Upload robot and semantic description that corresponds to the URDF -->
@@ -12,7 +13,7 @@
       <param name="max_solver_iterations" value="1000"/>
       <param name="pos_epsilon" type="double" value="0.025"/>  <!-- meters -->
       <param name="rot_epsilon" type="double" value="0.2"/>   <!-- to be determined -->
-      <param name="max_angle_inc" type="double" value="0.05"/>
+      <param name="max_angle_inc" type="double" value="$(arg max_angle_inc)"/>
     </node>
   </group>
   

@@ -593,11 +593,11 @@ double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray 
 
 int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const
 {
-  int iter = 0, ik_iterations = -1;
+  int iter = 0, ik_iterations = -3;
   KDL::JntArray q_old(dimension_), q_new(dimension_);
   KDL::JntArray inc_new(dimension_), inc_old(dimension_), inc_max = this->inc_max_;
   q_old = q_init;
-  double alpha, beta, gamma, q2_0, q3_0, C3, S3, S5, px, py, pz, L2, L3;
+  double alpha, beta, gamma, q2_0, q3_0, C3, S3, S5, px, py, pz, L2, L3, py_sign;
   double error, pos_error, rot_error;
   Eigen::Affine3d Tg0_6, Tc0_3, Tc0_6, Tc3_6, Tn0_3, Tsol;
   Eigen::Matrix3d Re4_6;
@@ -626,7 +626,8 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     {
       // Due to the range of q3, gamma will always be within the 1rst and 2nd quadrants
       gamma = atan2(S3, C3);
-      beta = atan2(pz-d1, sqrt(pow(px,2)+pow(py,2)));
+      py_sign = (py > 0.0) ? 1.0 : ((py < 0.0) ? -1.0 : 0.0);
+      beta = atan2(pz-d1, py_sign * sqrt(pow(px,2)+pow(py,2)));
       alpha = atan2(L3*sin(gamma), L2 - L3*cos(gamma));
       q_new(1) = beta + alpha - q2_0;
       q_new(2) = gamma - q3_0;
@@ -638,8 +639,8 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
           inc_new(i) = inc_max(i);
         if (inc_new(i) < -inc_max(i))
           inc_new(i) = -inc_max(i);
-        /*if (inc_new(i) == -inc_old(i))
-          inc_max(i) /= 2;*/
+        if (inc_new(i) == -inc_old(i))
+          inc_max(i) /= 2;
         inc_old(i) = inc_new(i);
         q_new(i) = q_old(i) + inc_new(i);
       }
@@ -667,8 +668,8 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
         inc_new(i) = inc_max(i);
       if (inc_new(i) < -inc_max(i))
         inc_new(i) = -inc_max(i);
-      /*if (inc_new(i) == -inc_old(i))
-        inc_max(i) /= 2;*/
+      if (inc_new(i) == -inc_old(i))
+        inc_max(i) /= 2;
       inc_old(i) = inc_new(i);
       q_new(i) = q_old(i) + inc_new(i);
     }
