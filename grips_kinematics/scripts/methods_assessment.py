@@ -4,8 +4,8 @@
 # rotation     position
 # [w x y z]    [x y z]
 
-import roslib; roslib.load_manifest('grips_kinematics')
-import rospy, math, argparse
+import roslib
+import rospy, math, argparse, os
 import random
 import scipy.io as sio
 import numpy as np
@@ -47,11 +47,6 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
     rospy.logwarn('Service did not process request: %s' % str(e))     
   min_positions = np.array(res.min_position)
   max_positions = np.array(res.max_position)
-  #~ min_positions[-1] = -math.pi; max_positions[-1] = math.pi;
-  #~ min_positions += 0.01
-  #~ max_positions -= 0.01
-  #~ min_positions = [-1.37,  -1.37,  -0.5236,  -0.4,   -0.42,    -6.283]
-  #~ max_positions = [1.37,   0,      0.3,      0.61,   0.42,     6.283]
   rospy.loginfo('min_positions: %s' % str(min_positions))
   rospy.loginfo('max_positions: %s' % str(max_positions))
   rospy.loginfo('Generating test MAT file, [%d] tests' % NUM_TEST)
@@ -144,7 +139,10 @@ def solve_ik(input_mat_file, out_filename):
     variables[i] = out_filename + '_' + name
   data_dict = {variables[0]: calculated_mat, variables[1]:estimated_poses, variables[2]:estimation_error, variables[3]:iterations, variables[4]:time_list}
   # Save new .mat file
+  path = os.path.dirname(input_mat_file)
   out_mat_file = out_filename + '.mat'
+  if path:
+    out_mat_file = path + '/' + out_mat_file
   rospy.loginfo(('\033[94m' + 'Writing %s file' + '\033[0m') % out_mat_file)
   sio.savemat(out_mat_file, data_dict, oned_as='column')
 
