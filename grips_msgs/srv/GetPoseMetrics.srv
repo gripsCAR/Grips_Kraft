@@ -17,6 +17,8 @@ bool                    found_group
 
 # The returned metrics
 sensor_msgs/JointState  joint_states
+geometry_msgs/Pose      estimated_pose
+geometry_msgs/Pose      estimation_error
 float64                 manipulability
 float64                 manipulability_index
 float64                 max_payload

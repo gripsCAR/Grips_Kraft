@@ -70,6 +70,17 @@ class KinematicServices {
         response.joint_states.name[i] = joint_names_[i];
         response.joint_states.position[i] = joint_values[i];
       }
+      // Populate the estimated pose
+      kinematic_interface_->setJointPositions(joint_values);
+      Eigen::Affine3d T_estimated;
+      T_estimated = kinematic_interface_->getEndEffectorTransform();
+      ROS_DEBUG_STREAM("\n" << T_estimated.matrix());
+      tf::poseEigenToMsg(T_estimated, response.estimated_pose);
+      
+      // Populate the error pose
+      Eigen::Affine3d T_goal;
+      tf::poseMsgToEigen(request.pose, T_goal);
+      tf::poseEigenToMsg(T_goal.inverse() * T_estimated, response.estimation_error);
       
       response.found_group = true;
       // TODO: Calculate the metrics

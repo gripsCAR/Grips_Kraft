@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+#
+# Poses are stored as:
+# rotation     position
+# [w x y z]    [x y z]
+
 import roslib; roslib.load_manifest('grips_kinematics')
 import rospy, math, argparse
 import random
@@ -11,12 +16,13 @@ from grips_msgs.srv import GetPoseMetrics, GetPoseMetricsRequest, GetPoseMetrics
 # Messages
 from geometry_msgs.msg import Pose
 
-q_goal_str = 'desired_angles_mat'
-poses_goal_str = 'desired_poses_mat'
+q_goal_str = 'joint_positions'
+poses_goal_str = 'poses'
 
-q_calc_str = 'calculated_angles_mat'
+q_calc_str = 'estimated_joint_positions'
+poses_calc_str = 'estimated_poses'
+error_str = 'estimation_error'
 iter_str = 'iterations'
-
 time_str = 'time'
 
 joint_names = ['SA', 'SE', 'linkage_tr', 'WP', 'WY', 'WR']
@@ -45,8 +51,8 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
   min_positions = np.array(res.min_position)
   max_positions = np.array(res.max_position)
   #~ min_positions[-1] = -math.pi; max_positions[-1] = math.pi;
-  min_positions += 0.01
-  max_positions -= 0.01
+  #~ min_positions += 0.01
+  #~ max_positions -= 0.01
   #~ min_positions = [-1.37,  -1.37,  -0.5236,  -0.4,   -0.42,    -6.283]
   #~ max_positions = [1.37,   0,      0.3,      0.61,   0.42,     6.283]
   rospy.loginfo('min_positions: %s' % str(min_positions))
@@ -96,7 +102,9 @@ def solve_ik(input_mat_file, output_mat_file):
   # Load data from the *.mat file  
   input_dict = sio.loadmat(input_mat_file)
   poses_mat = input_dict[poses_goal_str]
-  calculated_mat = np.array([])  
+  estimated_poses = np.array([])
+  calculated_mat = np.array([])
+  estimation_error = np.array([])
   iterations = []
   time_list = []
   calculated = 0  
@@ -112,10 +120,14 @@ def solve_ik(input_mat_file, output_mat_file):
       time_list.append((res.duration).to_sec())
       if res.found_ik and res.found_group:
         calculated_mat = np.append(calculated_mat, np.array(res.joint_states.position), 0)
+        estimated_poses = np.append(estimated_poses, np.array(pose2list(res.estimated_pose)), 0)
+        estimation_error = np.append(estimation_error, np.array(pose2list(res.estimation_error)), 0)
         iterations.append(1)
         calculated += 1
       else:
         calculated_mat = np.append(calculated_mat, np.array([0]*NUM_JOINTS), 0)
+        estimated_poses = np.append(estimated_poses, np.array([0]*7), 0)
+        estimation_error = np.append(estimation_error, np.array([0]*7), 0)
         iterations.append(0)
     except rospy.ServiceException, e:
       rospy.logwarn('Service did not process request: %s' % str(e))
@@ -126,12 +138,11 @@ def solve_ik(input_mat_file, output_mat_file):
       return
   # Show the result in the console
   rospy.loginfo('IK Done: %d/%d metrics were calculated' % (calculated, tests))
-  #~ rospy.loginfo('Iterations len: %d' % (len(iterations)))
-  #~ print calculated_mat.shape
   # Prepare the data to save it in a .mat file
-  mat_shape = (tests, NUM_JOINTS)
-  calculated_mat = calculated_mat.reshape(mat_shape)
-  data_dict = {q_calc_str: calculated_mat, iter_str:iterations, time_str:time_list}
+  calculated_mat = calculated_mat.reshape((tests, NUM_JOINTS))
+  estimated_poses = estimated_poses.reshape((tests, 7))
+  estimation_error = estimation_error.reshape((tests, 7))
+  data_dict = {q_calc_str: calculated_mat, iter_str:iterations, time_str:time_list, poses_calc_str:estimated_poses, error_str:estimation_error}
   rospy.loginfo('Writing %s file' % output_mat_file)
   sio.savemat(output_mat_file, data_dict, oned_as='column')
 
