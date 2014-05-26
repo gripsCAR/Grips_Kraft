@@ -10,6 +10,7 @@ set(LIB_5D_2_NAME grips_translationdirection5d_2_plugin)
 set(LIB_ITERATIVE grips_iterative_decoupling_plugin)
 
 find_package(catkin REQUIRED COMPONENTS 
+  dynamic_reconfigure
   grips_msgs
   moveit_core
   moveit_ros_planning
