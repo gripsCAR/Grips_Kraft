@@ -15,15 +15,12 @@ from grips_msgs.srv import GetJointLimits, GetJointLimitsRequest, GetJointLimits
 from grips_msgs.srv import GetPoseMetrics, GetPoseMetricsRequest, GetPoseMetricsResponse
 # Messages
 from geometry_msgs.msg import Pose
+#Dynamic Reconfigure
+import dynamic_reconfigure.client
 
-q_goal_str = 'joint_positions'
-poses_goal_str = 'poses'
+in_variables = ['joint_positions', 'poses']
 
-q_calc_str = 'estimated_joint_positions'
-poses_calc_str = 'estimated_poses'
-error_str = 'estimation_error'
-iter_str = 'iterations'
-time_str = 'time'
+out_variables = ['joint_positions', 'poses', 'error', 'iterations', 'time']
 
 joint_names = ['SA', 'SE', 'linkage_tr', 'WP', 'WY', 'WR']
 NUM_JOINTS = len(joint_names)
@@ -90,10 +87,10 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
   poses_mat = poses_mat.reshape(poses_shape)
   rospy.loginfo('[FK] Evaluated: %d/%d' % (i+1, NUM_TEST))
   rospy.loginfo('Writing %s file' % input_mat_file)
-  sio.savemat(input_mat_file, {q_goal_str:angles_mat, poses_goal_str:poses_mat}, oned_as='column')
+  sio.savemat(input_mat_file, {in_variables[0]:angles_mat, in_variables[1]:poses_mat}, oned_as='column')
   rospy.sleep(3.0)
 
-def solve_ik(input_mat_file, output_mat_file):  
+def solve_ik(input_mat_file, out_filename):  
   # Subscribe to kinematic services
   ik_srv_name = rospy.get_param('metrics_service', '/grips/kinematic_services/get_ik_metrics')
   rospy.loginfo('Waiting for %s service' % ik_srv_name)
@@ -101,7 +98,7 @@ def solve_ik(input_mat_file, output_mat_file):
   ik_srv = rospy.ServiceProxy(ik_srv_name, GetPoseMetrics)
   # Load data from the *.mat file  
   input_dict = sio.loadmat(input_mat_file)
-  poses_mat = input_dict[poses_goal_str]
+  poses_mat = input_dict[in_variables[1]]
   estimated_poses = np.array([])
   calculated_mat = np.array([])
   estimation_error = np.array([])
@@ -142,9 +139,14 @@ def solve_ik(input_mat_file, output_mat_file):
   calculated_mat = calculated_mat.reshape((tests, NUM_JOINTS))
   estimated_poses = estimated_poses.reshape((tests, 7))
   estimation_error = estimation_error.reshape((tests, 7))
-  data_dict = {q_calc_str: calculated_mat, iter_str:iterations, time_str:time_list, poses_calc_str:estimated_poses, error_str:estimation_error}
-  rospy.loginfo('Writing %s file' % output_mat_file)
-  sio.savemat(output_mat_file, data_dict, oned_as='column')
+  variables = [0] * len(out_variables)
+  for i, name in enumerate(out_variables):
+    variables[i] = out_filename + '_' + name
+  data_dict = {variables[0]: calculated_mat, variables[1]:estimated_poses, variables[2]:estimation_error, variables[3]:iterations, variables[4]:time_list}
+  # Save new .mat file
+  out_mat_file = out_filename + '.mat'
+  rospy.loginfo(('\033[94m' + 'Writing %s file' + '\033[0m') % out_mat_file)
+  sio.savemat(out_mat_file, data_dict, oned_as='column')
 
 def pose2list(pose):
   data = [0] * 7
@@ -177,13 +179,16 @@ if __name__ == '__main__':
                         help='If set, generates a new input MAT file')
   parser.add_argument('--input', dest='input_file', type=str, required=True,
                         help='The path of the input MAT file')
-  parser.add_argument('--output', dest='output_file', type=str, required=True,
-                        help='The path of the output MAT file')
   parser.add_argument('--tests', dest='tests', type=int, default=1000,
                         help='Tests to perform')
   args = parser.parse_args()
   #Generate a new input data file
   if args.generate:
     generate_input_data(args.input_file, args.tests)
-  # Test the IK solver
-  solve_ik(args.input_file, args.output_file)
+  # Test the available IK solvers
+  client = dynamic_reconfigure.client.Client('/grips/kinematic_services', timeout=1)
+  solvers = {0:'ikfast', 1:'lma', 2:'decoup', 3:'kdl'};
+  for key, solver in solvers.iteritems():
+    client.update_configuration({'kinematics_solver':key})
+    rospy.sleep(5.0) # Give it time to reset the solver
+    solve_ik(args.input_file, solver)

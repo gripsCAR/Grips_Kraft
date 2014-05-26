@@ -5,6 +5,10 @@
 #include <grips_msgs/GetStateMetrics.h>
 #include <grips_msgs/GetJointLimits.h>
 
+// Dynamic Reconfiguration
+#include <dynamic_reconfigure/server.h>
+#include <grips_msgs/KinematicsSolversConfig.h>
+
 // Grips kinematic Interface
 #include <grips_kinematics/kinematic_interface.hpp>
 
@@ -17,12 +21,16 @@ class KinematicServices {
     ros::ServiceServer        ik_service_;
     ros::ServiceServer        fk_service_;
     ros::ServiceServer        limits_service_;
+    // dynamic_reconfigure
+    dynamic_reconfigure::Server<grips_msgs::KinematicsSolversConfig>                server_;
+    dynamic_reconfigure::Server<grips_msgs::KinematicsSolversConfig>::CallbackType  dyn_callback_;
     // Misc
     std::string               robot_namespace_;
     std::vector<std::string>  joint_names_;
     std::string               model_frame_; 
     std::string               tip_link_;
     std::string               base_link_;
+    bool                      first_call_dyn_;
     // Kinematics
     KinematicInterfacePtr     kinematic_interface_;
     std::map<std::string, joint_limits_interface::JointLimits> urdf_limits_;
@@ -43,6 +51,37 @@ class KinematicServices {
       ik_service_ = nh_private_.advertiseService("get_ik_metrics", &KinematicServices::getIkMetrics, this);
       fk_service_ = nh_private_.advertiseService("get_fk_metrics", &KinematicServices::getFkMetrics, this);
       limits_service_ = nh_private_.advertiseService("get_joint_limits", &KinematicServices::getJointLimits, this);
+      // Setup dynamic_reconfigure Server
+      first_call_dyn_ = true;
+      dyn_callback_ = boost::bind(&KinematicServices::dynamicReconfiguration, this, _1, _2);
+      server_.setCallback(dyn_callback_);
+    }
+    
+    void dynamicReconfiguration(grips_msgs::KinematicsSolversConfig &config, uint32_t level) 
+    {
+      if (first_call_dyn_)
+      {
+        first_call_dyn_ = false;
+        return;
+      }
+      // Max angle increment parameter (IterativeDecouplingPlugin only)
+      nh_private_.setParam("max_angle_inc", config.max_increment);
+      
+      // Kinematic solver parameter
+      std::string selected_solver, current_solver;
+      ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", current_solver);
+      selected_solver = current_solver;
+      switch (config.kinematics_solver)
+      {
+        case 0: selected_solver = "grips_arm_kinematics/IKFastTransform6dPlugin"; break;
+        case 1: selected_solver = "lma_kinematics_plugin/LMAKinematicsPlugin"; break;
+        case 2: selected_solver = "grips_arm_kinematics/IterativeDecouplingPlugin"; break;
+        case 3: selected_solver = "kdl_kinematics_plugin/KDLKinematicsPlugin"; break;
+      }
+      
+      // Reset the Kinematic interface to load the selected plugin
+      ros::param::set(ros::this_node::getName() + "/arm/kinematics_solver", selected_solver);
+      kinematic_interface_.reset(new KinematicInterface());
     }
     
     bool getIkMetrics(grips_msgs::GetPoseMetrics::Request &request, grips_msgs::GetPoseMetrics::Response &response)

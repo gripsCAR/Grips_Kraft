@@ -21,6 +21,8 @@ find_package(catkin REQUIRED COMPONENTS
   #eigen_conversions
 )
 
+catkin_python_setup()
+
 catkin_package( 
   LIBRARIES 
     ${KIN_INTERFACE}
@@ -39,8 +41,6 @@ catkin_package(
     joint_limits_interface
 )
 
-catkin_python_setup()
-
 include_directories(include)
 
 find_package(Eigen REQUIRED)
@@ -58,7 +58,7 @@ target_link_libraries(${KIN_INTERFACE} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${
 # Nodes
 add_executable(kinematic_services src/kinematic_services.cpp)
 target_link_libraries(kinematic_services ${KIN_INTERFACE} ${catkin_LIBRARIES})
-add_dependencies(kinematic_services grips_msgs_gencpp)
+add_dependencies(kinematic_services grips_msgs_gencpp grips_msgs_gencfg)
 
 # Kinematics Plugins
 add_library(${LIB_6D_NAME} src/grips_transform6d_ikfast_plugin.cpp)
