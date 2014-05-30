@@ -185,8 +185,8 @@ if __name__ == '__main__':
     generate_input_data(args.input_file, args.tests)
   # Test the available IK solvers
   client = dynamic_reconfigure.client.Client('/grips/kinematic_services', timeout=1)
-  solvers = {0:'ikfast', 1:'lma', 2:'decoup', 3:'kdl'};
+  solvers = {0:'ikfast', 1:'lma', 2:'decoup', 3:'kdl'}
   for key, solver in solvers.iteritems():
     client.update_configuration({'kinematics_solver':key})
-    rospy.sleep(5.0) # Give it time to reset the solver
     solve_ik(args.input_file, solver)
+    rospy.sleep(10.0) # Give it time to reset the solver
