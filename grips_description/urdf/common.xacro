@@ -75,15 +75,15 @@
               izz="0.002" />
   </macro>
   <!-- Meshes -->
-  <property name="base_mesh" value="package://grips_description/meshes/base/base.dae" />
-  <property name="manifold_mesh" value="package://grips_description/meshes/manifold/manifold.dae" />
-  <property name="upper_arm_mesh" value="package://grips_description/meshes/upper_arm/upper_arm.dae" />
-  <property name="elbow_pivot_mesh" value="package://grips_description/meshes/linkage/elbow_pivot.dae" />
-  <property name="coupling_mesh" value="package://grips_description/meshes/linkage/coupling.dae" />
-  <property name="forearm_mesh" value="package://grips_description/meshes/forearm/forearm.dae" />
-  <property name="pitch_mesh" value="package://grips_description/meshes/pitch/pitch.dae" />
-  <property name="yaw_mesh" value="package://grips_description/meshes/yaw/yaw.dae" />
-  <property name="camera_mesh" value="package://grips_description/meshes/camera/camera.dae" />
+  <property name="base_mesh" value="package://grips_description/meshes/visual/base.dae" />
+  <property name="manifold_mesh" value="package://grips_description/meshes/visual/manifold.dae" />
+  <property name="upper_arm_mesh" value="package://grips_description/meshes/visual/upper_arm.dae" />
+  <property name="elbow_pivot_mesh" value="package://grips_description/meshes/visual/elbow_pivot.dae" />
+  <property name="coupling_mesh" value="package://grips_description/meshes/visual/coupling.dae" />
+  <property name="forearm_mesh" value="package://grips_description/meshes/visual/forearm.dae" />
+  <property name="pitch_mesh" value="package://grips_description/meshes/visual/pitch.dae" />
+  <property name="yaw_mesh" value="package://grips_description/meshes/visual/yaw.dae" />
+  <property name="camera_mesh" value="package://grips_description/meshes/visual/camera.dae" />
   <!-- Joints Dynamics -->
   <property name="SA_damping" value="5" />
   <property name="SE_damping" value="5" />
@@ -130,12 +130,12 @@
       iyz="0.0" izz="1.701e-4" />
   </macro>
   <!-- Meshes -->
-  <property name="gripper_base_mesh" value="package://grips_description/meshes/gripper/gripper_base.dae" />
-  <property name="outer_mesh" value="package://grips_description/meshes/gripper/outer_pivot.dae" />
-  <property name="r_inner_mesh" value="package://grips_description/meshes/gripper/r_inner_pivot.dae" />
-  <property name="l_inner_mesh" value="package://grips_description/meshes/gripper/l_inner_pivot.dae" />
-  <property name="r_finger_mesh" value="package://grips_description/meshes/gripper/r_finger.dae" />
-  <property name="l_finger_mesh" value="package://grips_description/meshes/gripper/l_finger.dae" />
+  <property name="gripper_base_mesh" value="package://grips_description/meshes/visual/gripper_base.dae" />
+  <property name="outer_mesh" value="package://grips_description/meshes/visual/outer_pivot.dae" />
+  <property name="r_inner_mesh" value="package://grips_description/meshes/visual/r_inner_pivot.dae" />
+  <property name="l_inner_mesh" value="package://grips_description/meshes/visual/l_inner_pivot.dae" />
+  <property name="r_finger_mesh" value="package://grips_description/meshes/visual/r_finger.dae" />
+  <property name="l_finger_mesh" value="package://grips_description/meshes/visual/l_finger.dae" />
   <!-- Joints Dynamics -->
   <property name="outer_damping" value="0.1" />
   <property name="inner_damping" value="0.1" />

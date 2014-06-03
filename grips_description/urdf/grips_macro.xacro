@@ -3,17 +3,17 @@
   <macro name="grips_robot" params="name">
     <!-- base link -->
     <link_collision name="${name}base_link" color="black" mesh="${base_mesh}" cog="${base_cog}" mass="${base_mass}" >
-      <mesh filename="package://grips_description/meshes/base/base_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/base.dae" />
       <base_inertia />
     </link_collision>
     <!-- manifold link -->
     <link_collision name="${name}manifold" color="blue" mesh="${manifold_mesh}" cog="${manifold_cog}" mass="${manifold_mass}" >
-      <mesh filename="package://grips_description/meshes/manifold/manifold_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/manifold.dae" />
       <manifold_inertia />
     </link_collision>
     <!-- upper arm link -->
     <link_collision name="${name}upper_arm" color="black" mesh="${upper_arm_mesh}" cog="${upper_arm_cog}" mass="${upper_arm_mass}" >
-      <mesh filename="package://grips_description/meshes/upper_arm/upper_arm_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/upper_arm.dae" />
       <upper_arm_inertia />
     </link_collision>
     <!-- elbow pivot link -->
@@ -26,24 +26,24 @@
     </create_link>
     <!-- forearm link -->
     <link_collision name="${name}forearm" color="black" mesh="${forearm_mesh}" cog="${forearm_cog}" mass="${forearm_mass}" >
-      <mesh filename="package://grips_description/meshes/forearm/forearm_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/forearm.dae" />
       <forearm_inertia />
     </link_collision>
     <!-- pitch link -->
     <link_collision name="${name}pitch" color="black" mesh="${pitch_mesh}" cog="${pitch_cog}" mass="${pitch_mass}" >
-      <mesh filename="package://grips_description/meshes/pitch/pitch_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/pitch.dae" />
       <pitch_inertia />
     </link_collision>
     <!-- yaw link -->
     <link_collision name="${name}yaw" color="black" mesh="${yaw_mesh}" cog="${yaw_cog}" mass="${yaw_mass}" >
-      <mesh filename="package://grips_description/meshes/yaw/yaw_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/yaw.dae" />
       <yaw_inertia />
     </link_collision>
     <!-- end effector dummy link -->
     <link name="${name}end_effector" />
     <!-- camera link -->
     <link_collision name="${name}camera" color="black" mesh="${camera_mesh}" cog="${camera_cog}" mass="${camera_mass}" >
-      <mesh filename="package://grips_description/meshes/camera/camera_collision.dae" />
+      <mesh filename="package://grips_description/meshes/collision/camera.dae" />
       <camera_inertia />
     </link_collision>
           

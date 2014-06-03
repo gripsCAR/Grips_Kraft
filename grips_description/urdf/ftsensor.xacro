@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Meshes -->
+  <property name="ft_kraft_plate_mesh"   value="package://grips_description/meshes/visual/ft_kraft_plate.dae" />
+  <property name="ft_robotiq_plate_mesh" value="package://grips_description/meshes/visual/ft_robotiq_plate.dae" />
+  <property name="ft_sensor_mesh"        value="package://grips_description/meshes/visual/ft_sensor.dae" />
+  <property name="ft_wrist_plate_mesh"   value="package://grips_description/meshes/visual/ft_wrist_plate.dae" />
+  <!-- Links Mass -->
+  <property name="ft_kraft_plate_mass"    value="0.059" />    <!-- Density: 5000 kg/m3 -->
+  <property name="ft_robotiq_plate_mass"  value="0.2304" />   <!-- Density: 4440 kg/m3 -->
+  <property name="ft_sensor_mass"         value="0.2396" />   <!-- Density: 1750 kg/m3 -->
+  <property name="ft_wrist_plate_mass"    value="0.1478" />   <!-- Density: 4070 kg/m3 -->
+  
+  <property name="robotiq_mass"           value="2.438" />
+  
+  <!-- Links COG -->
+  <property name="ft_kraft_plate_cog"     value="-0.192e-3  1.769e-9    6.143e-3" />
+  <property name="ft_robotiq_plate_cog"   value="0.0        0.0         5.644e-3" />
+  <property name="ft_sensor_cog"          value="9.396e-4   0.017       -7.545e-4" />
+  <property name="ft_wrist_plate_cog"     value="-0.057e-3  1.648e-8    17.057e-3" />
+  <!-- Links Inertia -->
+  <macro name="ft_kraft_plate_inertia">
+    <inertia  ixx="8.905e-6"  iyy="8.788e-6"  izz="1.421e-5"
+              ixy="0.0"       ixz="4.509e-8"  iyz="0.0" />
+  </macro>
+  <macro name="ft_robotiq_plate_inertia">
+    <inertia  ixx="9.43e-5"   iyy="9.43e-5"   izz="1.837e-4"
+              ixy="0.0"       ixz="0.0"       iyz="0.0" />
+  </macro>
+  <macro name="ft_sensor_inertia">
+    <inertia  ixx="1.055e-4"  iyy="1.7e-4"    izz="1.076e-4"
+              ixy="-7.262e-7" ixz="6.186e-6"  iyz="6.529e-7" />
+  </macro>
+  <macro name="ft_wrist_plate_inertia">
+    <inertia  ixx="4.686e-5"  iyy="4.663e-5"  izz="8.289e-5"
+              ixy="0.0"       ixz="0.0"       iyz="0.0" />
+  </macro>
+  
+  <macro name="ftsensor" params="name parent">
+    <!-- Links -->
+    <create_link name="${name}ft_kraft_plate" color="black" mesh="${ft_kraft_plate_mesh}" mass="${ft_kraft_plate_mass}" cog="${ft_kraft_plate_cog}" >
+      <ft_kraft_plate_inertia />
+    </create_link>
+    
+    <create_link name="${name}ft_wrist_plate" color="black" mesh="${ft_wrist_plate_mesh}" mass="${ft_wrist_plate_mass}" cog="${ft_wrist_plate_cog}" >
+      <ft_wrist_plate_inertia />
+    </create_link>
+    
+    <create_link name="${name}ft_sensor" color="black" mesh="${ft_sensor_mesh}" mass="${ft_sensor_mass}" cog="${ft_sensor_cog}" >
+      <ft_sensor_inertia />
+    </create_link>
+    
+    <create_link name="${name}ft_robotiq_plate" color="black" mesh="${ft_robotiq_plate_mesh}" mass="${ft_robotiq_plate_mass}" cog="${ft_robotiq_plate_cog}" >
+      <ft_robotiq_plate_inertia />
+    </create_link>
+    
+    <!-- dummy link for attaching end_effector -->
+    <link name="${name}ft_end_effector" />
+    
+    <!-- Joints -->
+    <joint name="${name}ft_robot_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 0" />
+      <parent link="${parent}" />
+      <child link="${name}ft_kraft_plate" />
+    </joint>
+    
+    <joint name="${name}ft_wrist_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="${name}ft_kraft_plate" />
+      <child link="${name}ft_wrist_plate" />
+    </joint>
+    
+    <joint name="${name}ft_sensor_joint" type="fixed">
+      <origin xyz="0 0 ${23.7e-3+32.7e-3}" rpy="${-pi/2} 0 0" />
+      <parent link="${name}ft_wrist_plate" />
+      <child link="${name}ft_sensor" />
+    </joint>
+    
+    <joint name="${name}ft_plate_joint" type="fixed">
+      <origin xyz="0 -11e-3 0" rpy="${-pi/2} 0 0" />
+      <parent link="${name}ft_sensor" />
+      <child link="${name}ft_robotiq_plate" />
+    </joint>
+    
+    <joint name="${name}ft_end_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 0" />
+      <parent link="${name}ft_robotiq_plate" />
+      <child link="${name}ft_end_effector" />
+    </joint>
+    
+  </macro>
+</robot>

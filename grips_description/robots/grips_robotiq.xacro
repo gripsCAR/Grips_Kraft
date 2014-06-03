@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot name="grips" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Import common macros-->
+  <xacro:include filename="$(find grips_description)/urdf/common.xacro" />
+  <!-- Import materials for rviz-->
+  <xacro:include filename="$(find grips_description)/urdf/materials.xacro" />
+  <!-- Import robot without gripper -->
+  <xacro:include filename="$(find grips_description)/urdf/grips_macro.xacro" />
+  <!-- Import simple gripper -->
+  <xacro:include filename="$(find grips_description)/urdf/ftsensor.xacro" /> 
+  
+  <property name="robot_name" value="" />
+  
+  <!-- Create the grips robot -->
+  <grips_robot name="${robot_name}"/>
+  
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world" />
+  <joint name="anchor" type="fixed">
+    <origin xyz="0 0 0.001" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="base_link" />
+  </joint>
+  
+  <!-- Add the ft_sensor -->
+  <ftsensor name="${robot_name}" parent="end_effector"/>
+  
+  
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/grips</robotNamespace>
+    </plugin>
+  </gazebo> 
+  
+</robot>
