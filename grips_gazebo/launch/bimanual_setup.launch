@@ -1,27 +1,27 @@
 <launch>
   <!-- Export env variable so that gazebo finds the models and materials -->
-	<env name="GAZEBO_MODEL_PATH" value="$(find grips_worlds)/models" />
+  <env name="GAZEBO_MODEL_PATH" value="$(find grips_worlds)/models" />
   
-	<!-- roslaunch arguments -->
+  <!-- roslaunch arguments -->
   <arg name="world_name" default="$(find grips_worlds)/worlds/bimanual_setup.world"/>
-	<arg name="show_rviz" default="true"/>
-	<arg name="debug" default="false"/>
-	<arg name="paused" default="true"/>
-	<arg name="gui" default="true"/>
+  <arg name="show_rviz" default="true"/>
+  <arg name="debug" default="false"/>
+  <arg name="paused" default="true"/>
+  <arg name="gui" default="true"/>
   <arg name="load_controllers" default="true"/>
   <arg name="spawn_args" default=""/>
 
-	<!-- We resume the logic in empty_world.launch, changing only the name of 
-		the world to be launched -->
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(arg world_name)" />
-		<arg name="debug" value="$(arg debug)" />
-		<arg name="gui" value="$(arg gui)" />
-		<arg name="paused" value="$(arg paused)" />
-		<arg name="use_sim_time" value="true" />
-		<arg name="headless" value="false" />
-	</include>
-	
+  <!-- We resume the logic in empty_world.launch, changing only the name of 
+    the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)" />
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="headless" value="false" />
+  </include>
+  
   <arg name="robot_name" value="bimanual"/>
   <!-- send robots urdfs to param server -->
   <param name="robot_description" command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'" />
@@ -48,8 +48,8 @@
   </group>
   
   <!-- Show in Rviz -->
-	<group if="$(arg show_rviz)">
-		<node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/bimanual.rviz"/> 
-	</group>
-	
+  <group if="$(arg show_rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/bimanual.rviz"/> 
+  </group>
+  
 </launch>

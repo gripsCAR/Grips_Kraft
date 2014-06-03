@@ -21,8 +21,9 @@
   
   <!-- Bring up the robot: description, spawn model, controllers and state publisher -->
   <include file="$(find grips_gazebo)/launch/robot_bringup.xml">
+    <arg name="controllers" default=" SA SE WP WY WR linkage_tr linkage_tl linkage_bl joint_state_controller"/>
     <arg name="spawn_args" value="$(arg spawn_args)"/>
-    <arg name="robot_name" value="grips" />
+    <arg name="robot_name" value="grips_robotiq" />
   </include>
   
   <!-- Show in Rviz -->
