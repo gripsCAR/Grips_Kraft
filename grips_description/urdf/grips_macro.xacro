@@ -166,7 +166,8 @@
     <gazebo reference="${name}end_effector">
       <selfCollide>false</selfCollide>
     </gazebo>
-    <!-- camera -->	
+
+    <!-- camera -->
     <gazebo reference="${name}camera">
       <material>Gazebo/FlatBlack</material>
       <selfCollide>false</selfCollide>

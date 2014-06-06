@@ -26,18 +26,37 @@
   </joint>
   
   <!-- Add the ft_sensor -->
-  <ftsensor name="${robot_name}" parent="end_effector"/>
+  <ftsensor name="${robot_name}" parent="${robot_name}end_effector"/>
+  <gazebo reference="${robot_name}WR">
+    <provideFeedback>true</provideFeedback>
+    <!-- FIXME: This sensor tag is never included in the sdf -->
+    <sensor type="force_torque" name="${robot_name}force_torque_sensor">
+      <always_on>1</always_on>
+      <update_rate>100.0</update_rate>
+      <visualize>1</visualize>
+      <force_torque name="${robot_name}ft_sensor">
+        <frame>child</frame>
+      </force_torque>
+    </sensor>
+    <!-- *************************************************** -->
+  </gazebo>
+  <gazebo>
+    <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
+      <updateRate>100.0</updateRate>
+      <topicName>ft_sensor</topicName>
+      <jointName>${robot_name}WR</jointName>
+    </plugin>
+  </gazebo>
   
    Add robotiq hand 
-  <s-model_articulated prefix=""/> 
+  <s-model_articulated prefix="${robot_name}"/> 
   
   <!-- Used for fixing Robotiq to the FT sensor -->
   <joint name="robotiq_anchor" type="fixed">
     <origin xyz="0 54e-3 0" rpy="0 0 0" />
     <parent link="ft_end_effector" />
     <child link="palm" />
-  </joint>
-  
+  </joint>  
   
   <!-- ros_control plugin -->
   <gazebo>

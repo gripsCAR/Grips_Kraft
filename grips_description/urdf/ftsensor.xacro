@@ -89,5 +89,34 @@
       <child link="${name}ft_end_effector" />
     </joint>
     
+<!--
+    <gazebo reference="${name}ft_plate_joint">
+      <physics>
+        <provide_feedback>1</provide_feedback>
+      </physics>
+      <sensor type="force_torque" name="${name}force_torque_sensor">
+        <always_on>1</always_on>
+        <update_rate>1000.0</update_rate>
+        <visualize>1</visualize>
+        <force_torque name="${name}force_torque_sensor">
+          <frame>${name}ft_robotiq_plate</frame>
+        </force_torque>
+        <plugin name="ft_sensor_plugin" filename="libgazebo_ros_ft_sensor.so">
+          <alwaysOn>1</alwaysOn>
+          <updateRate>1000.0</updateRate>
+          <robotNamespace>grips_robotiq</robotNamespace>
+          <topicName>ft_sensor</topicName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+    <transmission name="${name}ft_plate_joint_tran">
+      <type>hardware_interface/ForceTorqueSensorInterface</type>
+      <joint name="${name}ft_plate_joint" />
+      <actuator name="${name}ft_plate_joint_motor">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>-->
   </macro>
 </robot>

@@ -28,7 +28,7 @@
   
   <!-- Show in Rviz -->
   <group if="$(arg show_rviz)">
-    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/grips.rviz"/> 
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/grips_robotiq.rviz"/> 
   </group>
   
 </launch>

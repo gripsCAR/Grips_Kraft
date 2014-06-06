@@ -1,7 +1,10 @@
+# Sensors. publish_rate is in Hz.
 joint_state_controller:
   type: joint_state_controller/JointStateController
-  # Hz
   publish_rate: 1000
+ft_sensor_controller:
+  type: force_torque_sensor_controller/ForceTorqueSensorController
+  publish_rate: 50
 # Grips
 SA:
   type: effort_controllers/JointPositionController
