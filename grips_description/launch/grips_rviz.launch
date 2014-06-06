@@ -13,6 +13,7 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!-- Show in Rviz  -->
-  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_description)/launch/grips.rviz"/> 
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" required="true"
+    args="-d $(find grips_description)/launch/grips.rviz"/> 
 
 </launch>

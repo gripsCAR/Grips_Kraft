@@ -8,14 +8,29 @@
   <!-- Import robot without gripper -->
   <xacro:include filename="$(find grips_description)/urdf/grips_macro.xacro" />
   <!-- Import ft sensor -->
-  <xacro:include filename="$(find grips_description)/urdf/ftsensor.xacro" />
+  <xacro:include filename="$(find grips_description)/urdf/ft_sensor.xacro" />
+  <!-- Import imu sensor -->
+  <xacro:include filename="$(find grips_description)/urdf/imu_sensor.xacro" />
   <!-- Import robotiq s model -->
   <xacro:include filename="$(find robotiq_s_model_visualization)/cfg/s-model_articulated_macro.xacro" />
   
   <property name="robot_name" value="" />
   
   <!-- Create the grips robot -->
-  <grips_robot name="${robot_name}"/>
+  <grips_robot name="${robot_name}"/>  
+  <!-- Add the ft_sensor -->
+  <ft_sensor name="${robot_name}" parent="${robot_name}end_effector"/>
+  <!-- Add the imu_sensor -->
+  <imu_sensor prefix="${robot_name}" parent="${robot_name}end_effector">
+    <origin xyz="0 0.13 ${board_z_size+63.635e-3}" rpy="0 0 ${-pi/2}" />
+  </imu_sensor>
+  <!-- Add robotiq hand -->
+  <s-model_articulated prefix="${robot_name}"/>
+  <gazebo reference="${robot_name}palm">
+    <material>Gazebo/FlatBlack</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  
   
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world" />
@@ -23,39 +38,12 @@
     <origin xyz="0 0 0.001" rpy="0 0 0" />
     <parent link="world" />
     <child link="base_link" />
-  </joint>
-  
-  <!-- Add the ft_sensor -->
-  <ftsensor name="${robot_name}" parent="${robot_name}end_effector"/>
-  <gazebo reference="${robot_name}WR">
-    <provideFeedback>true</provideFeedback>
-    <!-- FIXME: This sensor tag is never included in the sdf -->
-    <sensor type="force_torque" name="${robot_name}force_torque_sensor">
-      <always_on>1</always_on>
-      <update_rate>100.0</update_rate>
-      <visualize>1</visualize>
-      <force_torque name="${robot_name}ft_sensor">
-        <frame>child</frame>
-      </force_torque>
-    </sensor>
-    <!-- *************************************************** -->
-  </gazebo>
-  <gazebo>
-    <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
-      <updateRate>100.0</updateRate>
-      <topicName>ft_sensor</topicName>
-      <jointName>${robot_name}WR</jointName>
-    </plugin>
-  </gazebo>
-  
-   Add robotiq hand 
-  <s-model_articulated prefix="${robot_name}"/> 
-  
+  </joint>  
   <!-- Used for fixing Robotiq to the FT sensor -->
   <joint name="robotiq_anchor" type="fixed">
     <origin xyz="0 54e-3 0" rpy="0 0 0" />
-    <parent link="ft_end_effector" />
-    <child link="palm" />
+    <parent link="${robot_name}ft_end_effector" />
+    <child link="${robot_name}palm" />
   </joint>  
   
   <!-- ros_control plugin -->

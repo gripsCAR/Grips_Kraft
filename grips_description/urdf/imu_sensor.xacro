@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- adis1640x IMU properties -->
+  <property name="imu_mesh"   value="package://grips_description/meshes/visual/adis1640x.dae" />
+  <property name="imu_mass"   value="0.0245" />
+  <property name="imu_cog"    value="-0.007e-3 11.349e-3 0.153e-3" />
+  <macro name="imu_inertia">
+    <inertia  ixx="1.181e-6"  iyy="1.188e-6"  izz="1.176e-6"
+              ixy="-9854e-10" ixz="-6.24e-10" iyz="1.978e-8" />
+  </macro>
+  
+  <!-- ADIS16IMU1/PCBZ board properties -->
+  <property name="board_x_size"   value="64.77e-3" />
+  <property name="board_y_size"   value="66.04e-3" />
+  <property name="board_z_size"   value="3.37e-3" />
+  <property name="board_mass"     value="0.059" />
+  
+  <macro name="imu_sensor" params="prefix parent *origin">
+    <!-- Links -->
+    <create_link name="${prefix}imu_sensor" color="black" mesh="${imu_mesh}" mass="${imu_mass}" cog="${imu_cog}" >
+      <imu_inertia />
+    </create_link>
+    <gazebo reference="${prefix}imu_sensor">
+      <material>Telerobcar/MetalSeamed</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+    
+    <link name="${prefix}imu_board">
+      <inertial>
+        <mass value="${board_mass}" />
+        <origin xyz="0 0 0" />
+        <!--The 3x3 rotational inertia matrix. -->
+        <box_inertia  m="${board_mass}" x="${board_x_size}" y="${board_y_size}" z="${board_z_size}"/> 
+      </inertial>    
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${board_x_size} ${board_y_size} ${board_z_size}"/>
+        </geometry>
+        <material name="green" />
+      </visual>  
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0 " />
+        <geometry>
+          <box size="${board_x_size} ${board_y_size} ${board_z_size}"/>
+        </geometry>
+      </collision>     
+    </link>
+    <gazebo reference="${prefix}imu_board">
+      <material>Gazebo/Green</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+    
+    <!-- Joints -->
+    <joint name="${prefix}board_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${prefix}imu_board" />
+    </joint>
+    
+    <joint name="${prefix}imu_joint" type="fixed">
+      <origin xyz="0 0 ${board_z_size/2 + 0.75e-3}" rpy="0 0 0" />
+      <parent link="${prefix}imu_board" />
+      <child link="${prefix}imu_sensor" />
+    </joint>
+    
+    <!-- IMU Plugin -->
+    <gazebo>
+      <plugin name="imu_sensor" filename="libgazebo_ros_imu.so">
+        <robotNamespace>/grips_robotiq</robotNamespace>
+        <updateRate>100.0</updateRate>
+        <topicName>imu_sensor</topicName>
+        <bodyName>${prefix}imu_board</bodyName>
+      </plugin>
+    </gazebo>
+    
+  </macro>
+</robot>

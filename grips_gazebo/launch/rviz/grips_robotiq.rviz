@@ -170,6 +170,16 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        imu_board:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        imu_sensor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         manifold:
           Alpha: 1
           Show Axes: false
@@ -273,9 +283,17 @@ Visualization Manager:
       Enabled: true
       Force Color: 204; 51; 51
       History Length: 1
-      Name: WrenchStamped
+      Name: ft_sensor
       Topic: /grips_robotiq/ft_sensor
       Torque Color: 204; 204; 51
+      Value: true
+    - Alpha: 1
+      Class: rviz_plugin_tutorials/Imu
+      Color: 204; 51; 204
+      Enabled: true
+      History Length: 1
+      Name: imu_sensor
+      Topic: /grips_robotiq/imu_sensor
       Value: true
   Enabled: true
   Global Options:
@@ -301,22 +319,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.75624
+      Distance: 0.451034
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.243947
-        Y: 0.502438
-        Z: 1.01052
+        X: 0.184497
+        Y: 0.707132
+        Z: 0.967108
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.545398
+      Pitch: 0.810398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.95857
+      Yaw: 0.0103853
     Saved: ~
 Window Geometry:
   Displays:
@@ -336,5 +354,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1627
-  X: 1326
+  X: 1333
   Y: 24
