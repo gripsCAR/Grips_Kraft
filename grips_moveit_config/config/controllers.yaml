@@ -1,0 +1,11 @@
+controller_list:
+  - name: /grips
+    action_ns: trajectory_controller/follow_joint_trajectory
+    type: FollowJointTrajectory
+    joints:
+      - SA
+      - SE
+      - linkage_tr
+      - WP
+      - WY
+      - WR

@@ -1,6 +1,10 @@
 <launch>
+  
+  <arg name="robot_name" default="grips" />
 
-  <include file="$(find grips_moveit_config)/launch/planning_context.launch" />
+  <include file="$(find grips_moveit_config)/launch/planning_context.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />

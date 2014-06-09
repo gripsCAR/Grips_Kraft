@@ -1,0 +1,22 @@
+# Sensors. publish_rate is in Hz.
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 1000
+
+# JointTrajectoryController
+trajectory_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - SA
+    - SE
+    - linkage_tr
+    - WP
+    - WY
+    - WR
+  gains:
+    SA: {p: 10000, i: 0, d: 100}
+    SE: {p: 1000000, i: 0, d: 100}
+    linkage_tr: {p: 10000, i: 0, d: 100}
+    WP: {p: 10000, i: 0, d: 100}
+    WY: {p: 3000, i: 0, d: 50}
+    WR: {p: 100, i: 0, d: 0}

@@ -3,7 +3,7 @@
     This is a format for representing semantic information about the robot structure.
     A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
 -->
-<robot name="grips_robotiq">
+<robot name="grips">
     <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
     <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
@@ -28,73 +28,255 @@
         <joint name="linkage_tr" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="gripper" parent_link="end_effector" group="arm" />
+    <end_effector name="robotiq" parent_link="end_effector" group="arm" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="coupling" reason="Never" />
     <disable_collisions link1="base_link" link2="forearm" reason="Never" />
     <disable_collisions link1="base_link" link2="manifold" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="pitch" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_1_link_0" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_1_link_1" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_1_link_2" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_1_link_3" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_middle_link_1" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_middle_link_2" reason="Never" />
+    <disable_collisions link1="camera" link2="finger_middle_link_3" reason="Never" />
     <disable_collisions link1="camera" link2="forearm" reason="Never" />
-    <disable_collisions link1="camera" link2="gripper_base" reason="Never" />
-    <disable_collisions link1="camera" link2="l_finger" reason="Never" />
-    <disable_collisions link1="camera" link2="l_inner" reason="Never" />
-    <disable_collisions link1="camera" link2="l_outer" reason="Never" />
+    <disable_collisions link1="camera" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="camera" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="camera" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="camera" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="camera" link2="imu_board" reason="Never" />
+    <disable_collisions link1="camera" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="camera" link2="palm" reason="Never" />
     <disable_collisions link1="camera" link2="pitch" reason="Never" />
-    <disable_collisions link1="camera" link2="r_finger" reason="Never" />
-    <disable_collisions link1="camera" link2="r_inner" reason="Never" />
-    <disable_collisions link1="camera" link2="r_outer" reason="Never" />
     <disable_collisions link1="camera" link2="yaw" reason="Adjacent" />
     <disable_collisions link1="coupling" link2="elbow_pivot" reason="Adjacent" />
+    <disable_collisions link1="coupling" link2="finger_1_link_0" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_1_link_1" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_1_link_2" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_1_link_3" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_middle_link_1" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_middle_link_2" reason="Never" />
+    <disable_collisions link1="coupling" link2="finger_middle_link_3" reason="Never" />
     <disable_collisions link1="coupling" link2="forearm" reason="Adjacent" />
-    <disable_collisions link1="coupling" link2="gripper_base" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_finger" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_inner" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_outer" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_finger" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_inner" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_outer" reason="Never" />
-    <disable_collisions link1="forearm" link2="gripper_base" reason="Never" />
-    <disable_collisions link1="forearm" link2="l_finger" reason="Never" />
-    <disable_collisions link1="forearm" link2="l_inner" reason="Never" />
-    <disable_collisions link1="forearm" link2="l_outer" reason="Never" />
+    <disable_collisions link1="coupling" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="coupling" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="coupling" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="coupling" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="coupling" link2="imu_board" reason="Never" />
+    <disable_collisions link1="coupling" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="coupling" link2="palm" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_1_link_0" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_1_link_1" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_1_link_2" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_1_link_3" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_middle_link_1" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_middle_link_2" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="finger_middle_link_3" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="imu_board" reason="Never" />
+    <disable_collisions link1="elbow_pivot" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="finger_1_link_1" reason="Adjacent" />
+    <disable_collisions link1="finger_1_link_0" link2="finger_1_link_2" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="finger_1_link_3" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="ft_robotiq_plate" reason="Default" />
+    <disable_collisions link1="finger_1_link_0" link2="ft_sensor" reason="Default" />
+    <disable_collisions link1="finger_1_link_0" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="palm" reason="Adjacent" />
+    <disable_collisions link1="finger_1_link_0" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_1_link_0" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="finger_1_link_2" reason="Adjacent" />
+    <disable_collisions link1="finger_1_link_1" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="palm" reason="Default" />
+    <disable_collisions link1="finger_1_link_1" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_1_link_1" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="finger_1_link_3" reason="Adjacent" />
+    <disable_collisions link1="finger_1_link_2" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_1_link_2" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="finger_2_link_0" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="finger_2_link_1" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_1_link_3" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_2_link_1" reason="Adjacent" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_2_link_2" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_2_link_3" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_1" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_2" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_3" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="palm" reason="Adjacent" />
+    <disable_collisions link1="finger_2_link_0" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_2_link_0" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="finger_2_link_2" reason="Adjacent" />
+    <disable_collisions link1="finger_2_link_1" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="palm" reason="Default" />
+    <disable_collisions link1="finger_2_link_1" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_2_link_1" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="finger_2_link_3" reason="Adjacent" />
+    <disable_collisions link1="finger_2_link_2" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_2_link_2" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="finger_middle_link_0" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_2_link_3" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="finger_middle_link_1" reason="Adjacent" />
+    <disable_collisions link1="finger_middle_link_0" link2="finger_middle_link_2" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="finger_middle_link_3" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="ft_sensor" reason="Default" />
+    <disable_collisions link1="finger_middle_link_0" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="palm" reason="Adjacent" />
+    <disable_collisions link1="finger_middle_link_0" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_middle_link_0" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="finger_middle_link_2" reason="Adjacent" />
+    <disable_collisions link1="finger_middle_link_1" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="palm" reason="Default" />
+    <disable_collisions link1="finger_middle_link_1" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_middle_link_1" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="finger_middle_link_3" reason="Adjacent" />
+    <disable_collisions link1="finger_middle_link_2" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_middle_link_2" link2="yaw" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="forearm" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="imu_board" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="pitch" reason="Never" />
+    <disable_collisions link1="finger_middle_link_3" link2="yaw" reason="Never" />
+    <disable_collisions link1="forearm" link2="ft_kraft_plate" reason="Never" />
+    <disable_collisions link1="forearm" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="forearm" link2="ft_sensor" reason="Never" />
+    <disable_collisions link1="forearm" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="forearm" link2="imu_board" reason="Never" />
+    <disable_collisions link1="forearm" link2="imu_sensor" reason="Never" />
     <disable_collisions link1="forearm" link2="manifold" reason="Never" />
+    <disable_collisions link1="forearm" link2="palm" reason="Never" />
     <disable_collisions link1="forearm" link2="pitch" reason="Adjacent" />
-    <disable_collisions link1="forearm" link2="r_finger" reason="Never" />
-    <disable_collisions link1="forearm" link2="r_inner" reason="Never" />
-    <disable_collisions link1="forearm" link2="r_outer" reason="Never" />
     <disable_collisions link1="forearm" link2="upper_arm" reason="Adjacent" />
     <disable_collisions link1="forearm" link2="yaw" reason="Never" />
-    <disable_collisions link1="gripper_base" link2="l_finger" reason="Never" />
-    <disable_collisions link1="gripper_base" link2="l_inner" reason="Adjacent" />
-    <disable_collisions link1="gripper_base" link2="l_outer" reason="Adjacent" />
-    <disable_collisions link1="gripper_base" link2="pitch" reason="Never" />
-    <disable_collisions link1="gripper_base" link2="r_finger" reason="Never" />
-    <disable_collisions link1="gripper_base" link2="r_inner" reason="Adjacent" />
-    <disable_collisions link1="gripper_base" link2="r_outer" reason="Adjacent" />
-    <disable_collisions link1="gripper_base" link2="yaw" reason="Adjacent" />
-    <disable_collisions link1="l_finger" link2="l_inner" reason="Adjacent" />
-    <disable_collisions link1="l_finger" link2="pitch" reason="Never" />
-    <disable_collisions link1="l_finger" link2="r_inner" reason="Never" />
-    <disable_collisions link1="l_finger" link2="r_outer" reason="Never" />
-    <disable_collisions link1="l_finger" link2="yaw" reason="Never" />
-    <disable_collisions link1="l_inner" link2="pitch" reason="Never" />
-    <disable_collisions link1="l_inner" link2="r_finger" reason="Never" />
-    <disable_collisions link1="l_inner" link2="r_inner" reason="Never" />
-    <disable_collisions link1="l_inner" link2="r_outer" reason="Never" />
-    <disable_collisions link1="l_inner" link2="yaw" reason="Never" />
-    <disable_collisions link1="l_outer" link2="pitch" reason="Never" />
-    <disable_collisions link1="l_outer" link2="r_finger" reason="Never" />
-    <disable_collisions link1="l_outer" link2="r_inner" reason="Never" />
-    <disable_collisions link1="l_outer" link2="r_outer" reason="Never" />
-    <disable_collisions link1="l_outer" link2="yaw" reason="Never" />
+    <disable_collisions link1="ft_kraft_plate" link2="ft_robotiq_plate" reason="Never" />
+    <disable_collisions link1="ft_kraft_plate" link2="ft_sensor" reason="Default" />
+    <disable_collisions link1="ft_kraft_plate" link2="ft_wrist_plate" reason="Adjacent" />
+    <disable_collisions link1="ft_kraft_plate" link2="imu_board" reason="Adjacent" />
+    <disable_collisions link1="ft_kraft_plate" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="ft_kraft_plate" link2="palm" reason="Never" />
+    <disable_collisions link1="ft_kraft_plate" link2="pitch" reason="Never" />
+    <disable_collisions link1="ft_kraft_plate" link2="yaw" reason="Adjacent" />
+    <disable_collisions link1="ft_robotiq_plate" link2="ft_sensor" reason="Adjacent" />
+    <disable_collisions link1="ft_robotiq_plate" link2="ft_wrist_plate" reason="Never" />
+    <disable_collisions link1="ft_robotiq_plate" link2="imu_board" reason="Never" />
+    <disable_collisions link1="ft_robotiq_plate" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="ft_robotiq_plate" link2="palm" reason="Adjacent" />
+    <disable_collisions link1="ft_robotiq_plate" link2="pitch" reason="Never" />
+    <disable_collisions link1="ft_robotiq_plate" link2="yaw" reason="Never" />
+    <disable_collisions link1="ft_sensor" link2="ft_wrist_plate" reason="Adjacent" />
+    <disable_collisions link1="ft_sensor" link2="imu_board" reason="Never" />
+    <disable_collisions link1="ft_sensor" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="ft_sensor" link2="palm" reason="Default" />
+    <disable_collisions link1="ft_sensor" link2="pitch" reason="Never" />
+    <disable_collisions link1="ft_sensor" link2="yaw" reason="Never" />
+    <disable_collisions link1="ft_wrist_plate" link2="imu_board" reason="Never" />
+    <disable_collisions link1="ft_wrist_plate" link2="imu_sensor" reason="Never" />
+    <disable_collisions link1="ft_wrist_plate" link2="palm" reason="Never" />
+    <disable_collisions link1="ft_wrist_plate" link2="pitch" reason="Never" />
+    <disable_collisions link1="ft_wrist_plate" link2="yaw" reason="Never" />
+    <disable_collisions link1="imu_board" link2="imu_sensor" reason="Adjacent" />
+    <disable_collisions link1="imu_board" link2="palm" reason="Default" />
+    <disable_collisions link1="imu_board" link2="pitch" reason="Never" />
+    <disable_collisions link1="imu_board" link2="yaw" reason="Adjacent" />
+    <disable_collisions link1="imu_sensor" link2="palm" reason="Default" />
+    <disable_collisions link1="imu_sensor" link2="pitch" reason="Never" />
+    <disable_collisions link1="imu_sensor" link2="yaw" reason="Never" />
     <disable_collisions link1="manifold" link2="upper_arm" reason="Adjacent" />
-    <disable_collisions link1="pitch" link2="r_finger" reason="Never" />
-    <disable_collisions link1="pitch" link2="r_inner" reason="Never" />
-    <disable_collisions link1="pitch" link2="r_outer" reason="Never" />
+    <disable_collisions link1="palm" link2="pitch" reason="Never" />
+    <disable_collisions link1="palm" link2="yaw" reason="Never" />
     <disable_collisions link1="pitch" link2="upper_arm" reason="Never" />
     <disable_collisions link1="pitch" link2="yaw" reason="Adjacent" />
-    <disable_collisions link1="r_finger" link2="r_inner" reason="Adjacent" />
-    <disable_collisions link1="r_finger" link2="yaw" reason="Never" />
-    <disable_collisions link1="r_inner" link2="yaw" reason="Never" />
-    <disable_collisions link1="r_outer" link2="yaw" reason="Never" />
 </robot>

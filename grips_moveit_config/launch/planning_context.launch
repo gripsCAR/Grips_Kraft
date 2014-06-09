@@ -1,4 +1,6 @@
 <launch>
+  <arg name="robot_name" default="grips" />
+  
   <!-- By default we do not overwrite the URDF. Change the following to true to change the default behavior -->
   <arg name="load_robot_description" default="false"/>
 
@@ -6,10 +8,10 @@
   <arg name="robot_description" default="robot_description"/>
 
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find grips_description)/robots/grips.xacro'"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find grips_moveit_config)/config/grips.srdf" />
+  <param name="$(arg robot_description)_semantic" textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
   
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">

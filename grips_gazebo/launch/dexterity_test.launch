@@ -23,6 +23,7 @@
 	
   <!-- Bring up the robot: description, spawn model, controllers and state publisher -->
   <include file="$(find grips_gazebo)/launch/robot_bringup.xml">
+    <arg name="load_controllers" default="$(arg load_controllers)"/>
     <arg name="spawn_args" value="$(arg spawn_args)"/>
     <arg name="robot_name" value="grips" />
   </include>

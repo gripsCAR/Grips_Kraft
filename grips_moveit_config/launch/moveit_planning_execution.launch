@@ -1,0 +1,31 @@
+<launch>	
+  <arg name="sim" default="true" />
+  <arg name="robot_name" default="grips" />
+  
+  <!-- Load robot model -->
+  <include file="$(find grips_gazebo)/launch/$(arg robot_name).launch" >
+    <arg name="load_controllers" value="false" />
+    <arg name="show_rviz" value="false" />
+  </include>
+  
+  <!-- Load robot controllers -->
+  <group ns="grips" >
+    <include file="$(find grips_control)/launch/grips_trajectory_control.launch" />
+  </group>
+
+  <group if="$(arg sim)" ns="grips" >
+    <rosparam file="$(find grips_moveit_config)/config/joint_names.yaml" command="load"/>
+    <include file="$(find industrial_robot_simulator)/launch/robot_interface_simulator.launch" />
+  </group>
+
+  <include file="$(find grips_moveit_config)/launch/move_group.launch">
+    <arg name="publish_monitored_planning_scene" value="true" />
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+
+  <include file="$(find grips_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include>
+  
+  <include file="$(find grips_moveit_config)/launch/default_warehouse_db.launch" />
+</launch>

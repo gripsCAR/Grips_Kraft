@@ -68,7 +68,7 @@
     <!-- IMU Plugin -->
     <gazebo>
       <plugin name="imu_sensor" filename="libgazebo_ros_imu.so">
-        <robotNamespace>/grips_robotiq</robotNamespace>
+        <robotNamespace>/grips</robotNamespace>
         <updateRate>500.0</updateRate>
         <topicName>imu</topicName>
         <bodyName>${prefix}imu_board</bodyName>
