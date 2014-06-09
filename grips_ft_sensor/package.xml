@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>grips_ft_sensor</name>
+  <description>The grips_ft_sensor package</description>
+
+  <version>0.2.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>force_torque_sensor_calib</build_depend>
+  <build_depend>gravity_compensation</build_depend>
+  <run_depend>force_torque_sensor_calib</run_depend>
+  <run_depend>gravity_compensation</run_depend>
+
+</package>
