@@ -107,7 +107,7 @@
       <plugin name="ft_sensor" filename="libgazebo_ros_ft_sensor.so">
         <robotNamespace>/grips_robotiq</robotNamespace>
         <updateRate>100.0</updateRate>
-        <topicName>ft_sensor</topicName>
+        <topicName>ft_raw</topicName>
         <jointName>${name}WR</jointName>
       </plugin>
     </gazebo>

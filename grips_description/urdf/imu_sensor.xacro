@@ -45,7 +45,7 @@
         <geometry>
           <box size="${board_x_size} ${board_y_size} ${board_z_size}"/>
         </geometry>
-      </collision>     
+      </collision>
     </link>
     <gazebo reference="${prefix}imu_board">
       <material>Gazebo/Green</material>
@@ -69,8 +69,8 @@
     <gazebo>
       <plugin name="imu_sensor" filename="libgazebo_ros_imu.so">
         <robotNamespace>/grips_robotiq</robotNamespace>
-        <updateRate>100.0</updateRate>
-        <topicName>imu_sensor</topicName>
+        <updateRate>500.0</updateRate>
+        <topicName>imu</topicName>
         <bodyName>${prefix}imu_board</bodyName>
       </plugin>
     </gazebo>

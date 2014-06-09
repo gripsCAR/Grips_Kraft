@@ -17,7 +17,7 @@
   <property name="robot_name" value="" />
   
   <!-- Create the grips robot -->
-  <grips_robot name="${robot_name}"/>  
+  <grips_robot name="${robot_name}"/>
   <!-- Add the ft_sensor -->
   <ft_sensor name="${robot_name}" parent="${robot_name}end_effector"/>
   <!-- Add the imu_sensor -->

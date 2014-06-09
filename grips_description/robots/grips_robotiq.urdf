@@ -35,6 +35,7 @@
   </material>
   <!-- Import robot without gripper -->
   <!-- Import ft sensor -->
+  <!-- Import imu sensor -->
   <!-- Import robotiq s model -->
   <!-- Create the grips robot -->
   <link name="base_link">
@@ -402,13 +403,6 @@
       </plugin>
     </sensor>
   </gazebo>
-  <!-- Used for fixing robot to Gazebo 'base_link' -->
-  <link name="world"/>
-  <joint name="anchor" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0.001"/>
-    <parent link="world"/>
-    <child link="base_link"/>
-  </joint>
   <!-- Add the ft_sensor -->
   <link name="ft_kraft_plate">
     <visual>
@@ -523,11 +517,79 @@
   </gazebo>
   <gazebo>
     <plugin filename="libgazebo_ros_ft_sensor.so" name="ft_sensor">
+      <robotNamespace>/grips_robotiq</robotNamespace>
       <updateRate>100.0</updateRate>
-      <topicName>ft_sensor</topicName>
+      <topicName>ft_raw</topicName>
       <jointName>WR</jointName>
     </plugin>
   </gazebo>
+  <!-- Add the imu_sensor -->
+  <link name="imu_sensor">
+    <visual>
+      <geometry>
+        <mesh filename="package://grips_description/meshes/visual/adis1640x.dae"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://grips_description/meshes/visual/adis1640x.dae"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.007e-3 11.349e-3 0.153e-3"/>
+      <mass value="0.0245"/>
+      <inertia ixx="1.181e-6" ixy="-9854e-10" ixz="-6.24e-10" iyy="1.188e-6" iyz="1.978e-8" izz="1.176e-6"/>
+    </inertial>
+  </link>
+  <gazebo reference="imu_sensor">
+    <material>Telerobcar/MetalSeamed</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <link name="imu_board">
+    <inertial>
+      <mass value="0.059"/>
+      <origin xyz="0 0 0"/>
+      <!--The 3x3 rotational inertia matrix. -->
+      <inertia ixx="2.14988059583e-05" ixy="0" ixz="0" iyy="2.06820065167e-05" iyz="0" izz="2.06820065167e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.06477 0.06604 0.00337"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0 " xyz="0 0 0"/>
+      <geometry>
+        <box size="0.06477 0.06604 0.00337"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="imu_board">
+    <material>Gazebo/Green</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <joint name="board_joint" type="fixed">
+    <origin rpy="0 0 -1.57079632679" xyz="0 0.13 0.067005"/>
+    <parent link="end_effector"/>
+    <child link="imu_board"/>
+  </joint>
+  <joint name="imu_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.002435"/>
+    <parent link="imu_board"/>
+    <child link="imu_sensor"/>
+  </joint>
+  <gazebo>
+    <plugin filename="libgazebo_ros_imu.so" name="imu_sensor">
+      <robotNamespace>/grips_robotiq</robotNamespace>
+      <updateRate>500.0</updateRate>
+      <topicName>imu</topicName>
+      <bodyName>imu_board</bodyName>
+    </plugin>
+  </gazebo>
+  <!-- Add robotiq hand -->
   <link name="finger_1_link_0">
     <visual>
       <origin rpy="0 0 0" xyz="0.020 0 0"/>
@@ -912,6 +974,17 @@
     <child link="finger_middle_link_0"/>
     <axis xyz="0 0 1"/>
     <origin rpy="0 0 1.57" xyz="0.0455 0.0214 0"/>
+  </joint>
+  <gazebo reference="palm">
+    <material>Gazebo/FlatBlack</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+  <joint name="anchor" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.001"/>
+    <parent link="world"/>
+    <child link="base_link"/>
   </joint>
   <!-- Used for fixing Robotiq to the FT sensor -->
   <joint name="robotiq_anchor" type="fixed">
