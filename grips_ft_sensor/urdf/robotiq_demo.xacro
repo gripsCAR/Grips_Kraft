@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<robot name="grips" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Import common macros-->
+  <xacro:include filename="$(find grips_description)/urdf/common.xacro" />
+  <!-- Import materials for rviz-->
+  <xacro:include filename="$(find grips_description)/urdf/materials.xacro" />
+  <!-- Import ft sensor -->
+  <xacro:include filename="$(find grips_description)/urdf/ft_sensor.xacro" />
+  <!-- Import imu sensor -->
+  <xacro:include filename="$(find grips_description)/urdf/imu_sensor.xacro" />
+  <!-- Import robotiq s model -->
+  <xacro:include filename="$(find robotiq_s_model_visualization)/cfg/s-model_fixed_macro.xacro" />
+  
+  
+  <!-- Create fixing links -->
+  <link name="world" />
+  <link name="anchor_link" />
+  <joint name="anchor" type="fixed">
+    <origin xyz="0 0 0.5" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="anchor_link" />
+  </joint>
+  
+  <ft_sensor name="" parent="anchor_link"/>
+  <!-- Add the imu_sensor -->
+  <imu_sensor prefix="" parent="anchor_link">
+    <origin xyz="0 0.13 ${board_z_size+63.635e-3}" rpy="0 0 ${-pi/2}" />
+  </imu_sensor>
+  <!-- Add robotiq hand -->
+  <s-model_fixed prefix=""/>
+  <gazebo reference="palm">
+    <material>Gazebo/FlatBlack</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  
+  <!-- Used for fixing Robotiq to the FT sensor -->
+  <joint name="robotiq_anchor" type="fixed">
+    <origin xyz="0 54e-3 0" rpy="0 0 0" />
+    <parent link="ft_end_effector" />
+    <child link="palm" />
+  </joint>  
+  
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo>
+  
+</robot>

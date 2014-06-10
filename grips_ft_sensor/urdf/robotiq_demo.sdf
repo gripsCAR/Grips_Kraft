@@ -1,0 +1,445 @@
+<sdf version='1.4'>
+  <model name='grips'>
+    <link name='anchor_link'>
+      <pose>0 0 0.5 0 -0 0</pose>
+      <inertial>
+        <pose>-0.00745342 0.129635 0.00179105 0 -0 0</pose>
+        <mass>3.2603</mass>
+        <inertia>
+          <ixx>0.0945641</ixx>
+          <ixy>0.00564016</ixy>
+          <ixz>-0.000238885</ixz>
+          <iyy>0.0706216</iyy>
+          <iyz>-6.37637e-05</iyz>
+          <izz>0.0413639</izz>
+        </inertia>
+      </inertial>
+      <collision name='anchor_link_collision_finger_1_link_0'>
+        <pose>-0.00406378 0.0973332 -3.3426e-07 7.34643e-06 7.35226e-06 5.39914e-11</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_1_link_1'>
+        <pose>-0.0735557 0.212778 0.0360005 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_1_link_2'>
+        <pose>-0.092961 0.246607 0.0285008 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_1_link_3'>
+        <pose>-0.092961 0.246607 0.0360008 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_2_link_0'>
+        <pose>-0.00406378 0.0973332 -0.0720003 7.34643e-06 7.35226e-06 5.39914e-11</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_2_link_1'>
+        <pose>-0.0735557 0.212778 -0.0359995 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_2_link_2'>
+        <pose>-0.092961 0.246607 -0.0434992 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_2_link_3'>
+        <pose>-0.092961 0.246607 -0.0359992 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_middle_link_0'>
+        <pose>0.00406378 0.097333 0.036 3.14159 -7.34641e-06 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_middle_link_1'>
+        <pose>0.0735557 0.212778 3.23139e-12 9.74576e-12 -1.69899e-11 1.05</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_middle_link_2'>
+        <pose>0.092961 0.246607 0.0075 9.74576e-12 -1.69899e-11 1.05</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_finger_middle_link_3'>
+        <pose>0.092961 0.246607 3.894e-12 1.58062e-14 -1.95867e-11 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_ft_kraft_plate'>
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_kraft_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_ft_robotiq_plate'>
+        <pose>0 0.0674 3.83901e-13 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_robotiq_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_ft_sensor'>
+        <pose>0 0.0564 2.76175e-13 -3.14159 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_sensor.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_ft_wrist_plate'>
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_wrist_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='anchor_link_collision_imu_board'>
+        <pose>0 0.13 0.067005 0 0 -1.5708</pose>
+        <geometry>
+          <box>
+            <size>0.06477 0.06604 0.00337</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='anchor_link_collision_imu_sensor'>
+        <pose>0 0.13 0.06944 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/adis1640x.dae</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='anchor_link_collision_palm'>
+        <pose>0 0.1214 1.44157e-12 1.95866e-11 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/collision/palm.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='anchor_link_visual_finger_1_link_0'>
+        <pose>-0.0455159 0.1628 0.0360001 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_1_link_1'>
+        <pose>-0.0735557 0.212778 0.0360005 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_1_link_2'>
+        <pose>-0.092961 0.246607 0.0285008 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_1_link_3'>
+        <pose>-0.092961 0.246607 0.0360008 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_2_link_0'>
+        <pose>-0.0455159 0.1628 -0.0359999 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_2_link_1'>
+        <pose>-0.0735557 0.212778 -0.0359995 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_2_link_2'>
+        <pose>-0.092961 0.246607 -0.0434992 3.14159 -6.37537e-06 2.09159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_2_link_3'>
+        <pose>-0.092961 0.246607 -0.0359992 3.14159 -7.34643e-06 1.57159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_middle_link_0'>
+        <pose>0.0455159 0.1628 2.25245e-12 1.58062e-14 -1.95867e-11 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_0.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_middle_link_1'>
+        <pose>0.0735557 0.212778 3.23139e-12 9.74576e-12 -1.69899e-11 1.05</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_1.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_middle_link_2'>
+        <pose>0.092961 0.246607 0.0075 9.74576e-12 -1.69899e-11 1.05</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_2.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_finger_middle_link_3'>
+        <pose>0.092961 0.246607 3.894e-12 1.58062e-14 -1.95867e-11 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/link_3.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_ft_kraft_plate'>
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_kraft_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_ft_robotiq_plate'>
+        <pose>0 0.0674 3.83901e-13 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_robotiq_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_ft_sensor'>
+        <pose>0 0.0564 2.76175e-13 -3.14159 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_sensor.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_ft_wrist_plate'>
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/ft_wrist_plate.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='anchor_link_visual_imu_board'>
+        <pose>0 0.13 0.067005 0 0 -1.5708</pose>
+        <geometry>
+          <box>
+            <size>0.06477 0.06604 0.00337</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Green</name>
+            <uri>__default__</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='anchor_link_visual_imu_sensor'>
+        <pose>0 0.13 0.06944 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://grips_description/meshes/visual/adis1640x.dae</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Telerobcar/MetalSeamed</name>
+            <uri>__default__</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='anchor_link_visual_palm'>
+        <pose>0 0.1214 1.44157e-12 1.95866e-11 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://robotiq_s_model_visualization/meshes/s-model_articulated/visual/palm.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/FlatBlack</name>
+            <uri>__default__</uri>
+          </script>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <gravity>1</gravity>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <self_collide>0</self_collide>
+    </link>
+    <joint name='anchor' type='revolute'>
+      <child>anchor_link</child>
+      <parent>world</parent>
+      <axis>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+        </dynamics>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+    <plugin name='ft_sensor' filename='libgazebo_ros_ft_sensor.so'>
+      <robotNamespace>/grips</robotNamespace>
+      <updateRate>100.0</updateRate>
+      <topicName>ft_raw</topicName>
+      <jointName>WR</jointName>
+    </plugin>
+    <plugin name='imu_sensor' filename='libgazebo_ros_imu.so'>
+      <robotNamespace>/grips</robotNamespace>
+      <updateRate>500.0</updateRate>
+      <topicName>imu</topicName>
+      <bodyName>anchor_link</bodyName>
+      <xyzOffset>0 -0.13 -0.067005</xyzOffset>
+      <rpyOffset>0 -0 1.5708</rpyOffset>
+    </plugin>
+    <static>0</static>
+    <plugin name='ros_control' filename='libgazebo_ros_control.so'/>
+  </model>
+</sdf>
