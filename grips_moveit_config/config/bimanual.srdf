@@ -48,13 +48,10 @@
     <end_effector name="left_gripper" parent_link="left_end_effector" group="left_arm" />
     <end_effector name="right_gripper" parent_link="right_end_effector" group="right_arm" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="left_base_link" link2="left_coupling" reason="Never" />
     <disable_collisions link1="left_base_link" link2="left_forearm" reason="Never" />
     <disable_collisions link1="left_base_link" link2="left_manifold" reason="Adjacent" />
     <disable_collisions link1="left_base_link" link2="left_pitch" reason="Never" />
     <disable_collisions link1="left_base_link" link2="right_base_link" reason="Adjacent" />
-    <disable_collisions link1="left_base_link" link2="right_coupling" reason="Never" />
-    <disable_collisions link1="left_base_link" link2="right_elbow_pivot" reason="Never" />
     <disable_collisions link1="left_base_link" link2="right_forearm" reason="Never" />
     <disable_collisions link1="left_base_link" link2="right_manifold" reason="Never" />
     <disable_collisions link1="left_base_link" link2="right_pitch" reason="Never" />
@@ -70,18 +67,6 @@
     <disable_collisions link1="left_camera" link2="left_r_inner" reason="Never" />
     <disable_collisions link1="left_camera" link2="left_r_outer" reason="Never" />
     <disable_collisions link1="left_camera" link2="left_yaw" reason="Adjacent" />
-    <disable_collisions link1="left_coupling" link2="left_elbow_pivot" reason="Adjacent" />
-    <disable_collisions link1="left_coupling" link2="left_forearm" reason="Adjacent" />
-    <disable_collisions link1="left_coupling" link2="left_gripper_base" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_l_finger" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_l_inner" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_l_outer" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_r_finger" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_r_inner" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="left_r_outer" reason="Never" />
-    <disable_collisions link1="left_coupling" link2="right_r_outer" reason="Never" />
-    <disable_collisions link1="left_elbow_pivot" link2="left_l_finger" reason="Never" />
-    <disable_collisions link1="left_elbow_pivot" link2="left_r_finger" reason="Never" />
     <disable_collisions link1="left_forearm" link2="left_gripper_base" reason="Never" />
     <disable_collisions link1="left_forearm" link2="left_l_finger" reason="Never" />
     <disable_collisions link1="left_forearm" link2="left_l_inner" reason="Never" />
@@ -156,7 +141,6 @@
     <disable_collisions link1="left_upper_arm" link2="right_base_link" reason="Never" />
     <disable_collisions link1="left_upper_arm" link2="right_manifold" reason="Never" />
     <disable_collisions link1="left_yaw" link2="right_base_link" reason="Never" />
-    <disable_collisions link1="right_base_link" link2="right_coupling" reason="Never" />
     <disable_collisions link1="right_base_link" link2="right_forearm" reason="Never" />
     <disable_collisions link1="right_base_link" link2="right_manifold" reason="Adjacent" />
     <disable_collisions link1="right_base_link" link2="right_pitch" reason="Never" />
@@ -170,16 +154,6 @@
     <disable_collisions link1="right_camera" link2="right_r_inner" reason="Never" />
     <disable_collisions link1="right_camera" link2="right_r_outer" reason="Never" />
     <disable_collisions link1="right_camera" link2="right_yaw" reason="Adjacent" />
-    <disable_collisions link1="right_coupling" link2="right_elbow_pivot" reason="Adjacent" />
-    <disable_collisions link1="right_coupling" link2="right_forearm" reason="Adjacent" />
-    <disable_collisions link1="right_coupling" link2="right_gripper_base" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_l_finger" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_l_inner" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_l_outer" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_r_finger" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_r_inner" reason="Never" />
-    <disable_collisions link1="right_coupling" link2="right_r_outer" reason="Never" />
-    <disable_collisions link1="right_elbow_pivot" link2="right_r_finger" reason="Never" />
     <disable_collisions link1="right_forearm" link2="right_gripper_base" reason="Never" />
     <disable_collisions link1="right_forearm" link2="right_l_finger" reason="Never" />
     <disable_collisions link1="right_forearm" link2="right_l_inner" reason="Never" />

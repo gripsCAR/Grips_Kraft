@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /RobotModel1
+        - /RobotModel1/Links1
       Splitter Ratio: 0.5
     Tree Height: 719
   - Class: rviz/Selection
@@ -52,7 +53,7 @@ Visualization Manager:
       Collision Enabled: false
       Enabled: true
       Links:
-        All Links Enabled: false
+        All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
@@ -81,62 +82,17 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        finger_1_link_0:
+        finger_1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        finger_1_link_1:
+        finger_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        finger_1_link_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_1_link_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_2_link_0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_2_link_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_2_link_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_2_link_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_middle_link_0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_middle_link_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_middle_link_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        finger_middle_link_3:
+        finger_3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -154,22 +110,22 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         ft_robotiq_plate:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         ft_sensor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         ft_wrist_plate:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
         imu_board:
           Alpha: 1
           Show Axes: false
@@ -208,7 +164,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -253,22 +209,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.475414
+      Distance: 0.835575
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.150036
-        Y: 0.692699
-        Z: 0.956245
+        X: -0.123304
+        Y: 0.688887
+        Z: 0.91118
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.0854003
+      Pitch: 0.0704003
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.0353929
+      Yaw: 0.0104009
     Saved: ~
 Window Geometry:
   Displays:

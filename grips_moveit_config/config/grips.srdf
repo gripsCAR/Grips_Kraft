@@ -30,7 +30,6 @@
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="gripper" parent_link="end_effector" group="arm" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="base_link" link2="coupling" reason="Never" />
     <disable_collisions link1="base_link" link2="forearm" reason="Never" />
     <disable_collisions link1="base_link" link2="manifold" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="pitch" reason="Never" />
@@ -44,15 +43,6 @@
     <disable_collisions link1="camera" link2="r_inner" reason="Never" />
     <disable_collisions link1="camera" link2="r_outer" reason="Never" />
     <disable_collisions link1="camera" link2="yaw" reason="Adjacent" />
-    <disable_collisions link1="coupling" link2="elbow_pivot" reason="Adjacent" />
-    <disable_collisions link1="coupling" link2="forearm" reason="Adjacent" />
-    <disable_collisions link1="coupling" link2="gripper_base" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_finger" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_inner" reason="Never" />
-    <disable_collisions link1="coupling" link2="l_outer" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_finger" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_inner" reason="Never" />
-    <disable_collisions link1="coupling" link2="r_outer" reason="Never" />
     <disable_collisions link1="forearm" link2="gripper_base" reason="Never" />
     <disable_collisions link1="forearm" link2="l_finger" reason="Never" />
     <disable_collisions link1="forearm" link2="l_inner" reason="Never" />

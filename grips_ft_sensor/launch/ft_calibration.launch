@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-    
-  <node name="ft_calibration" pkg="force_torque_sensor_calib" type="ft_calib_node" output="screen" ns="grips">
+  <arg name="node_name" default="ft_calibration" />
+  
+  <node name="$(arg node_name)" pkg="force_torque_sensor_calib" type="ft_calib_node" output="screen" ns="grips">
     <rosparam command="load" file="$(find grips_ft_sensor)/config/ft_calibration_poses.yaml"/>
-<!--
-    <remap from="/ft_raw" to="/grips/ft_raw"/>
-    <remap from="/imu"    to="/grips/imu" />
--->
+    <remap from="robot_description" to="/grips/robot_description" />
+    <remap to="/grips/ft_raw" from="/grips/$(arg node_name)/ft_raw"/>
+    <remap to="/grips/imu"    from="/grips/$(arg node_name)/imu" />
   </node>
 </launch>

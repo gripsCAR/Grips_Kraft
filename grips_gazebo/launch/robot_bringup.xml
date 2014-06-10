@@ -3,8 +3,8 @@
   <arg name="robot_name"/>
   <arg name="spawn_args" default=""/>
   <arg name="load_controllers" default="true"/>
-  <arg name="controllers" default=" SA SE WP WY WR linkage_tr linkage_tl linkage_bl
-                                    r_outer l_outer r_inner l_inner r_finger l_finger joint_state_controller"/>
+  <arg name="controllers" default=" SA SE WP WY WR linkage_tr joint_state_controller
+                                    r_outer l_outer r_inner l_inner r_finger l_finger"/>
   
   <!-- send robot urdf to param server -->
   <param name="robot_description" 

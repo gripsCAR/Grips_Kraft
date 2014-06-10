@@ -30,14 +30,6 @@ linkage_tr:
   type: effort_controllers/JointPositionController
   joint: linkage_tr
   pid: {p: 10000, i: 0, d: 100}
-linkage_tl:
-  type: effort_controllers/JointPositionController
-  joint: linkage_tl
-  pid: {p: 1000, i: 0, d: 10}
-linkage_bl:
-  type: effort_controllers/JointPositionController
-  joint: linkage_bl
-  pid: {p: 100, i: 0, d: 1}
 # Simple gripper
 r_outer:
   type: effort_controllers/JointPositionController

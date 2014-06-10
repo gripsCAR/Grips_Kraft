@@ -12,7 +12,7 @@
   <!-- Import imu sensor -->
   <xacro:include filename="$(find grips_description)/urdf/imu_sensor.xacro" />
   <!-- Import robotiq s model -->
-  <xacro:include filename="$(find robotiq_s_model_visualization)/cfg/s-model_articulated_macro.xacro" />
+  <xacro:include filename="$(find robotiq_s_model_visualization)/cfg/s-model_fixed_macro.xacro" />
   
   <property name="robot_name" value="" />
   
@@ -25,7 +25,7 @@
     <origin xyz="0 0.13 ${board_z_size+63.635e-3}" rpy="0 0 ${-pi/2}" />
   </imu_sensor>
   <!-- Add robotiq hand -->
-  <s-model_articulated prefix="${robot_name}"/>
+  <s-model_fixed prefix="${robot_name}"/>
   <gazebo reference="${robot_name}palm">
     <material>Gazebo/FlatBlack</material>
     <turnGravityOff>false</turnGravityOff>
