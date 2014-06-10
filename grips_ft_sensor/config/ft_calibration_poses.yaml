@@ -1,5 +1,5 @@
-pose0: [-0.391454, 0.27643, 0.398496, -0.699645, 0.264964, 0.365214]
-pose1: [0.544716, 0.074425, 1.095642, 0.967859, -0.24338, -0.702985]
+pose1: [-0.391454, 0.27643, 0.398496, -0.699645, 0.264964, 0.365214]
+pose0: [0.544716, 0.074425, 1.095642, 0.967859, -0.24338, -0.702985]
 pose2: [0.09123, 0.266684, 0.184346, -2.516244, -0.441497, -1.279227]
 pose3: [-0.674418, 0.490463, 0.885431, -2.987519, 0.273613, 2.754712]
 pose4: [-0.600421, -0.052709, 1.22984, -0.997998, 0.149795, 2.461518]
@@ -33,6 +33,6 @@ wait_time: 2.0
 moveit_group_name: arm
 calib_file_name: ft_calibrated_data.yaml
 calib_file_dir: ~/catkin_ws/src/grips/grips_ft_sensor/config
-random_poses: false
-number_random_poses: 0.0
+random_poses: true
+number_random_poses: 30.0
 poses_frame_id: world

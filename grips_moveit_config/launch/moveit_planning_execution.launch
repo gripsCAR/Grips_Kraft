@@ -11,21 +11,26 @@
   <!-- Load robot controllers -->
   <group ns="grips" >
     <include file="$(find grips_control)/launch/grips_trajectory_control.launch" />
+  
+    <group if="$(arg sim)">
+      <rosparam file="$(find grips_moveit_config)/config/joint_names.yaml" command="load"/>
+      <!-- industrial_robot_simulator: accepts robot commands and reports status -->
+      <node pkg="industrial_robot_simulator" type="industrial_robot_simulator" name="industrial_robot_simulator"/>
+    </group>
+  
+
+    <include file="$(find grips_moveit_config)/launch/move_group.launch">
+      <arg name="publish_monitored_planning_scene" value="true" />
+      <arg name="robot_name" value="$(arg robot_name)" />
+    </include>
+  
   </group>
 
-  <group if="$(arg sim)" ns="grips" >
-    <rosparam file="$(find grips_moveit_config)/config/joint_names.yaml" command="load"/>
-    <include file="$(find industrial_robot_simulator)/launch/robot_interface_simulator.launch" />
-  </group>
-
-  <include file="$(find grips_moveit_config)/launch/move_group.launch">
-    <arg name="publish_monitored_planning_scene" value="true" />
-    <arg name="robot_name" value="$(arg robot_name)" />
-  </include>
-
+<!--
   <include file="$(find grips_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="true"/>
   </include>
   
   <include file="$(find grips_moveit_config)/launch/default_warehouse_db.launch" />
+-->
 </launch>

@@ -6,13 +6,16 @@
   <arg name="controllers" default=" SA SE WP WY WR linkage_tr linkage_tl linkage_bl
                                     r_outer l_outer r_inner l_inner r_finger l_finger joint_state_controller"/>
   
-  <!-- send robots urdfs to param server -->
+  <!-- send robot urdf to param server -->
   <param name="robot_description" 
     command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'" />
+  <!-- the semantic description that corresponds to the URDF -->
+  <param name="robot_description_semantic" 
+    textfile="$(find grips_moveit_config)/config/$(arg robot_name).srdf" />
   
-  <group ns="$(arg robot_name)">  
+  <group ns="grips">  
   
-    <!-- send robots urdfs to param server -->
+    <!-- send robot urdf to param server -->
     <param name="robot_description" 
       command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'" />
     
@@ -22,9 +25,9 @@
   
     <!-- push robot_description to factory and spawn robot in gazebo -->
     <node name="$(arg robot_name)_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
-      args="-urdf -param robot_description -model $(arg robot_name)
+      args="-urdf -param robot_description -model grips
             $(arg spawn_args)" >
-      <remap from="robot_description" to="/$(arg robot_name)/robot_description" />
+      <remap from="robot_description" to="/grips/robot_description" />
     </node>
                 
     <group if="$(arg load_controllers)">
