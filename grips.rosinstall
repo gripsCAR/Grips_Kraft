@@ -4,4 +4,13 @@
 - git: {local-name: netft, uri: 'https://github.com/fsuarez6/netft.git', version: hydro-devel}
 
 # External dependencies
+- git: {local-name: gazebo_ros_pkgs, uri: 'https://github.com/fsuarez6/gazebo_ros_pkgs.git', version: development}
+
 - git: {local-name: robotiq, uri: 'https://github.com/ros-industrial/robotiq', version: groovy-devel}
+- git: {local-name: ros_control, uri: 'https://github.com/ros-controls/ros_control.git', version: hydro-devel}
+- git: {local-name: ros_controllers, uri: 'https://github.com/ros-controls/ros_controllers.git', version: hydro-devel}
+- git: {local-name: realtime_tools, uri: 'https://github.com/ros-controls/realtime_tools.git', version: hydro-devel}
+- git: {local-name: control_toolbox, uri: 'https://github.com/ros-controls/control_toolbox.git', version: hydro-devel}
+- git: {local-name: control_msgs, uri: 'https://github.com/ros-controls/control_msgs.git', version: hydro-devel}
+
+- git: {local-name: force_torque_tools, uri: 'https://github.com/kth-ros-pkg/force_torque_tools.git', version: hydro-devel}
