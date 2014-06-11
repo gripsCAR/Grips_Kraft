@@ -3,7 +3,9 @@ grips
 
 <img align="right" src="./grips_description/resources/bimanual_gazebo.png" width="350" />
 
-ROS packages developed by the [Group of Robots and Intelligent Machines](http://www.romin.upm.es/) from the [Universidad Politécnica de Madrid](http://www.upm.es/internacional). This group is part of the [Centre for Automation and Robotics](http://www.car.upm-csic.es/) (CAR UPM-CSIC). On going development continues in the hydro-devel branch.
+ROS packages developed by the [Group of Robots and Intelligent Machines](http://www.romin.upm.es/) from the [Universidad Politécnica de Madrid](http://www.upm.es/internacional). This group is part of the [Centre for Automation and Robotics](http://www.car.upm-csic.es/) (CAR UPM-CSIC).
+
+This instructions are for the **grips_robotiq** branch. This branch is under constant change and may become **unstable**.
 
 **Maintainer:** Francisco Suárez Ruiz, [http://www.romin.upm.es/fsuarez/](http://www.romin.upm.es/fsuarez/)
 
@@ -16,7 +18,7 @@ ROS packages developed by the [Group of Robots and Intelligent Machines](http://
 
 ### Build Status
 
-[![Build Status](https://travis-ci.org/fsuarez6/grips.png?branch=hydro-devel)](https://travis-ci.org/fsuarez6/grips)
+[![Build Status](https://travis-ci.org/fsuarez6/grips.svg?branch=grips-robotiq)](https://travis-ci.org/fsuarez6/grips)
 
 
 ## Installation
@@ -39,7 +41,7 @@ cd ~/catkin_ws/src
 Use the `wstool` to install the repository
 ```
 wstool init .
-wstool merge https://raw.github.com/fsuarez6/grips/hydro-devel/grips.rosinstall
+wstool merge https://raw.github.com/fsuarez6/grips/grips-robotiq/grips.rosinstall
 wstool update
 ``` 
 Install any missing dependencies using rosdep:
@@ -60,9 +62,9 @@ source /opt/ros/hydro/setup.bash
 ``` 
 You might want to add that line to your `~/.bashrc`
 
-Try any of the `.launch` files in the `grips_gazebo` package: (e.g. `bimanual_setup.launch`)
+Try any of the `.launch` files in the `grips_gazebo` package: (e.g. `grips_robotiq.launch`)
 ```
-roslaunch grips_gazebo bimanual_setup.launch
+roslaunch grips_gazebo grips_robotiq.launch
 ``` 
 
 ## Changelog

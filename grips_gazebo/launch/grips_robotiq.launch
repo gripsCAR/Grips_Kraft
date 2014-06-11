@@ -1,8 +1,8 @@
 <launch>
   <!-- roslaunch arguments -->
   <arg name="world_name" default="$(find grips_gazebo)/worlds/grips.world"/>
-  <arg name="load_controllers" default="false"/>
-  <arg name="show_rviz" default="true"/>
+  <arg name="load_controllers" default="true"/>
+  <arg name="show_rviz" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="paused" default="true"/>
   <arg name="spawn_args" default=""/>
@@ -21,7 +21,7 @@
   
   <!-- Bring up the robot: description, spawn model, controllers and state publisher -->
   <include file="$(find grips_gazebo)/launch/robot_bringup.xml">
-    <arg name="controllers" default=" SA SE WP WY WR linkage_tr linkage_tl linkage_bl joint_state_controller"/>
+    <arg name="controllers" default=" SA SE WP WY WR linkage_tr joint_state_controller"/>
     <arg name="load_controllers" default="$(arg load_controllers)"/>
     <arg name="spawn_args" value="$(arg spawn_args)"/>
     <arg name="robot_name" value="grips_robotiq" />
