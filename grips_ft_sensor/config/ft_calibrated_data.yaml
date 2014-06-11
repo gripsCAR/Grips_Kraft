@@ -1,4 +1,5 @@
-bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# Using the calibration algorithm
+bias: [-0.0118351, 0.00533736, -0.00596248, 0.00064073, 0.0725907, 0.00805979]
 gripper_com_frame_id: end_effector
-gripper_com_pose: [-0.00745342, 0.129635, 0.00179105, 0.0, 0.0, 0.0]
-gripper_mass: 3.2603
+gripper_com_pose: [-0.00583072, 0.129304, 0.000191861, 0.0, 0.0, 0.0]
+gripper_mass: 3.26024

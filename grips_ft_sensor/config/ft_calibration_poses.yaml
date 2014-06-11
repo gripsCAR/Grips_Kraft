@@ -34,5 +34,5 @@ moveit_group_name: arm
 calib_file_name: ft_calibrated_data.yaml
 calib_file_dir: ~/catkin_ws/src/grips/grips_ft_sensor/config
 random_poses: true
-number_random_poses: 30.0
+number_random_poses: 10.0
 poses_frame_id: world
