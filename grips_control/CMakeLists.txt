@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   joint_limits_interface
   joint_state_controller
   message_generation
+  effort_controllers
   position_controllers
   transmission_interface
 )

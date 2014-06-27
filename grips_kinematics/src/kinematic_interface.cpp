@@ -53,7 +53,7 @@ namespace grips_kinematics
   void KinematicInterface::setupRobotModel()
   {
     std::string kinematic_solver;
-    if (ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", kinematic_solver))
+    if (ros::param::get(ros::this_node::getName() + "/" + planning_group_ + "/kinematics_solver", kinematic_solver))
       ROS_INFO_STREAM("\033[94m" << "Using solver: " << kinematic_solver << "\033[0m");
     else
     {
