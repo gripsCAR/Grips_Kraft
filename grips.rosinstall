@@ -1,5 +1,5 @@
 # Maintained dependencies
-- git: {local-name: grips, uri: 'https://github.com/fsuarez6/grips.git', version: hydro-devel}
+- git: {local-name: grips, uri: 'https://github.com/fsuarez6/grips.git', version: grips-robotiq}
 - git: {local-name: labview_bridge, uri: 'https://github.com/fsuarez6/labview_bridge.git', version: hydro-devel}
 - git: {local-name: netft, uri: 'https://github.com/fsuarez6/netft.git', version: hydro-devel}
 
