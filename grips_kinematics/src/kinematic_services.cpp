@@ -26,11 +26,13 @@ class KinematicServices {
     dynamic_reconfigure::Server<grips_msgs::KinematicsSolversConfig>::CallbackType  dyn_callback_;
     // Misc
     std::string               robot_namespace_;
+    std::string               planning_group_;
     std::vector<std::string>  joint_names_;
     std::string               model_frame_; 
     std::string               tip_link_;
     std::string               base_link_;
     bool                      first_call_dyn_;
+    bool                      dyn_reconfig_enabled_;
     // Kinematics
     KinematicInterfacePtr     kinematic_interface_;
     std::map<std::string, joint_limits_interface::JointLimits> urdf_limits_;
@@ -41,6 +43,13 @@ class KinematicServices {
     { 
       // Get robot namespace
       robot_namespace_ = ros::this_node::getNamespace();
+      // Get parameters from the server
+      nh_private_.param(std::string("planning_group"), planning_group_, std::string("arm"));
+      if (!nh_private_.hasParam("planning_group"))
+        ROS_WARN_STREAM("Parameter [~planning_group] not found, using default: " << planning_group_);
+      nh_private_.param(std::string("ik_dynamic_reconfigure"), dyn_reconfig_enabled_, true);
+      if (!nh_private_.hasParam("ik_dynamic_reconfigure"))
+        ROS_WARN_STREAM("Parameter [~ik_dynamic_reconfigure] not found, using default: " << dyn_reconfig_enabled_);
       // Kinematic interface
       kinematic_interface_.reset(new KinematicInterface());
       joint_names_ = kinematic_interface_->getActiveJointModelNames();
@@ -59,6 +68,10 @@ class KinematicServices {
     
     void dynamicReconfiguration(grips_msgs::KinematicsSolversConfig &config, uint32_t level) 
     {
+      if (!dyn_reconfig_enabled_)
+        return;
+      
+      // Avoid the initialization execution
       if (first_call_dyn_)
       {
         first_call_dyn_ = false;
@@ -69,7 +82,7 @@ class KinematicServices {
       
       // Kinematic solver parameter
       std::string selected_solver, current_solver;
-      ros::param::get(ros::this_node::getName() + "/arm/kinematics_solver", current_solver);
+      ros::param::get(ros::this_node::getName() + "/" + planning_group_ + "/kinematics_solver", current_solver);
       selected_solver = current_solver;
       switch (config.kinematics_solver)
       {
@@ -80,18 +93,29 @@ class KinematicServices {
       }
       
       // Reset the Kinematic interface to load the selected plugin
-      ros::param::set(ros::this_node::getName() + "/arm/kinematics_solver", selected_solver);
+      ros::param::set(ros::this_node::getName() + "/" + planning_group_ + "/kinematics_solver", selected_solver);
       kinematic_interface_.reset(new KinematicInterface());
     }
     
     bool getIkMetrics(grips_msgs::GetPoseMetrics::Request &request, grips_msgs::GetPoseMetrics::Response &response)
     {
       // Validate that frame_id = model_frame_
+      Eigen::Affine3d T_frame_id;
       if (request.header.frame_id != model_frame_)
       {
-        ROS_WARN("frame_id [%s] received. Expected [%s]", request.header.frame_id.c_str(), model_frame_.c_str());
-        return true;
+        // TODO: Validate that the is within model_frame_ and tip_link
+        T_frame_id = kinematic_interface_->getGlobalLinkTransform(request.header.frame_id);
+        //~ ROS_WARN("frame_id [%s] received. Expected [%s]", request.header.frame_id.c_str(), model_frame_.c_str());
+        //~ return true;
       }
+      else
+        T_frame_id.setIdentity();
+      Eigen::Affine3d T_goal;
+      tf::poseMsgToEigen(request.pose, T_goal);
+      //~ ROS_INFO_STREAM("\nRequest pose:\n" << T_goal);
+      //~ ROS_INFO_STREAM("\nT_frame_id:\n" << T_frame_id.matrix());
+      T_goal = T_frame_id * T_goal;
+      //~ ROS_INFO_STREAM("\nT_goal:\n" << T_goal.matrix());
       ros::Time begin = ros::Time::now();
       response.found_ik = kinematic_interface_->setEndEffectorPose(request.pose);
       response.duration = ros::Time::now() - begin;
@@ -109,17 +133,15 @@ class KinematicServices {
         response.joint_states.name[i] = joint_names_[i];
         response.joint_states.position[i] = joint_values[i];
       }
-      // Populate the estimated pose
-      kinematic_interface_->setJointPositions(joint_values);
-      Eigen::Affine3d T_estimated;
-      T_estimated = kinematic_interface_->getEndEffectorTransform();
-      ROS_DEBUG_STREAM("\n" << T_estimated.matrix());
-      tf::poseEigenToMsg(T_estimated, response.estimated_pose);
-      
-      // Populate the error pose
-      Eigen::Affine3d T_goal;
-      tf::poseMsgToEigen(request.pose, T_goal);
-      tf::poseEigenToMsg(T_goal.inverse() * T_estimated, response.estimation_error);
+      //~ // Populate the estimated pose
+      //~ kinematic_interface_->setJointPositions(joint_values);
+      //~ Eigen::Affine3d T_estimated;
+      //~ T_estimated = T_frame_id.inverse() * kinematic_interface_->getEndEffectorTransform();
+      //~ ROS_DEBUG_STREAM("\n" << T_estimated.matrix());
+      //~ tf::poseEigenToMsg(T_estimated, response.estimated_pose);
+      //~ 
+      //~ // Populate the error pose
+      //~ tf::poseEigenToMsg(T_goal.inverse() * T_estimated, response.estimation_error);
       
       response.found_group = true;
       // TODO: Calculate the metrics
