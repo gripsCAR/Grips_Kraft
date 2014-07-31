@@ -53,6 +53,8 @@
 
 // KDL
 #include <kdl/jntarray.hpp>
+#include <kdl/chainiksolver.hpp>
+#include <kdl/chainfksolver.hpp>
 
 // MoveIt!
 #include <moveit/kinematics_base/kinematics_base.h>
@@ -188,23 +190,23 @@ namespace iterative_decoupling_plugin
                                 KDL::JntArray &jnt_array,
                                 bool lock_redundancy) const;
 
-		/**
-		* @brief Forward kinematics is solved using Displacement Matrices: http://dx.doi.org/10.1016/j.riai.2012.09.004
-		* @return The number of solutions found
-		*/
-		int ComputeFK_0_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_6) const;
-		
-		int ComputeFK_0_3(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_3) const;
+    /**
+    * @brief Forward kinematics is solved using Displacement Matrices: http://dx.doi.org/10.1016/j.riai.2012.09.004
+    * @return The number of solutions found
+    */
+    int ComputeFK_0_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_6) const;
+    
+    int ComputeFK_0_3(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T0_3) const;
   
-		int ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T3_6) const;
+    int ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Eigen::Affine3d &T3_6) const;
 
-		double harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const;
+    double harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const;
   
-		bool validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const;
+    bool validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const;
     
     bool obeysLimits(const KDL::JntArray &jnt_pos) const;
-		
-		int iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const;
+    
+    int iterativeIK(const KDL::JntArray& q_init, const KDL::Frame& p_in, KDL::JntArray& q_out) const;
 
     bool active_; /** Internal variable that indicates whether solvers are configured and ready */
 
@@ -228,6 +230,7 @@ namespace iterative_decoupling_plugin
     double max_solver_iterations_;
     double epsilon_;
     double d1, d2, d3, d4, d5, a1, a2, a3, a4, pos_eps, rot_eps;
+    KDL::Twist delta_twist_;
   };
 }
 

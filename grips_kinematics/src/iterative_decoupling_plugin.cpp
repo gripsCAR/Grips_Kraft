@@ -37,7 +37,7 @@
 #include <moveit/iterative_decoupling_plugin/iterative_decoupling_plugin.h>
 #include <class_loader/class_loader.h>
 
-//#include <tf/transform_datatypes.h>
+// KDL
 #include <tf_conversions/tf_kdl.h>
 #include <kdl_parser/kdl_parser.hpp>
 #include <eigen_conversions/eigen_msg.h>
@@ -546,20 +546,10 @@ int IterativeDecouplingPlugin::ComputeFK_3_6(const KDL::JntArray &jnt_pos_in, Ei
 
 bool IterativeDecouplingPlugin::validSolution(Eigen::Affine3d Tsol, Eigen::Affine3d Tgoal) const
 {
-  /*Eigen::Matrix3d R;
-  ROS_DEBUG_STREAM_NAMED("idp","Tsol:\n" << Tsol.matrix());
-  ROS_DEBUG_STREAM_NAMED("idp","Tgoal:\n" << Tgoal.matrix());
-  R = Tsol.rotation() - Tgoal.rotation();
-  double rot_error = std::max(fabs(R.minCoeff()), fabs(R.maxCoeff()));*/
-  Eigen::Quaterniond q_sol(Tsol.rotation());
-  Eigen::Quaterniond q_goal(Tgoal.rotation());
-  double rot_error = 1 - pow(q_goal.dot(q_sol), 2.0);
-  Eigen::Vector3d P;
-  P = Tsol.translation() - Tgoal.translation();
-  double pos_error = std::max(fabs(P.minCoeff()), fabs(P.maxCoeff()));
-  ROS_DEBUG_NAMED("idp", "pos_error [%f] rot_error [%f]", pos_error, rot_error);
-  return ((rot_error <= this->rot_eps) && (pos_error <= this->pos_eps));
-  //~ return ((pos_error <= this->pos_eps));
+  KDL::Frame f, p_in;
+  tf::transformEigenToKDL(Tsol, f);
+  tf::transformEigenToKDL(Tgoal, p_in);
+  return (KDL::Equal(KDL::diff(f,p_in), KDL::Twist::Zero(), epsilon_));
 }
 
 double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const
@@ -685,12 +675,8 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     if (ik_found)
     {
       if(obeysLimits(q_new))
-      {
         ik_iterations = iter;
-        break;
-      }
-      else
-        getRandomConfiguration(q_new, true);
+      break;
     }
     q_old = q_new;
   }
