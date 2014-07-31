@@ -20,19 +20,19 @@ import dynamic_reconfigure.client
 
 in_variables = ['joint_positions', 'poses']
 
-out_variables = ['joint_positions', 'poses', 'error', 'iterations', 'time']
+out_variables = ['joint_positions', 'poses', 'joint_errors', 'iterations', 'time']
 
 joint_names = ['SA', 'SE', 'linkage_tr', 'WP', 'WY', 'WR']
 NUM_JOINTS = len(joint_names)
 
 def generate_input_data(input_mat_file, NUM_TEST = 100):
   # Subscribe to the FK service
-  fk_srv_name = rospy.get_param('metrics_service', '/grips/kinematic_services/get_fk_metrics')
+  fk_srv_name = rospy.get_param('metrics_service', '/grips/kinematics_services/get_fk_metrics')
   rospy.loginfo('Waiting for %s service' % fk_srv_name)
   rospy.wait_for_service(fk_srv_name)
   fk_srv = rospy.ServiceProxy(fk_srv_name, GetStateMetrics)
   # Subscribe to limits_service
-  limits_srv_name = rospy.get_param('limits_service', '/grips/kinematic_services/get_joint_limits')
+  limits_srv_name = rospy.get_param('limits_service', '/grips/kinematics_services/get_joint_limits')
   rospy.loginfo('Waiting for %s service' % limits_srv_name)
   rospy.wait_for_service(limits_srv_name)
   limits_srv = rospy.ServiceProxy(limits_srv_name, GetJointLimits)
@@ -44,7 +44,7 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
   try:
     res = limits_srv(req)
   except rospy.ServiceException, e:
-    rospy.logwarn('Service did not process request: %s' % str(e))     
+    rospy.logwarn('Service did not process request: %s' % str(e))
   min_positions = np.array(res.min_position)
   max_positions = np.array(res.max_position)
   rospy.loginfo('min_positions: %s' % str(min_positions))
@@ -83,11 +83,10 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
   rospy.loginfo('[FK] Evaluated: %d/%d' % (i+1, NUM_TEST))
   rospy.loginfo('Writing %s file' % input_mat_file)
   sio.savemat(input_mat_file, {in_variables[0]:angles_mat, in_variables[1]:poses_mat}, oned_as='column')
-  rospy.sleep(3.0)
 
 def solve_ik(input_mat_file, out_filename):  
   # Subscribe to kinematic services
-  ik_srv_name = rospy.get_param('metrics_service', '/grips/kinematic_services/get_ik_metrics')
+  ik_srv_name = rospy.get_param('metrics_service', '/grips/kinematics_services/get_ik_metrics')
   rospy.loginfo('Waiting for %s service' % ik_srv_name)
   rospy.wait_for_service(ik_srv_name)
   ik_srv = rospy.ServiceProxy(ik_srv_name, GetPoseMetrics)
@@ -136,7 +135,7 @@ def solve_ik(input_mat_file, out_filename):
   estimation_error = estimation_error.reshape((tests, 7))
   variables = [0] * len(out_variables)
   for i, name in enumerate(out_variables):
-    variables[i] = out_filename + '_' + name
+    variables[i] = name
   data_dict = {variables[0]: calculated_mat, variables[1]:estimated_poses, variables[2]:estimation_error, variables[3]:iterations, variables[4]:time_list}
   # Save new .mat file
   path = os.path.dirname(input_mat_file)
@@ -183,10 +182,25 @@ if __name__ == '__main__':
   #Generate a new input data file
   if args.generate:
     generate_input_data(args.input_file, args.tests)
-  # Test the available IK solvers
-  client = dynamic_reconfigure.client.Client('/grips/kinematic_services', timeout=1)
-  solvers = {0:'ikfast', 1:'lma', 2:'decoup', 3:'kdl'}
-  for key, solver in solvers.iteritems():
-    client.update_configuration({'kinematics_solver':key})
-    solve_ik(args.input_file, solver)
-    rospy.sleep(10.0) # Give it time to reset the solver
+  # Start dynamic reconfiguration client for changing between plugins
+  client = dynamic_reconfigure.client.Client('/grips/kinematics_services', timeout=1)
+  plugins = { 'ikfast': 'grips_arm_kinematics/IKFastTransform6dPlugin', 
+              'lma':    'lma_kinematics_plugin/LMAKinematicsPlugin',
+              'decoup': 'grips_arm_kinematics/IterativeDecouplingPlugin',
+              'kdl':    'kdl_kinematics_plugin/KDLKinematicsPlugin'
+            }
+
+  #~ # Increment assessments
+  #~ filename  = 'decoup'
+  #~ solver    = plugins[filename]
+  #~ client.update_configuration({'solver':          solver})
+  #~ increments = [  0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.1, 0.25, 0.5, 0.75, 
+                  #~ 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6]
+  #~ for i, increment in enumerate(increments[:]):
+    #~ client.update_configuration({'max_increment': increment})
+    #~ solve_ik(args.input_file, filename + str(i))
+  #~ 
+  # Performance analisys for all the plugins
+  for filename, solver in plugins.items():
+    client.update_configuration({'solver': solver, 'max_increment': 0.75})
+    solve_ik(args.input_file, filename)
