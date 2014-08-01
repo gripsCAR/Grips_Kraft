@@ -11,7 +11,7 @@
     <node name="kinematics_services" pkg="moveit_kinematics_interface" type="kinematics_services" respawn="false" output="screen">
       <rosparam command="load" file="$(find grips_moveit_config)/config/kinematics.yaml" />
       <param name="planning_group" value="arm" />
-      <param name="max_solver_iterations" value="1000" />
+      <param name="max_solver_iterations" value="500" />
       <param name="ik_dynamic_reconfigure" value="true" />
       <param name="max_angle_inc" type="double" value="$(arg max_angle_inc)" />
       <param name="pos_epsilon" type="double" value="0.05" />  <!-- meters -->

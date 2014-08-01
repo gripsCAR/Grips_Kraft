@@ -229,8 +229,7 @@ namespace iterative_decoupling_plugin
     robot_model::JointModelGroup* joint_model_group_;
     double max_solver_iterations_;
     double epsilon_;
-    double d1, d2, d3, d4, d5, a1, a2, a3, a4, pos_eps, rot_eps;
-    KDL::Twist delta_twist_;
+    double d1, d2, d3, d4, d5, a1, a2, a3, a4;
   };
 }
 

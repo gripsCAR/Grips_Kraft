@@ -18,12 +18,30 @@ from geometry_msgs.msg import Pose
 #Dynamic Reconfigure
 import dynamic_reconfigure.client
 
+# Global variables
 in_variables = ['joint_positions', 'poses']
-
 out_variables = ['joint_positions', 'poses', 'joint_errors', 'iterations', 'time']
-
 joint_names = ['SA', 'SE', 'linkage_tr', 'WP', 'WY', 'WR']
 NUM_JOINTS = len(joint_names)
+
+# Helper functions
+def frange(start, end=None, inc=None):
+  if end == None:
+    end = start + 0.0
+    start = 0.0
+  else: 
+    start += 0.0 # force it to be a float
+  if inc == None:
+    inc = 1.0
+  count = int((end - start) / inc)
+  if start + count * inc != end:
+    # need to adjust the count.
+    # AFAIKT, it always comes up one short.
+    count += 1
+  L = [None,] * count
+  for i in range(count):
+    L[i] = start + i * inc
+  return L
 
 def generate_input_data(input_mat_file, NUM_TEST = 100):
   # Subscribe to the FK service
@@ -84,7 +102,7 @@ def generate_input_data(input_mat_file, NUM_TEST = 100):
   rospy.loginfo('Writing %s file' % input_mat_file)
   sio.savemat(input_mat_file, {in_variables[0]:angles_mat, in_variables[1]:poses_mat}, oned_as='column')
 
-def solve_ik(input_mat_file, out_filename):  
+def solve_ik(input_mat_file, out_filename):
   # Subscribe to kinematic services
   ik_srv_name = rospy.get_param('metrics_service', '/grips/kinematics_services/get_ik_metrics')
   rospy.loginfo('Waiting for %s service' % ik_srv_name)
@@ -102,6 +120,8 @@ def solve_ik(input_mat_file, out_filename):
   req = GetPoseMetricsRequest()
   tests = poses_mat.shape[0]
   for i, pose in enumerate(poses_mat):
+    if rospy.is_shutdown():
+      return
     req.header.stamp = rospy.Time.now()
     req.header.frame_id = 'world'
     req.link_name = 'end_effector'
@@ -136,6 +156,7 @@ def solve_ik(input_mat_file, out_filename):
   variables = [0] * len(out_variables)
   for i, name in enumerate(out_variables):
     variables[i] = name
+  if 
   data_dict = {variables[0]: calculated_mat, variables[1]:estimated_poses, variables[2]:estimation_error, variables[3]:iterations, variables[4]:time_list}
   # Save new .mat file
   path = os.path.dirname(input_mat_file)
@@ -190,17 +211,37 @@ if __name__ == '__main__':
               'kdl':    'kdl_kinematics_plugin/KDLKinematicsPlugin'
             }
 
-  #~ # Increment assessments
+  # Max Increment assessment
+  filename  = 'decoup'
+  solver    = plugins[filename]
+  increments = frange(0.005, 0.025, 0.005)
+  increments += frange(0.025, 0.1, 0.025)
+  increments += frange(0.1, 0.25, 0.05)
+  increments += frange(0.25, 1.5, 0.25)
+  increments += frange(1.5, 4.5, 0.5)
+  increments += [4.5, 5, 6]
+  increments = [round(x, 3) for x in increments]
+  for increment in increments[:]:
+    client.update_configuration({'solver': solver, 'max_increment': increment, 'max_iterations': 500})
+    solve_ik(args.input_file, filename + '_inc_' + str(increment))
+  
+  # Iterations assessment
+  iter_group = range(1, 6)
+  iter_group += range(6, 20, 2)
+  iter_group += range(20, 55, 5)
+  iter_group += range(100, 600, 100)
+  for filename, solver in plugins.items():
+    # ikfast doesn't use iterations
+    if filename == 'ikfast':
+      client.update_configuration({'solver': solver, 'max_iterations': iterations, 'max_increment': 0.75})
+      solve_ik(args.input_file, filename)
+      continue
+    for iterations in iter_group:
+      client.update_configuration({'solver': solver, 'max_iterations': iterations, 'max_increment': 0.75})
+      solve_ik(args.input_file, filename + '_iter_' + str(iterations))
+  #~ 
+  #~ # Performance analisys for only one
   #~ filename  = 'decoup'
   #~ solver    = plugins[filename]
-  #~ client.update_configuration({'solver':          solver})
-  #~ increments = [  0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.1, 0.25, 0.5, 0.75, 
-                  #~ 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6]
-  #~ for i, increment in enumerate(increments[:]):
-    #~ client.update_configuration({'max_increment': increment})
-    #~ solve_ik(args.input_file, filename + str(i))
-  #~ 
-  # Performance analisys for all the plugins
-  for filename, solver in plugins.items():
-    client.update_configuration({'solver': solver, 'max_increment': 0.75})
-    solve_ik(args.input_file, filename)
+  #~ client.update_configuration({'solver': solver, 'max_increment': 0.75, 'max_iterations': 500})
+  #~ solve_ik(args.input_file, filename)

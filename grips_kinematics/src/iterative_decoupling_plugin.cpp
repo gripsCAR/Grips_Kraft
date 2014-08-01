@@ -194,8 +194,6 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
 
   private_handle.param("max_solver_iterations", max_solver_iterations, 500);
   private_handle.param("epsilon", epsilon, 1e-5);
-  private_handle.param("pos_epsilon", this->pos_eps, 1e-3); // meters
-  private_handle.param("rot_epsilon", this->rot_eps, 0.2); // factor from 0-1
   private_handle.param(group_name+"/position_only_ik", position_ik, false);
   ROS_DEBUG_NAMED("idp","Looking in private handle: %s for param name: %s",
             private_handle.getNamespace().c_str(),
@@ -205,7 +203,7 @@ bool IterativeDecouplingPlugin::initialize(const std::string &robot_description,
     ROS_INFO_NAMED("idp","Using position only ik");
     
   ROS_INFO_NAMED("idp","max_solver_iterations: %d", max_solver_iterations);
-  ROS_INFO_NAMED("idp","pos_epsilon: [%.3f], rot_epsilon: [%.3f], max_inc: [%.3f]", this->pos_eps, this->rot_eps, angle_inc);
+  ROS_INFO_NAMED("idp","max_increment: [%.3f]", angle_inc);
 
   // Setup the joint state group
   state_.reset(new robot_state::RobotState(robot_model_));
@@ -640,6 +638,7 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     // Calculate the new middle point Tn0_3
     this->ComputeFK_0_3(q_new, Tn0_3);
     ROS_DEBUG_STREAM_NAMED("idp","Tn0_3:\n" << Tn0_3.matrix());
+    // TODO: This operation could be faster using quaternions
     // Estimate the orientation R4_6
     Re4_6 = Tn0_3.rotation().inverse() * Tg0_6.rotation();
     ROS_DEBUG_STREAM_NAMED("idp","Re4_6:\n" << Re4_6);
