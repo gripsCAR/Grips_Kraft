@@ -156,7 +156,6 @@ def solve_ik(input_mat_file, out_filename):
   variables = [0] * len(out_variables)
   for i, name in enumerate(out_variables):
     variables[i] = name
-  if 
   data_dict = {variables[0]: calculated_mat, variables[1]:estimated_poses, variables[2]:estimation_error, variables[3]:iterations, variables[4]:time_list}
   # Save new .mat file
   path = os.path.dirname(input_mat_file)
@@ -233,7 +232,7 @@ if __name__ == '__main__':
   for filename, solver in plugins.items():
     # ikfast doesn't use iterations
     if filename == 'ikfast':
-      client.update_configuration({'solver': solver, 'max_iterations': iterations, 'max_increment': 0.75})
+      client.update_configuration({'solver': solver})
       solve_ik(args.input_file, filename)
       continue
     for iterations in iter_group:
