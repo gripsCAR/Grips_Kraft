@@ -547,7 +547,11 @@ bool IterativeDecouplingPlugin::validSolution(Eigen::Affine3d Tsol, Eigen::Affin
   KDL::Frame f, p_in;
   tf::transformEigenToKDL(Tsol, f);
   tf::transformEigenToKDL(Tgoal, p_in);
-  return (KDL::Equal(KDL::diff(f,p_in), KDL::Twist::Zero(), epsilon_));
+  bool valid_solution = false;
+  if (KDL::Equal(KDL::diff(f.p, p_in.p), KDL::Vector::Zero(), epsilon_))
+    if (KDL::Equal(KDL::diff(f.M, p_in.M), KDL::Vector::Zero(), epsilon_))
+      valid_solution = true;
+  return valid_solution;
 }
 
 double IterativeDecouplingPlugin::harmonize(KDL::JntArray &q_old, KDL::JntArray &q_new) const
@@ -586,10 +590,11 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
   KDL::JntArray inc_new(dimension_), inc_old(dimension_), inc_max = this->inc_max_;
   q_old = q_init;
   double alpha, beta, gamma, q2_0, q3_0, C3, S3, S5, px, py, pz, L2, L3, py_sign;
-  double error, pos_error, rot_error;
+  double error;
   Eigen::Affine3d Tg0_6, Tc0_3, Tc0_6, Tc3_6, Tn0_3, Tsol;
   Eigen::Matrix3d Re4_6;
   Eigen::Vector3d Pe0_3;
+  Eigen::Quaterniond q0_3, q0_6, q4_6;
   // Populate the Goal Transformation 
   tf::transformKDLToEigen(p_in, Tg0_6);
   ROS_DEBUG_STREAM_NAMED("idp","Tg0_6:\n" << Tg0_6.matrix());
@@ -640,7 +645,12 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
     ROS_DEBUG_STREAM_NAMED("idp","Tn0_3:\n" << Tn0_3.matrix());
     // TODO: This operation could be faster using quaternions
     // Estimate the orientation R4_6
-    Re4_6 = Tn0_3.rotation().inverse() * Tg0_6.rotation();
+    //~ Re4_6 = Tn0_3.rotation().inverse() * Tg0_6.rotation();
+    // Quaternions seem slightly faster
+    q0_3 = Eigen::Quaterniond(Tn0_3.rotation());
+    q0_6 = Eigen::Quaterniond(Tg0_6.rotation());
+    q4_6 = q0_3.inverse() * q0_6;
+    Re4_6 = q4_6.toRotationMatrix();
     ROS_DEBUG_STREAM_NAMED("idp","Re4_6:\n" << Re4_6);
     // Calculate the new q4, q5, q6
     q_new(3) = atan2(Re4_6(2,1), Re4_6(1,1));
@@ -658,7 +668,7 @@ int IterativeDecouplingPlugin::iterativeIK(const KDL::JntArray& q_init, const KD
       if (inc_new(i) < -inc_max(i))
         inc_new(i) = -inc_max(i);
       if (inc_new(i) == -inc_old(i))
-        inc_max(i) /= 2;
+        inc_max(i) *= 0.5;
       inc_old(i) = inc_new(i);
       q_new(i) = q_old(i) + inc_new(i);
     }
