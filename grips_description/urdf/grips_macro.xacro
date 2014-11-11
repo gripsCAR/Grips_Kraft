@@ -16,14 +16,6 @@
       <mesh filename="package://grips_description/meshes/collision/upper_arm.dae" />
       <upper_arm_inertia />
     </link_collision>
-    <!-- elbow pivot link -->
-    <create_link name="${name}elbow_pivot" color="black" mesh="${elbow_pivot_mesh}" cog="${elbow_pivot_cog}" mass="${elbow_pivot_mass}" >
-      <elbow_pivot_inertia />
-    </create_link>
-    <!-- coupling link -->
-    <create_link name="${name}coupling" color="black" mesh="${coupling_mesh}" cog="${coupling_cog}" mass="${coupling_mass}" >
-      <coupling_inertia />
-    </create_link>
     <!-- forearm link -->
     <link_collision name="${name}forearm" color="black" mesh="${forearm_mesh}" cog="${forearm_cog}" mass="${forearm_mass}" >
       <mesh filename="package://grips_description/meshes/collision/forearm.dae" />
@@ -41,11 +33,6 @@
     </link_collision>
     <!-- end effector dummy link -->
     <link name="${name}end_effector" />
-    <!-- camera link -->
-    <link_collision name="${name}camera" color="black" mesh="${camera_mesh}" cog="${camera_cog}" mass="${camera_mass}" >
-      <mesh filename="package://grips_description/meshes/collision/camera.dae" />
-      <camera_inertia />
-    </link_collision>
           
     <!-- Joints -->
     <joint name="${name}SA" type="revolute">
@@ -96,30 +83,6 @@
       <limit effort="${max_effort}" velocity="${200*pi/180}" />
       <dynamics damping="${WR_damping}"/>
     </joint>
-    <joint name="${name}camera_joint" type="fixed">
-      <child link="${name}camera"/>
-      <parent link="${name}yaw"/>
-      <axis xyz="0 1 0" />
-      <origin xyz="0 ${0.190892/2} 0.25" rpy="0 ${pi/6} ${pi/2}"/>    
-    </joint>
-    
-    <!-- four-bar linkage -->
-    <joint name="${name}linkage_tl" type="continuous">
-      <child link="${name}coupling" />
-      <parent link="${name}forearm" />
-      <axis xyz="1 0 0" />
-      <origin xyz="0 -0.123444 0.029845" rpy="0.019320795 0 0" />
-      <limit effort="${max_effort}" velocity="${max_velocity}" />
-      <dynamics damping="${linkage_damping}" friction="${linkage_friction}"/>
-    </joint>
-    <joint name="${name}linkage_bl" type="continuous">
-      <child link="${name}elbow_pivot" />
-      <parent link="${name}coupling" />
-      <axis xyz="1 0 0" />
-      <origin xyz="0 0 -0.5207" rpy="-0.24521876 0 0" />
-      <limit effort="${max_effort}" velocity="${max_velocity}" />
-      <dynamics damping="${linkage_damping}" friction="${linkage_friction}"/>
-    </joint>
 
     <!-- Transmissions -->
     <simple_transmission joint="${name}SA" />
@@ -128,8 +91,6 @@
     <simple_transmission joint="${name}WY" />
     <simple_transmission joint="${name}WR" />
     <simple_transmission joint="${name}linkage_tr" />
-    <simple_transmission joint="${name}linkage_tl" />
-    <simple_transmission joint="${name}linkage_bl" />
     
     <gazebo reference="${name}base_link">
       <material>Telerobcar/MetalSeamed</material>
@@ -140,14 +101,6 @@
       <selfCollide>false</selfCollide>
     </gazebo>
     <gazebo reference="${name}upper_arm">
-      <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
-    </gazebo>
-    <gazebo reference="${name}elbow_pivot">
-      <material>Telerobcar/MetalSeamed</material>
-      <selfCollide>false</selfCollide>
-    </gazebo>
-    <gazebo reference="${name}coupling">
       <material>Telerobcar/MetalSeamed</material>
       <selfCollide>false</selfCollide>
     </gazebo>
@@ -165,40 +118,6 @@
     </gazebo>
     <gazebo reference="${name}end_effector">
       <selfCollide>false</selfCollide>
-    </gazebo>
-    <!-- camera -->	
-    <gazebo reference="${name}camera">
-      <material>Gazebo/FlatBlack</material>
-      <selfCollide>false</selfCollide>
-      <sensor type="camera" name="${name}camera">
-        <update_rate>30.0</update_rate>
-        <camera name="${name}camera">
-          <horizontal_fov>1.3962634</horizontal_fov>
-          <image>
-            <width>800</width>
-            <height>800</height>
-            <format>R8G8B8</format>
-          </image>
-          <clip>
-            <near>0.02</near>
-            <far>300</far>
-          </clip>
-        </camera>
-        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-          <alwaysOn>true</alwaysOn>
-          <updateRate>0.0</updateRate>
-          <cameraName>${name}camera</cameraName>
-          <imageTopicName>image_raw</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>${name}camera</frameName>
-          <hackBaseline>0.07</hackBaseline>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
-          <distortionT2>0.0</distortionT2>
-        </plugin>
-      </sensor>
     </gazebo>
   </macro>  
 </robot>

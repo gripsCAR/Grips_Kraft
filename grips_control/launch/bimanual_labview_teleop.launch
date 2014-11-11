@@ -1,0 +1,7 @@
+<launch>
+  
+  <node name="bimanual_labview_teleop" pkg="grips_control" type="bimanual_labview_teleop.py" output="screen"/> 
+  
+  <node name="simple_gripper_control" pkg="grips_control" type="simple_gripper_control.py" output="screen"/> 
+  
+</launch>

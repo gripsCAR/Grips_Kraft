@@ -4,11 +4,11 @@
   
   <!-- roslaunch arguments -->
   <arg name="world_name" default="$(find grips_worlds)/worlds/bimanual_setup.world"/>
-  <arg name="rviz" default="true"/>
+  <arg name="rviz" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="paused" default="true"/>
   <arg name="gui" default="true"/>
-  <arg name="load_controllers" default="true"/>
+  <arg name="control" default="true"/>
   <arg name="spawn_args" default=""/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of 
@@ -34,13 +34,16 @@
         args="-urdf -param robot_description -model $(arg robot_name)
               $(arg spawn_args)" />
   
-  <group if="$(arg load_controllers)">
+  <group if="$(arg control)">
     <!-- load joint controller configurations from YAML file to parameter server -->
     <rosparam file="$(find grips_control)/config/bimanual_joint_control.yaml" command="load" />
     <!-- load the controllers -->
     <node name="$(arg robot_name)_controller" pkg="controller_manager" type="spawner" output="log" 
-        args="left_SA left_SE left_WP left_WY left_WR left_linkage_tr left_linkage_tl left_linkage_bl
-        right_SA right_SE right_WP right_WY right_WR right_linkage_tr right_linkage_tl right_linkage_bl joint_state_controller" />
+        args="left_SA left_SE left_WP left_WY left_linkage_tr joint_state_controller
+        right_SA right_SE right_WP right_WY right_linkage_tr " />
+<!--
+       left_WR right_WR right_r_inner right_l_inner right_r_outer right_l_outer right_r_finger right_l_finger
+-->
     <!-- start robot state publisher -->
     <node name="$(arg robot_name)_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="log">
       <param name="publish_frequency" type="double" value="50.0" />

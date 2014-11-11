@@ -15,28 +15,39 @@ class LabviewMaster:
                  'right_SA', 'right_SE', 'right_linkage_tr', 'right_WP', 'right_WY', 'right_WR', 'right_GRIP']
   def __init__(self): 
     self.ns = rospy.get_namespace()
+    gripper_joints = ['r_inner','l_inner','r_outer','l_outer','r_finger','l_finger']
+    gripper_names = []
+    for joint in gripper_joints:
+      for arm in ['left','right']:
+        gripper_names.append('%s_%s' % (arm, joint))
+    gripper_values = [0] * len(gripper_names)
     # Set up receiver socket
-    self.read_port = 5555
+    self.read_port = 6565
     self.read_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     self.read_socket.bind(('', self.read_port))
     rospy.loginfo('UDP Socket receiving on port [%d]' % (self.read_port))
     # Set up sender socket
     self.write_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    self.labview_ip = '138.100.76.191'
-    self.write_port = 5050    
+    self.labview_ip = '192.168.0.3'
+    self.write_port = 6060
     rospy.loginfo('UDP Socket sending to [udp://%s:%d]' % (self.labview_ip, self.write_port))
     #Set-up publishers/subscribers
     self.command_pub = dict()
     for joint in self.joint_names:
       self.command_pub[joint] = rospy.Publisher('%s/command' % joint, Float64)
+    self.state_pub = rospy.Publisher('/joint_states', JointState)
     
     while not rospy.is_shutdown():
       msg = JointState()
       data = self.recv_timeout()
       if data:
         msg.deserialize(data)
-        for i, joint in enumerate(msg.name):
-          self.command_pub[joint].publish(msg.position[i])
+        msg.header.stamp = rospy.Time.now()
+        msg.name = list(msg.name) + gripper_names
+        msg.position = list(msg.position) + gripper_values
+        self.state_pub.publish(msg)
+        #~ for i, joint in enumerate(msg.name):
+          #~ self.command_pub[joint].publish(msg.position[i])
   
   def cb_joint_states(self, msg):
     file_str = StringIO()
