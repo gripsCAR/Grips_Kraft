@@ -4,7 +4,7 @@
   
   <!-- roslaunch arguments -->
   <arg name="world_name" default="$(find grips_worlds)/worlds/bimanual_setup.world"/>
-  <arg name="show_rviz" default="true"/>
+  <arg name="rviz" default="true"/>
   <arg name="debug" default="false"/>
   <arg name="paused" default="true"/>
   <arg name="gui" default="true"/>
@@ -48,7 +48,7 @@
   </group>
   
   <!-- Show in Rviz -->
-  <group if="$(arg show_rviz)">
+  <group if="$(arg rviz)">
     <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_gazebo)/launch/rviz/bimanual.rviz"/> 
   </group>
   

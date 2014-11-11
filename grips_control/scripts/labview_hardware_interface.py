@@ -101,7 +101,7 @@ class HardwareInterface(LabviewServer):
     self.cmd_msg.position[5] = msg.data
   
   def cb_GRIP(self, msg):
-    self.cmd_msg.position[6] = msg.data    
+    self.cmd_msg.position[6] = msg.data
 
 
 if __name__ == '__main__':

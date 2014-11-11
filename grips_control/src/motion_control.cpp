@@ -273,7 +273,7 @@ class MotionControl
             d_j[i] = fmax(d_j[i], j_error);
           }
           // score[i] = d_q[i] + d_xyz[i] + d_j[i];
-          score[i] = 0.5*d_q[i] + 0.5*d_j[i];
+          score[i] = d_j[i];
         }
         std::size_t choice_idx = std::min_element(score.begin(), score.end()) - score.begin();
         //~ if (score[choice_idx] > 0.1)
