@@ -5,147 +5,21 @@
   <property name="pi" value="3.1415926535897931" />
   <property name="gripper_effort" value="200" />
   <property name="gripper_velocity" value="15" />
-  <!-- Auxiliar Values -->
-  <property name="pi" value="3.1415926535897931" />
   <property name="max_effort" value="200" />
   <property name="max_velocity" value="5" />
-  <!-- Links Mass -->
-  <property name="base_mass" value="1.208" />
-  <property name="manifold_mass" value="41.111" />
-  <property name="upper_arm_mass" value="3.592" />
-  <property name="elbow_pivot_mass" value="0.72" />
-  <property name="coupling_mass" value="0.446" />
-  <property name="forearm_mass" value="4.935" />
-  <property name="pitch_mass" value="0.679" />
-  <property name="yaw_mass" value="4.689" />
-  <property name="camera_mass" value="0.869" />
-  <!-- Links COG -->
-  <property name="base_cog" value="0 0 7e-3" />
-  <property name="manifold_cog" value="0 2e-3 0.21" />
-  <property name="upper_arm_cog" value="0 5e-3 0.227" />
-  <property name="elbow_pivot_cog" value="-3.6e-10 80.686e-3 -6.33e-5" />
-  <property name="coupling_cog" value="0 0 -0.26035" />
-  <property name="forearm_cog" value="0 0.155337 0.012119" />
-  <property name="pitch_cog" value="0 0.065 0" />
-  <property name="yaw_cog" value="-1e-3 95.791e-3 18.273e-3" />
-  <property name="camera_cog" value="0.077 0.007 0.002" />
-  <!-- Links Inertia -->
-  <macro name="base_inertia">
-    <inertia ixx="0.003" ixy="0.0" ixz="0.0" iyy="0.003" iyz="0.0"
-      izz="0.006" />
-  </macro>
-  <macro name="manifold_inertia">
-    <inertia  ixx="0.549"   ixy="-9.556e-5"   ixz="-5.871e-5" 
-              iyy="0.855" iyz="2e-3" 
-              izz="0.605" />
-  </macro>
-  <macro name="upper_arm_inertia">
-    <inertia  ixx="0.103" ixy="0" ixz="0" 
-              iyy="0.106" iyz="0.004"
-              izz="0.013" />
-  </macro>
-  <macro name="elbow_pivot_inertia">
-    <inertia  ixx="0.002" ixy="-3.231e-27" ixz="0" 
-              iyy="3.397e-4" iyz="-1.919e-5"
-              izz="0.002" />
-  </macro>
-  <macro name="coupling_inertia">
-    <inertia  ixx="0.011" ixy="-3.231e-27" ixz="0" 
-              iyy="0.011" iyz="0" 
-              izz="2.102e-5" />
-  </macro>
-  <macro name="forearm_inertia">
-    <inertia  ixx="0.073" ixy="0" ixz="0" 
-              iyy="0.009" iyz="0.004"
-              izz="0.073" />
-  </macro>
-  <macro name="pitch_inertia">
-    <inertia  ixx="0.003" ixy="0" ixz="0" 
-              iyy="0.002" iyz="0.004"
-              izz="0.002" />
-  </macro>
-  <macro name="yaw_inertia">
-    <inertia  ixx="0.027" ixy="1.597e-4" ixz="-2.174e-4" 
-              iyy="0.009" iyz="-0.003" 
-              izz="0.026" />
-  </macro>
-  <macro name="camera_inertia">
-    <inertia  ixx="0.001" ixy="-1.561e-4" ixz="-5.859e-5" 
-              iyy="0.002" iyz="3.295e-5" 
-              izz="0.002" />
-  </macro>
-  <!-- Meshes -->
-  <property name="base_mesh" value="package://grips_description/meshes/visual/base.dae" />
-  <property name="manifold_mesh" value="package://grips_description/meshes/visual/manifold.dae" />
-  <property name="upper_arm_mesh" value="package://grips_description/meshes/visual/upper_arm.dae" />
-  <property name="elbow_pivot_mesh" value="package://grips_description/meshes/visual/elbow_pivot.dae" />
-  <property name="coupling_mesh" value="package://grips_description/meshes/visual/coupling.dae" />
-  <property name="forearm_mesh" value="package://grips_description/meshes/visual/forearm.dae" />
-  <property name="pitch_mesh" value="package://grips_description/meshes/visual/pitch.dae" />
-  <property name="yaw_mesh" value="package://grips_description/meshes/visual/yaw.dae" />
-  <property name="camera_mesh" value="package://grips_description/meshes/visual/camera.dae" />
-  <!-- Joints Dynamics -->
-  <property name="SA_damping" value="5" />
-  <property name="SE_damping" value="5" />
-  <property name="linkage_damping" value="0.5" />
-  <property name="linkage_friction" value="0.5" />
-  <property name="WP_damping" value="5" />
-  <property name="WY_damping" value="5" />
-  <property name="WR_damping" value="0.5" />
-  <!-- Links Mass -->
-  <property name="gripper_base_mass" value="0.923" />
-  <property name="outer_mass" value="0.091" />
-  <property name="inner_mass" value="0.194" />
-  <property name="finger_mass" value="0.174" />
-  <!-- Links COG -->
-  <property name="gripper_base_cog" value="0 26.28e-3 0" />
-  <property name="outer_cog" value="0 31.725e-3 0" />
-  <property name="r_inner_cog" value="-0.316e-3 23.873e-3 0" />
-  <property name="l_inner_cog" value="0.316e-3 23.873e-3 0" />
-  <property name="r_finger_cog" value="3.441e-3 20.353e-3 0" />
-  <property name="l_finger_cog" value="-3.441e-3 20.353e-3 0" />  
-  <!-- Links Inertia -->
-  <macro name="gripper_base_inertia">
-    <inertia ixx="9.67e-4" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0"
-      izz="0.002" />
-  </macro>
-  <macro name="outer_inertia">
-    <inertia ixx="4.664e-5" ixy="0.0" ixz="0.0" iyy="5.519e-6"
-      iyz="0.0" izz="4.682e-5" />
-  </macro>
-  <macro name="r_inner_inertia">
-    <inertia ixx="1.179e-4" ixy="1.347e-6" ixz="0.0" iyy="5.647e-5"
-      iyz="0.0" izz="7.353e-5" />
-  </macro>
-  <macro name="l_inner_inertia">
-    <inertia ixx="1.179e-4" ixy="-1.347e-6" ixz="0.0" iyy="5.647e-5"
-      iyz="0.0" izz="7.353e-5" />
-  </macro>
-  <macro name="r_finger_inertia">
-    <inertia ixx="1.65e-4" ixy="3.16e-5" ixz="0.0" iyy="3.595e-5"
-      iyz="0.0" izz="1.701e-4" />
-  </macro>
-  <macro name="l_finger_inertia">
-    <inertia ixx="1.65e-4" ixy="-3.16e-5" ixz="0.0" iyy="3.595e-5"
-      iyz="0.0" izz="1.701e-4" />
-  </macro>
-  <!-- Meshes -->
-  <property name="gripper_base_mesh" value="package://grips_description/meshes/visual/gripper_base.dae" />
-  <property name="outer_mesh" value="package://grips_description/meshes/visual/outer_pivot.dae" />
-  <property name="r_inner_mesh" value="package://grips_description/meshes/visual/r_inner_pivot.dae" />
-  <property name="l_inner_mesh" value="package://grips_description/meshes/visual/l_inner_pivot.dae" />
-  <property name="r_finger_mesh" value="package://grips_description/meshes/visual/r_finger.dae" />
-  <property name="l_finger_mesh" value="package://grips_description/meshes/visual/l_finger.dae" />
-  <!-- Joints Dynamics -->
-  <property name="outer_damping" value="0.1" />
-  <property name="inner_damping" value="0.1" />
-  <property name="finger_damping" value="0.1" />
-  <property name="inner_friction" value="0" />
-  <property name="outer_friction" value="0" />
-  <property name="finger_friction" value="0" />
   
-  <!-- Link's Macros -->
-  <macro name="create_link" params="name color mesh mass cog *inertia">
+  <!-- Macros -->
+  <!-- Inertia Macro -->
+  <macro name="cylinder_inertial" params="cog mass radius length">
+    <inertial>
+      <origin xyz="${cog}" rpy="0 0 0" />
+      <mass value="${mass}" />
+      <inertia  ixx="${3*mass*radius^2 / 12  + length^2 / 12}" ixy="0.0"  ixz="0.0" 
+                iyy="${3*mass*radius^2 / 12  + length^2 / 12}" iyz="0.0"  izz="${mass*radius^2 / 2}" />
+    </inertial>
+  </macro>
+  <!-- Link Macro -->
+  <macro name="create_link" params="name color mesh *inertia">
     <link name="${name}">
       <visual>
         <geometry>
@@ -153,39 +27,17 @@
         </geometry>
         <material name="${color}" />
       </visual>
+<!--
       <collision>
         <geometry>
           <mesh filename="${mesh}" />
         </geometry>
       </collision>
-      <inertial>
-        <origin xyz="${cog}" rpy="0 0 0" />
-        <mass value="${mass}" />
-        <xacro:insert_block name="inertia" />
-      </inertial>
+      <xacro:insert_block name="inertia" />
+-->
     </link>
   </macro>
-  <macro name="link_collision" params="name color mesh mass cog *collision *inertia">
-    <link name="${name}">
-      <visual>
-        <geometry>
-          <mesh filename="${mesh}" />
-        </geometry>
-        <material name="${color}" />
-      </visual>
-      <collision>
-        <geometry>
-          <xacro:insert_block name="collision" />
-        </geometry>
-      </collision>
-      <inertial>
-        <origin xyz="${cog}" rpy="0 0 0" />
-        <mass value="${mass}" />
-        <xacro:insert_block name="inertia" />
-      </inertial>
-    </link>
-  </macro>
-  <!-- Transmission's Macro -->
+  <!-- Transmission Macro -->
   <macro name="simple_transmission" params="joint">
     <transmission name="${joint}_tran">
       <type>transmission_interface/SimpleTransmission</type>

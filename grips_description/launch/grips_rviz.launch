@@ -1,8 +1,8 @@
 <launch>
-  <arg name="robot_name" default="grips"/>
+  <arg name="robot" default="grips"/>
   
   <!-- send grips urdf to param server -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot_name).xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find grips_description)/robots/$(arg robot).urdf.xacro'" />
 
   <!-- send fake joint values -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

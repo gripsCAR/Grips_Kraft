@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="grips" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Import common macros-->
+  <xacro:include filename="$(find grips_description)/urdf/common.xacro" />
+  <!-- Import materials for rviz-->
+  <xacro:include filename="$(find grips_description)/urdf/materials.xacro" />
+  <!-- Import robot without gripper -->
+  <xacro:include filename="$(find grips_description)/urdf/serial_arm.xacro" />
+  <!-- Import simple gripper -->
+  <xacro:include filename="$(find grips_description)/urdf/jaw_gripper.xacro" /> 
+  
+  <!-- Create the grips robot -->
+  <link name="world" />
+  <serial_arm parent="world"/>
+
+</robot>
