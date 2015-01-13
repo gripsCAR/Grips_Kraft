@@ -9,17 +9,25 @@
   <property name="max_velocity" value="5" />
   
   <!-- Macros -->
-  <!-- Inertia Macro -->
-  <macro name="cylinder_inertial" params="cog mass radius length">
+  <macro name="cylinder_collision" params="radius length">
+    <collision>
+      <origin xyz="0 0 ${length/2}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${radius}" length="${length}"/>
+      </geometry>
+    </collision>
+  </macro>
+  <macro name="cylinder_inertia" params="mass radius length">
     <inertial>
-      <origin xyz="${cog}" rpy="0 0 0" />
+      <origin xyz="0 0 ${length/2}" rpy="0 0 0" />
       <mass value="${mass}" />
-      <inertia  ixx="${3*mass*radius^2 / 12  + length^2 / 12}" ixy="0.0"  ixz="0.0" 
-                iyy="${3*mass*radius^2 / 12  + length^2 / 12}" iyz="0.0"  izz="${mass*radius^2 / 2}" />
+      <inertia  ixx="${mass*radius^2 / 4  + mass*length^2 / 12}" ixy="0.0"  ixz="0.0" 
+                iyy="${mass*radius^2 / 4  + mass*length^2 / 12}" iyz="0.0"  
+                izz="${mass*radius^2 / 2}" />
     </inertial>
   </macro>
   <!-- Link Macro -->
-  <macro name="create_link" params="name color mesh *inertia">
+  <macro name="create_link" params="name color mesh *collision *inertia">
     <link name="${name}">
       <visual>
         <geometry>
@@ -27,14 +35,25 @@
         </geometry>
         <material name="${color}" />
       </visual>
-<!--
+      <xacro:insert_block name="collision" />
+      <xacro:insert_block name="inertia" />
+    </link>
+  </macro>
+  <!-- A smaller dummy link makes the model to explode in Gazebo -->
+  <macro name="dummy_link" params="name">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <sphere radius="0.02"/>
+        </geometry>
+        <material name="black" />
+      </visual>
       <collision>
         <geometry>
-          <mesh filename="${mesh}" />
+          <sphere radius="0.02"/>
         </geometry>
       </collision>
-      <xacro:insert_block name="inertia" />
--->
+      <cylinder_inertia radius="0.02" length="0.02" mass="0.05"/>
     </link>
   </macro>
   <!-- Transmission Macro -->
