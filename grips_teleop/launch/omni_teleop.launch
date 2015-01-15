@@ -1,0 +1,30 @@
+<launch>
+  
+  <arg name="master_name" default="omni"/>
+  <arg name="slave_name" default="grips"/>
+  <arg name="frame_id" default="base_link"/>
+  <arg name="rviz" default="true"/>
+  
+  <!-- Coupling node between omni and cart controller  -->
+  <node name="omni_cart_coupling" pkg="grips_teleop" type="omni_cart_coupling.py" output="screen"/>
+  
+  <!-- Phantom node -->
+  <node name="omni_state" pkg="omni_common" type="omni_state" output="screen"> 
+    <param name="omni_name" type="string" value="$(arg master_name)"/>
+    <rosparam command="load" file="$(find grips_teleop)/config/phantom_omni.yaml" />
+  </node>
+  
+  <!-- Rate position controller -->
+  <node name="workspace_indexing" pkg="rate_position_controller" type="workspace_indexing.py" output="screen">
+    <param name="slave_name" type="string" value="$(arg slave_name)"/>
+    <param name="master_name" type="string" value="$(arg master_name)"/>
+    <param name="frame_id" type="string" value="$(arg frame_id)"/>
+    <remap from="$(arg slave_name)/state" to="/grips/endpoint_state"/>
+    <rosparam command="load" file="$(find grips_teleop)/config/phantom_omni.yaml" />
+  </node>
+  
+  <!-- Show in Rviz -->
+  <group if="$(arg rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find grips_teleop)/config/cartesian_controller.rviz"/>
+  </group>
+</launch>

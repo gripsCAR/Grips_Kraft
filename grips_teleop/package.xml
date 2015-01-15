@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <name>grips_teleop</name>
+  <description>The grips_teleop package</description>
+  
+  <version>0.1.0</version>
+  <maintainer email="fsuarez6@gmail.com">Francisco Suarez-Ruiz</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/fsuarez6/grips</url>
+  <url type="repository">https://github.com/fsuarez6/grips</url>
+  <author>Francisco Suarez-Ruiz</author>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>baxter_core_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rate_position_controller</build_depend>
+  
+  <run_depend>baxter_core_msgs</run_depend>
+  <run_depend>baxter_teleop</run_depend>
+  <run_depend>grips_description</run_depend>
+  <run_depend>grips_moveit_config</run_depend>
+  <run_depend>pykdl_utils</run_depend>
+  <run_depend>rate_position_controller</run_depend>
+  <run_depend>tf_conversions</run_depend>
+  <run_depend>urdf_parser_py</run_depend>
+
+</package>
