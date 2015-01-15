@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Dimensions -->
+  <property name="base_radius" value="0.125" />
+  <property name="base_length" value="15.24e-3" />
+  <property name="manifold_radius" value="0.205" />
+  <property name="manifold_length" value="0.33812" />
+  <property name="upper_arm_radius" value="0.075" />
+  <property name="upper_arm_length" value="0.52167" />
+  <property name="forearm_radius" value="0.075" />
+  <property name="forearm_length" value="0.385078" />
+  <property name="pitch_radius" value="0.075" />
+  <property name="pitch_length" value="0.133223" />
+  <property name="yaw_radius" value="0.085" />
+  <property name="yaw_length" value="0.190892" />
+  <!-- Link Masses -->
+  <property name="base_mass" value="1.208" />
+  <property name="manifold_mass" value="41.111" />
+  <property name="upper_arm_mass" value="3.592" />
+  <property name="elbow_pivot_mass" value="0.72" />
+  <property name="coupling_mass" value="0.446" />
+  <property name="forearm_mass" value="4.935" />
+  <property name="pitch_mass" value="0.679" />
+  <property name="yaw_mass" value="4.689" />
+  <property name="camera_mass" value="0.869" />
+  <!-- Meshes -->
+  <property name="base_mesh" value="package://grips_description/meshes/visual/base.dae" />
+  <property name="manifold_mesh" value="package://grips_description/meshes/visual/manifold.dae" />
+  <property name="upper_arm_mesh" value="package://grips_description/meshes/visual/upper_arm.dae" />
+  <property name="elbow_pivot_mesh" value="package://grips_description/meshes/visual/elbow_pivot.dae" />
+  <property name="coupling_mesh" value="package://grips_description/meshes/visual/coupling.dae" />
+  <property name="forearm_mesh" value="package://grips_description/meshes/visual/forearm.dae" />
+  <property name="pitch_mesh" value="package://grips_description/meshes/visual/pitch.dae" />
+  <property name="yaw_mesh" value="package://grips_description/meshes/visual/yaw.dae" />
+  <property name="camera_mesh" value="package://grips_description/meshes/visual/camera.dae" />
+  <!-- Joints Dynamics -->
+  <property name="SA_damping" value="5" />
+  <property name="SE_damping" value="5" />
+  <property name="linkage_damping" value="0.5" />
+  <property name="linkage_friction" value="0.5" />
+  <property name="WP_damping" value="5" />
+  <property name="WY_damping" value="5" />
+  <property name="WR_damping" value="0.5" />
+  
+  <macro name="serial_arm" params="parent">
+    <create_link name="base_link" color="black" mesh="${base_mesh}" >
+      <cylinder_collision radius="${base_radius}" length="${base_length}" />
+      <cylinder_inertia radius="${base_radius}" length="${base_length}" mass="${base_mass}"/>
+    </create_link>
+    
+    <create_link name="manifold" color="black" mesh="${manifold_mesh}" >
+      <cylinder_collision radius="${manifold_radius}" length="${manifold_length}" />
+      <cylinder_inertia radius="${manifold_radius}" length="${manifold_length}" mass="${manifold_mass}"/>
+    </create_link>
+    
+    <create_link name="upper_arm" color="black" mesh="${upper_arm_mesh}" >
+      <cylinder_collision radius="${upper_arm_radius}" length="${upper_arm_length}" />
+      <cylinder_inertia radius="${upper_arm_radius}" length="${upper_arm_length}" mass="${upper_arm_mass}"/>
+    </create_link>
+    
+    <create_link name="forearm" color="black" mesh="${forearm_mesh}" >
+      <collision>
+        <origin xyz="0 ${forearm_length/2 - 0.1234} 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${forearm_radius}" length="${forearm_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 ${forearm_length/2 - 0.1234} 0" rpy="0 0 0"/>
+        <mass value="${forearm_mass}" />
+        <inertia  ixx="${forearm_mass*forearm_radius^2 / 4  + forearm_mass*forearm_length^2 / 12}" ixy="0.0"  ixz="0.0" 
+                  iyy="${forearm_mass*forearm_radius^2 / 2}" iyz="0.0"
+                  izz="${forearm_mass*forearm_radius^2 / 4  + forearm_mass*forearm_length^2 / 12}" />
+      </inertial>
+    </create_link>
+    <create_link name="pitch" color="black" mesh="${pitch_mesh}" >
+      <collision>
+        <origin xyz="0 ${pitch_length/2} 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${pitch_radius}" length="${pitch_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 ${pitch_length/2} 0" rpy="0 0 0"/>
+        <mass value="${pitch_mass}" />
+        <inertia  ixx="${pitch_mass*pitch_radius^2 / 4  + pitch_mass*pitch_length^2 / 12}" ixy="0.0"  ixz="0.0" 
+                  iyy="${pitch_mass*pitch_radius^2 / 2}" iyz="0.0"
+                  izz="${pitch_mass*pitch_radius^2 / 4  + pitch_mass*pitch_length^2 / 12}" />
+      </inertial>
+    </create_link>
+    <create_link name="yaw" color="black" mesh="${yaw_mesh}" >
+      <collision>
+        <origin xyz="0 ${yaw_length/2} 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${yaw_radius}" length="${yaw_length}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 ${yaw_length/2} 0" rpy="0 0 0"/>
+        <mass value="${yaw_mass}" />
+        <inertia  ixx="${yaw_mass*yaw_radius^2 / 4  + yaw_mass*yaw_length^2 / 12}" ixy="0.0"  ixz="0.0" 
+                  iyy="${yaw_mass*yaw_radius^2 / 2}" iyz="0.0"
+                  izz="${yaw_mass*yaw_radius^2 / 4  + yaw_mass*yaw_length^2 / 12}" />
+      </inertial>
+    </create_link>
+    
+    <!-- This dummy link is needed for coupling hands to the robot -->
+    <dummy_link name="end_effector" />
+    
+    <!-- Joints -->
+    <joint name="anchor" type="fixed">
+      <origin xyz="0 0 0.001" rpy="0 0 0" />
+      <parent link="${parent}" />
+      <child link="base_link" />
+    </joint>
+    <joint name="SA" type="revolute">
+      <child link="manifold" />
+      <parent link="base_link" />
+      <axis xyz="0 0 1" />
+      <origin xyz="0 0 ${base_length}" rpy="0 0 0" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="${max_effort}" velocity="${80*pi/180}" />
+      <dynamics damping="${SA_damping}"/>
+    </joint>
+    <joint name="SE" type="revolute">
+      <child link="upper_arm" />
+      <parent link="manifold" />
+      <axis xyz="1 0 0" />
+      <origin xyz="0 0 ${manifold_length}" rpy="0 0 0" />
+      <limit lower="${-pi/2}" upper="${pi/6}" effort="${max_effort}" velocity="${65*pi/180}" />
+      <dynamics damping="${SE_damping}" friction="10"/>
+    </joint>
+    <joint name="linkage_tr" type="revolute">
+      <child link="forearm" />
+      <parent link="upper_arm" />
+      <axis xyz="1 0 0" />
+      <origin xyz="0 -9.82e-3 ${upper_arm_length}" rpy="0 0 0" />
+      <limit lower="-1.28" upper="${pi/3}" effort="${max_effort}" velocity="${50*pi/180}" />
+      <dynamics damping="10"/>
+    </joint>
+    <joint name="WP" type="revolute">
+      <child link="pitch" />
+      <parent link="forearm" />
+      <axis xyz="1 0 0" />
+      <origin xyz="0 0.26109 7.5e-3" rpy="0 0 0" />
+      <limit lower="-0.581" upper="1.1" effort="${max_effort}" velocity="${100*pi/180}" />
+      <dynamics damping="${WP_damping}"/>
+    </joint>
+    <joint name="WY" type="revolute">
+      <child link="yaw" />
+      <parent link="pitch" />
+      <axis xyz="0 0 1" />
+      <origin xyz="0 ${pitch_length} 0" rpy="0 0 0" />
+      <limit lower="-1.01" upper="0.675" effort="${max_effort}" velocity="${115*pi/180}" />
+      <dynamics damping="${WY_damping}"/>
+    </joint>
+    <joint name="WR" type="continuous">
+      <child link="end_effector" />
+      <parent link="yaw" />
+      <axis xyz="0 1 0" />
+      <origin xyz="-0.787e-3 ${yaw_length} 0.051331" rpy="0 0 0" />
+      <limit effort="${max_effort}" velocity="${200*pi/180}" />
+      <dynamics damping="${WR_damping}"/>
+    </joint>
+    
+    <!-- Transmissions -->
+    <simple_transmission joint="SA" />
+    <simple_transmission joint="SE" />
+    <simple_transmission joint="linkage_tr" />
+    <simple_transmission joint="WP" />
+    <simple_transmission joint="WY" />
+    <simple_transmission joint="WR" />
+    
+    <gazebo reference="base_link">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="manifold">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="upper_arm">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="forearm">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="pitch">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="yaw">
+      <material>Telerobcar/MetalSeamed</material>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+    <gazebo reference="end_effector">
+      <selfCollide>false</selfCollide>
+    </gazebo> 
+  </macro>
+</robot>

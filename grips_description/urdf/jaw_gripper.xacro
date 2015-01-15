@@ -1,5 +1,43 @@
 <?xml version="1.0"?>
-<robot name="simple_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Links Mass -->
+  <property name="gripper_base_mass" value="0.923" />
+  <property name="outer_mass" value="0.091" />
+  <property name="inner_mass" value="0.194" />
+  <property name="finger_mass" value="0.174" />
+  <!-- Links COG -->
+  <property name="gripper_base_cog" value="0 26.28e-3 0" />
+  <property name="outer_cog" value="0 31.725e-3 0" />
+  <property name="r_inner_cog" value="-0.316e-3 23.873e-3 0" />
+  <property name="l_inner_cog" value="0.316e-3 23.873e-3 0" />
+  <property name="r_finger_cog" value="3.441e-3 20.353e-3 0" />
+  <property name="l_finger_cog" value="-3.441e-3 20.353e-3 0" />  
+  <!-- Links Inertia -->
+  <macro name="gripper_base_inertia">
+    <inertia ixx="9.67e-4" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0"
+      izz="0.002" />
+  </macro>
+  <macro name="outer_inertia">
+    <inertia ixx="4.664e-5" ixy="0.0" ixz="0.0" iyy="5.519e-6"
+      iyz="0.0" izz="4.682e-5" />
+  </macro>
+  <macro name="r_inner_inertia">
+    <inertia ixx="1.179e-4" ixy="1.347e-6" ixz="0.0" iyy="5.647e-5"
+      iyz="0.0" izz="7.353e-5" />
+  </macro>
+  <macro name="l_inner_inertia">
+    <inertia ixx="1.179e-4" ixy="-1.347e-6" ixz="0.0" iyy="5.647e-5"
+      iyz="0.0" izz="7.353e-5" />
+  </macro>
+  <macro name="r_finger_inertia">
+    <inertia ixx="1.65e-4" ixy="3.16e-5" ixz="0.0" iyy="3.595e-5"
+      iyz="0.0" izz="1.701e-4" />
+  </macro>
+  <macro name="l_finger_inertia">
+    <inertia ixx="1.65e-4" ixy="-3.16e-5" ixz="0.0" iyy="3.595e-5"
+      iyz="0.0" izz="1.701e-4" />
+  </macro>
+  
   <macro name="simple_gripper" params="name">
     <!-- base link -->
     <create_link name="${name}gripper_base" color="metal_seamed" mesh="${gripper_base_mesh}" cog="${gripper_base_cog}" mass="${gripper_base_mass}">
