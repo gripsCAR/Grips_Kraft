@@ -14,7 +14,7 @@
     <arg name="headless" value="false" />
   </include>
   
-   <!-- start pr2 robot -->
+  <!-- start pr2 robot -->
   <include file="$(find grips_gazebo)/launch/grips.launch"/>
   
 </launch>

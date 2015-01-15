@@ -1,7 +1,7 @@
 <launch>
   
   <!-- load controller configurations from YAML file to parameter server -->
-  <rosparam file="$(find grips_control)/config/joint_position_controllers.yaml" command="load" />
+  <rosparam file="$(find grips_control)/config/joint_effort_controllers.yaml" command="load" />
   
   <!-- load the controllers -->
   <node name="controller_manager" pkg="controller_manager" type="spawner" output="screen" 
