@@ -58,13 +58,14 @@
   </macro>
   <!-- Transmission Macro -->
   <macro name="simple_transmission" params="joint">
-    <transmission name="${joint}_tran">
+    <transmission name="${joint}_tran" type="transmission_interface/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${joint}" />
+      <joint name="${joint}"/>
       <actuator name="${joint}_motor">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
+      <mechanicalReduction>1</mechanicalReduction>
     </transmission>
   </macro>
 </robot>

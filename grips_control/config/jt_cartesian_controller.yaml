@@ -1,0 +1,11 @@
+# Expected frame id of the ik commands
+frame_id: base_link
+tip_link: end_effector
+# Publish Rate in [Hz]
+publish_rate: 500
+
+# Joint Torque controller gains
+gains:
+  #    X trans    Y trans   Z trans   X rot   Y rot   Z rot
+  Kp: [1500.0,    1500.0,   1500.0,   100.0,  100.0,  100.0]
+  Kd: [20.0,      20.0,     20.0,     0.5,    0.5,    0.5]
