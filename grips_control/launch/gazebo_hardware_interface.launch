@@ -1,0 +1,14 @@
+<launch>
+  
+  <!-- Hardware Interface -->
+  <node name="gazebo_hardware_interface" pkg="grips_control" type="gazebo_hardware_interface.py" output="screen"> 
+    <param name="write_ip" type="string" value="192.168.0.4"/>
+    <param name="read_port" type="int" value="5051"/>
+    <param name="write_port" type="int" value="5052"/>
+    <param name="publish_frequency" type="double" value="500.0" />
+  </node>
+
+  <!-- Initial position -->
+  <node name="initial_xyz_pos" pkg="rostopic" type="rostopic" args="pub -1 /grips/ik_command geometry_msgs/PoseStamped '{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: base_link}, pose: { position: { x: 0, y: 1, z: 0 }, orientation: {x: 0, y: 0, z: 0, w: 1 } } }'" />
+
+</launch>
