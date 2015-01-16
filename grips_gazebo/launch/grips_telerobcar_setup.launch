@@ -1,15 +1,24 @@
 <launch>
-  <arg name="paused" default="true" />
+  
+  <!-- Export env variable with the initial robot position -->
+  <env name="ROBOT_INITIAL_POSE" value="-z 0.8" />
   <!-- Export env variable so that gazebo find the models and materials -->
   <env name="GAZEBO_MODEL_PATH" value="$(find grips_worlds)/models" />
+  
   <!-- We resume the logic in empty_world.launch, changing only the name of 
     the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find grips_worlds)/worlds/dexterity_test.world" />
+    <arg name="world_name" value="$(find grips_worlds)/worlds/telerobcar_setup.world" />
     <arg name="debug" value="false" />
     <arg name="gui" value="true" />
-    <arg name="paused" value="$(arg paused)" />
+    <arg name="paused" value="false" />
     <arg name="use_sim_time" value="true" />
     <arg name="headless" value="false" />
   </include>
+  
+  <!-- start Grips robot -->
+  <include file="$(find grips_gazebo)/launch/grips_no_controllers.launch">
+    <arg name="robot_initial_pose" value="-z 0.8" />
+  </include>
+  
 </launch>

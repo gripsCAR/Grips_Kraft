@@ -66,6 +66,9 @@ class JTCartesianController(object):
 
   def shutdown(self):
     self.torque_controller_timer.shutdown()
+    # Stop the torque commands. It avoids unwanted movements after stoping this controller
+    for i, name in enumerate(self.joint_names):
+      self.torque_pub[name].publish(0.0)
 
   def torque_controller_cb(self, event):
     if rospy.is_shutdown() or None in [self.cart_command, self.endpoint_state, self.joint_states]:

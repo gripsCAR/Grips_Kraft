@@ -1,11 +1,14 @@
 <launch>
   
+  <arg name="robot_name" default="grips_no_gripper" />
+  <arg name="robot_initial_pose" default="-x 0 -y 0 -z 0" />
+  
   <!-- send grips urdf to param server -->
   <include file="$(find grips_description)/launch/upload_grips.launch">
-    <arg name="robot_name" value="grips_no_gripper" />
+    <arg name="robot_name" value="$(arg robot_name)" />
   </include>
   
   <!-- push robot_description to factory and spawn robot in gazebo -->
-  <node name="spawn_grips_model" pkg="gazebo_ros" type="spawn_model" args="$(optenv ROBOT_INITIAL_POSE) -urdf -param robot_description -model grips -ros_namespace /gazebo" respawn="false" output="screen" />
+  <node name="spawn_grips_model" pkg="gazebo_ros" type="spawn_model" args="$(arg robot_initial_pose) -urdf -param robot_description -model grips -ros_namespace /gazebo" respawn="false" output="screen" />
   
 </launch>

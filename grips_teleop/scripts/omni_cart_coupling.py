@@ -8,7 +8,7 @@ from baxter_interface import CHECK_VERSION
 from geometry_msgs.msg import Point, PoseStamped, Quaternion, Wrench
 from omni_msgs.msg import OmniButtonEvent
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float64
 # Services
 from std_srvs.srv import Empty
 # Quaternions tools
@@ -20,14 +20,17 @@ from math import sqrt, pi
 
 GREY_BUTTON = 0
 WHITE_BUTTON = 1
+GRIPPER_RATIO = 10
 
 
 class CartCoupling(object):
   def __init__(self):
     self.roll_angle = 0
+    self.gripper_cmd = -GRIPPER_RATIO
     self.q0 = PyKDL.Rotation.Quaternion(0.0, 0.0, 0.0, 1.0)
     # Set-up publishers/subscribers
-    self.locked_pub = rospy.Publisher('/grips/gripper/locked', Bool)
+    self.locked_pub = rospy.Publisher('/omni/locked', Bool)
+    self.gripper_pub = rospy.Publisher('/grips/gripper/command', Float64)
     self.ik_cmd_pub = rospy.Publisher('/grips/ik_command', PoseStamped)
     rospy.Subscriber('/grips/raw_ik_command', PoseStamped, self.pose_cb)
     self.prev_buttons = [0] * 2
@@ -44,14 +47,15 @@ class CartCoupling(object):
       if (previous != button_states[i]) and button_states[i] == 1:
         self.buttons[i] = not self.buttons[i]
     # Open or close the gripper
-    if self.buttons[GREY_BUTTON]:
-      pass  # Close
-    else:
-      pass  # Open
+    if self.buttons[GREY_BUTTON]:   # Close
+      self.gripper_cmd = GRIPPER_RATIO
+    else:                           # Open
+      self.gripper_cmd = -GRIPPER_RATIO
+    self.gripper_pub.publish(Float64(self.gripper_cmd))
   
   def joint_states_cb(self, msg):
     idx = msg.name.index('roll')
-    self.roll_angle = pi/2 - msg.position[idx]
+    self.roll_angle = -msg.position[idx]
 
   def pose_cb(self, msg):
     self.locked_pub.publish(Bool(self.buttons[WHITE_BUTTON]))
