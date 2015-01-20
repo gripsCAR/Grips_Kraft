@@ -10,7 +10,7 @@ SA:
 SE:
   type: effort_controllers/JointEffortController
   joint: SE
-  pid: {p: 1000000, i: 0, d: 100}
+  pid: {p: 10000, i: 0, d: 100}
 linkage_tr:
   type: effort_controllers/JointEffortController
   joint: linkage_tr
@@ -18,12 +18,12 @@ linkage_tr:
 WP:
   type: effort_controllers/JointEffortController
   joint: WP
-  pid: {p: 1000, i: 0.1, d: 0}
+  pid: {p: 10000, i: 0, d: 100}
 WY:
   type: effort_controllers/JointEffortController
   joint: WY
-  pid: {p: 100, i: 0.1, d: 0}
+  pid: {p: 10000, i: 0, d: 100}
 WR:
   type: effort_controllers/JointEffortController
   joint: WR
-  pid: {p: 100, i: 0.1, d: 0}
+  pid: {p: 10000, i: 0, d: 100}

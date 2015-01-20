@@ -6,3 +6,5 @@
 
 # External dependencies
 - git: {local-name: robotiq, uri: 'https://github.com/ros-industrial/robotiq', version: groovy-devel}
+- git: {local-name: robotiq, uri: 'https://github.com/gt-ros-pkg/hrl-kdl.git', version: hydro}
+

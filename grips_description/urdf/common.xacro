@@ -5,7 +5,7 @@
   <property name="pi" value="3.1415926535897931" />
   <property name="gripper_effort" value="200" />
   <property name="gripper_velocity" value="15" />
-  <property name="max_effort" value="200" />
+  <property name="max_effort" value="400" />
   <property name="max_velocity" value="5" />
   
   <!-- Macros -->
@@ -58,13 +58,14 @@
   </macro>
   <!-- Transmission Macro -->
   <macro name="simple_transmission" params="joint">
-    <transmission name="${joint}_tran">
+    <transmission name="${joint}_tran" type="transmission_interface/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${joint}" />
+      <joint name="${joint}"/>
       <actuator name="${joint}_motor">
         <hardwareInterface>EffortJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
+      <mechanicalReduction>1</mechanicalReduction>
     </transmission>
   </macro>
 </robot>
