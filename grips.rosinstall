@@ -5,6 +5,5 @@
 - git: {local-name: lma_kinematics_plugin, uri: 'https://github.com/fsuarez6/lma_kinematics_plugin.git', version: hydro-devel}
 
 # External dependencies
-- git: {local-name: robotiq, uri: 'https://github.com/ros-industrial/robotiq', version: groovy-devel}
 - git: {local-name: robotiq, uri: 'https://github.com/gt-ros-pkg/hrl-kdl.git', version: hydro}
 
