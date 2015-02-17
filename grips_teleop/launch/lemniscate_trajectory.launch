@@ -1,0 +1,7 @@
+<launch>
+  
+  <node name="cartesian_trajectory" pkg="grips_teleop" type="cartesian_trajectory.py" output="screen"> 
+    <rosparam command="load" file="$(find grips_teleop)/config/lemniscate_trajectory.yaml" />
+  </node>
+  
+</launch>

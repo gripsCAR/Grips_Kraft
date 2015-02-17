@@ -9,6 +9,6 @@
   </node>
   
   <!-- Initial position -->
-  <node name="initial_xyz_pos" pkg="rostopic" type="rostopic" args="pub -1 /grips/ik_command geometry_msgs/PoseStamped '{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: base_link}, pose: { position: { x: 0, y: 1, z: 0 }, orientation: {x: 0, y: 0, z: 0, w: 1 } } }'" />
+  <node name="initial_xyz_pos" pkg="rostopic" type="rostopic" args="pub -1 /grips/ik_command geometry_msgs/PoseStamped '{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: base_link}, pose: { position: { x: 0.25, y: 0.5, z: 0.5 }, orientation: {x: 0, y: 0, z: 0, w: 1 } } }'" />
 
 </launch>
