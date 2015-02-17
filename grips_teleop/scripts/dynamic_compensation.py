@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import rospy, os, collections
 import numpy as np
+# Filters
+from scipy.signal import lfilter
 # PyKDL
 import PyKDL
 from hrl_geom.pose_converter import PoseConv
@@ -17,33 +19,39 @@ from geometry_msgs.msg import Twist, Vector3
 class DynamicCompensation(object):
   def __init__(self):
     self.fs = read_parameter('/joint_state_controller/publish_rate', 1000.0)
-    self.window_size = 100
-    self.kernel_size = 51
-    self.order = 4
-    self.a_x = collections.deque(maxlen=self.window_size)
-    self.a_y = collections.deque(maxlen=self.window_size)
-    self.a_z = collections.deque(maxlen=self.window_size)
-    self.alpha_x = collections.deque(maxlen=self.window_size)
-    self.alpha_y = collections.deque(maxlen=self.window_size)
-    self.alpha_z = collections.deque(maxlen=self.window_size)
+    self.window_size = int(self.fs / 2.0)
+    order = int(10000 / self.fs)
+    self.b = smooth_diff(order)
+    self.vx = collections.deque(maxlen=self.window_size)
+    self.vy = collections.deque(maxlen=self.window_size)
+    self.vz = collections.deque(maxlen=self.window_size)
+    self.wx = collections.deque(maxlen=self.window_size)
+    self.wy = collections.deque(maxlen=self.window_size)
+    self.wz = collections.deque(maxlen=self.window_size)
     # Set-up publishers/subscribers
     self.acc_pub = rospy.Publisher('/grips/endpoint_acc', Twist)
     rospy.Subscriber('/grips/endpoint_state', EndpointState, self.endpoint_cb)
   
   def endpoint_cb(self, msg):
-    self.a_x.append(msg.twist.linear.x)
-    self.a_y.append(msg.twist.linear.y)
-    self.a_z.append(msg.twist.linear.z)
-    self.alpha_x.append(msg.twist.angular.x)
-    self.alpha_y.append(msg.twist.angular.y)
-    self.alpha_z.append(msg.twist.angular.z)
-    if len(self.a_x) < self.window_size:
+    self.vx.append(msg.twist.linear.x)
+    self.vy.append(msg.twist.linear.y)
+    self.vz.append(msg.twist.linear.z)
+    self.wx.append(msg.twist.angular.x)
+    self.wy.append(msg.twist.angular.y)
+    self.wz.append(msg.twist.angular.z)
+    if len(self.vx) < self.window_size:
       return
+    ax = lfilter(self.b, 1.0, self.vx)
+    ay = lfilter(self.b, 1.0, self.vy)
+    az = lfilter(self.b, 1.0, self.vz)
+    alphax = lfilter(self.b, 1.0, self.wx)
+    alphay = lfilter(self.b, 1.0, self.wy)
+    alphaz = lfilter(self.b, 1.0, self.wz)
+    last_acc = np.array([ax[-1], ay[-1], az[-1]]) * self.fs
+    last_alpha = np.array([alphax[-1], alphay[-1], alphaz[-1]]) * self.fs
     acc_msg = Twist()
-    ax = savitzky_golay(np.array(self.a_x), self.kernel_size, self.order, deriv=1, rate=self.fs)
-    ay = savitzky_golay(np.array(self.a_y), self.kernel_size, self.order, deriv=1, rate=self.fs)
-    az = savitzky_golay(np.array(self.a_z), self.kernel_size, self.order, deriv=1, rate=self.fs)
-    acc_msg.linear = Vector3(ax[-1], ay[-1], az[-1])
+    acc_msg.linear = Vector3(*last_acc)
+    acc_msg.angular = Vector3(*last_alpha)
     try:
       self.acc_pub.publish(acc_msg)
     except:
