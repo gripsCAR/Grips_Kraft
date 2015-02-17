@@ -17,8 +17,6 @@ class CartersianTrajectory(object):
     # Set-up publishers/subscribers
     cmd_pub = rospy.Publisher('/grips/ik_command', PoseStamped)
     for point in points:
-      #~ if rospy.is_shutdown():
-        #~ return
       pose = PoseConv.to_pose_stamped_msg(frame_id, point[4:7], point[:4])
       cmd_pub.publish(pose)
       try:

@@ -36,10 +36,10 @@ def smooth_diff(n):
   IEEE Transactions on Ultrasonics Ferroelectrics and Frequency Control 2004, 51, (9), 1119-1127.
   """
   if n >= 2 and math.floor(n) == math.ceil(n):
-    if n % 2 == 1:                       # is odd
+    if n % 2 == 1:                    # is odd
         m = math.trunc((n-1) / 2.0);
         h = np.concatenate( (-np.ones(m), [0], np.ones(m)) ) / (m * (m+1))
-    else:                                   # is even
+    else:                             # is even
         m = math.trunc(n / 2.0);
         h = np.concatenate( (-np.ones(m), np.ones(m)) ) /m**2
   else:
