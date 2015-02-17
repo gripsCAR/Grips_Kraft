@@ -3,7 +3,7 @@ import rospy, math
 import numpy as np
 from scipy.signal import medfilt
 
-def smooth_diff(m):
+def smooth_diff(n):
   """A smoothed differentiation filter (digital differentiator). 
 
   Such a filter has the following advantages:
