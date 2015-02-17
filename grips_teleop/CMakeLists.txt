@@ -19,7 +19,6 @@ catkin_package(CATKIN_DEPENDS
   pykdl_utils
   rate_position_controller
   tf_conversions
-  urdf_parser_py
 )
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>  
+  <arg name="node_name" default="compensation_node" />
+  <arg name="robot_ns" default="grips" />
+  
+  <node name="$(arg node_name)" pkg="gravity_compensation" type="gravity_compensation_node" output="screen" ns="$(arg robot_ns)">
+    <rosparam command="load"  file="$(find grips_ft_sensor)/config/ft_calibrated_data.yaml"/>
+    <remap to="/grips/ft_raw" from="/grips/$(arg node_name)/ft_raw"/>
+    <remap to="/grips/imu"    from="/grips/$(arg node_name)/imu" />
+    <param name="gripper_com_child_frame_id" value="gripper_com"/>
+    <param name="loop_rate"   value="500.0" />
+    <param name="ns"          value="/$(arg robot_ns)"/>
+  </node>
+
+</launch>

@@ -24,6 +24,5 @@
   <run_depend>pykdl_utils</run_depend>
   <run_depend>rate_position_controller</run_depend>
   <run_depend>tf_conversions</run_depend>
-  <run_depend>urdf_parser_py</run_depend>
 
 </package>
