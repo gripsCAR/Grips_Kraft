@@ -1,0 +1,21 @@
+<launch>
+  
+  <!-- load controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find grips_control)/config/joint_position_controllers.yaml" command="load" />
+  
+  <!-- load the controllers -->
+  <node name="controller_manager" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller"/>
+  
+  <!-- State of the endpoint (FK) -->
+  <node name="endpoint_state" pkg="grips_control" type="endpoint_state.py" >
+    <param name="frame_id" type="string" value="base_link" />
+    <param name="tip_link" type="string" value="end_effector" />
+  </node>
+  
+  <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+    <param name="publish_frequency" type="double" value="50.0" />
+  </node>
+  
+  <node name="dynamic_compensation" pkg="grips_teleop" type="dynamic_compensation.py" output="screen" />
+  
+</launch>
