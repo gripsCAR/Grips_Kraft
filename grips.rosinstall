@@ -3,12 +3,12 @@
 - git: {local-name: netft, uri: 'https://github.com/fsuarez6/netft.git', version: hydro-devel}
 - git: {local-name: phantom_omni, uri: 'https://github.com/fsuarez6/phantom_omni.git', version: hydro-devel}
 - git: {local-name: labview_bridge, uri: 'https://github.com/fsuarez6/labview_bridge.git', version: hydro-devel}
+- git: {local-name: baxter_teleoperation, uri: 'https://github.com/fsuarez6/baxter_teleoperation.git', version: hydro-devel}
 - git: {local-name: rate_position_controller, uri: 'https://github.com/fsuarez6/rate_position_controller.git', version: master}
 - git: {local-name: lma_kinematics_plugin, uri: 'https://github.com/fsuarez6/lma_kinematics_plugin.git', version: hydro-devel}
 - git: {local-name: moveit_kinematics_interface, uri: 'https://github.com/fsuarez6/moveit_kinematics_interface.git', version: hydro-devel}
 
 
 # External dependencies
-- git: {local-name: robotiq, uri: 'https://github.com/gt-ros-pkg/hrl-kdl.git', version: hydro}
+- git: {local-name: moveit_robots, uri: 'https://github.com/ros-planning/moveit_robots.git', version: master}
 - git: {local-name: force_torque_tools, uri: 'https://github.com/kth-ros-pkg/force_torque_tools.git', version: hydro}
-
