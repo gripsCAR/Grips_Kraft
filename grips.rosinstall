@@ -1,9 +1,12 @@
 # Maintained dependencies
 - git: {local-name: grips, uri: 'https://github.com/fsuarez6/grips.git', version: hydro-devel}
-- git: {local-name: labview_bridge, uri: 'https://github.com/fsuarez6/labview_bridge.git', version: hydro-devel}
 - git: {local-name: netft, uri: 'https://github.com/fsuarez6/netft.git', version: hydro-devel}
+- git: {local-name: labview_bridge, uri: 'https://github.com/fsuarez6/labview_bridge.git', version: hydro-devel}
 - git: {local-name: lma_kinematics_plugin, uri: 'https://github.com/fsuarez6/lma_kinematics_plugin.git', version: hydro-devel}
+- git: {local-name: moveit_kinematics_interface, uri: 'https://github.com/fsuarez6/moveit_kinematics_interface.git', version: hydro-devel}
+
 
 # External dependencies
 - git: {local-name: robotiq, uri: 'https://github.com/gt-ros-pkg/hrl-kdl.git', version: hydro}
+- git: {local-name: force_torque_tools, uri: 'https://github.com/kth-ros-pkg/force_torque_tools.git', version: hydro}
 

@@ -17,3 +17,7 @@ gripper_inertia:  [7300e-6, 0,      -650e-6,  8800e-6,  0,      7000e-6]
 #~ Iyz: 0
 #~ Izz: 7000
 
+#~ Real measurements
+#~ FT Sensor: 1.4 N
+#~ Acople:    1.4 N
+#~ Robotiq:   23.3 N
