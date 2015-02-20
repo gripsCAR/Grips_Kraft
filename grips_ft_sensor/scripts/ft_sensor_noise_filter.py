@@ -3,7 +3,7 @@ import rospy, os, collections
 import math
 import numpy as np
 # Messages
-from geometry_msgs.msg import Wrench, WrenchStamped
+from geometry_msgs.msg import Vector3, Wrench, WrenchStamped
 # Filter
 from scipy.signal import butter, lfilter, lfilter_zi
 # Utils
@@ -13,10 +13,10 @@ from baxter_teleop.utils import read_parameter
 class FTSensorFilter(object):
   def __init__(self):
     # Read parameters
-    fs = read_parameter('~fs', 1000)
+    fs = read_parameter('/netft/publish_rate', 1000.0)
     lowcut = read_parameter('~lowcut', 30)
     highcut = read_parameter('~highcut', 70)
-    self.order = read_parameter('~order', 6)
+    self.order = int(read_parameter('~order', 6))
     # Create butterworth stopband filter
     nyq = 0.5 * fs
     low = lowcut / nyq
@@ -45,12 +45,12 @@ class FTSensorFilter(object):
     self.tz.append(msg.wrench.torque.z)
     if len(self.fx) < self.window_size:
       return
-    fx, self.z_fx = lfilter(self.b, self.a, self.fx)
-    fy, self.z_fy = lfilter(self.b, self.a, self.fy)
-    fz, self.z_fz = lfilter(self.b, self.a, self.fz)
-    tx, self.z_tx = lfilter(self.b, self.a, self.tx)
-    ty, self.z_ty = lfilter(self.b, self.a, self.ty)
-    tz, self.z_tz = lfilter(self.b, self.a, self.tz)
+    fx = lfilter(self.b, self.a, self.fx)
+    fy = lfilter(self.b, self.a, self.fy)
+    fz = lfilter(self.b, self.a, self.fz)
+    tx = lfilter(self.b, self.a, self.tx)
+    ty = lfilter(self.b, self.a, self.ty)
+    tz = lfilter(self.b, self.a, self.tz)
     f_filtered = np.array([fx[-1], fy[-1], fz[-1]])
     t_filtered = np.array([tx[-1], ty[-1], tz[-1]])
     filtered_msg.wrench.force = Vector3(*f_filtered)

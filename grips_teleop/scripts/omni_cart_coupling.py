@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import rospy, os
+import rospy, os, math
 import numpy as np
 # Baxter Interface for the grippers
 import baxter_interface
@@ -27,7 +27,7 @@ class CartCoupling(object):
   def __init__(self):
     self.roll_angle = 0
     self.gripper_cmd = -GRIPPER_RATIO
-    self.q0 = PyKDL.Rotation.Quaternion(0.0, 0.0, 0.0, 1.0)
+    self.q0 = PyKDL.Rotation.Quaternion(-math.sqrt(2)/2.0, 0.0, 0.0, math.sqrt(2)/2.0)
     # Set-up publishers/subscribers
     self.locked_pub = rospy.Publisher('/omni/locked', Bool)
     self.gripper_pub = rospy.Publisher('/grips/gripper/command', Float64)

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!-- netft node -->
+  <node name="netft" pkg="netft_rdt_driver" type="netft_node" output="screen">
+    <param name="ip_address"    type="string"   value="192.168.0.7"/>
+    <param name="frame_id"      type="string"   value="ft_sensor"/>
+    <param name="publish_rate"  type="double"   value="1000.0"/>
+    <param name="sensor_name"   type="string"   value="netft"/>
+  </node>
+  
+  <!-- Noise filter for the F/T sensor  -->
+  <node name="ft_sensor_noise_filter" pkg="grips_ft_sensor" type="ft_sensor_noise_filter.py" output="screen">
+    <param name="lowcut"    type="double"   value="30"/>
+    <param name="highcut"   type="double"   value="70"/>
+    <param name="order"     type="int"      value="6"/>
+  </node>
+  
+  <!-- dynamic compensation node -->
+  <node name="dynamic_compensation" pkg="grips_ft_sensor" type="dynamic_compensation.py" output="screen">
+    <rosparam command="load"  file="$(find grips_ft_sensor)/config/ft_calibrated_data.yaml"/>
+  </node>
+  
+</launch>
