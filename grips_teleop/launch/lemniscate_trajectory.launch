@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
   
   <node name="cartesian_trajectory" pkg="grips_teleop" type="cartesian_trajectory.py" output="screen"> 
