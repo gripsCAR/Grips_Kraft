@@ -44,16 +44,16 @@
     <link name="${name}">
       <visual>
         <geometry>
-          <sphere radius="0.02"/>
+          <sphere radius="0.01"/>
         </geometry>
-        <material name="black" />
+        <material name="blue" />
       </visual>
       <collision>
         <geometry>
-          <sphere radius="0.02"/>
+          <sphere radius="0.01"/>
         </geometry>
       </collision>
-      <cylinder_inertia radius="0.02" length="0.02" mass="0.05"/>
+      <cylinder_inertia radius="0.01" length="0.02" mass="0.05"/>
     </link>
   </macro>
   <!-- Transmission Macro -->

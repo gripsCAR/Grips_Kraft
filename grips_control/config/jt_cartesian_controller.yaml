@@ -1,7 +1,7 @@
 # Expected frame id of the ik commands
 frame_id: base_link
-tip_link: end_effector
-# Publish Rate in [Hz]
+tip_link: ft_sensor
+# Publish Rate in [Hz] of the torque commands
 publish_rate: 500
 
 # Joint Torque controller gains

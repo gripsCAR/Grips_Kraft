@@ -18,6 +18,7 @@
   
   <!-- start Grips robot -->
   <include file="$(find grips_gazebo)/launch/grips_no_controllers.launch">
+    <arg name="robot_name" value="grips_robotiq" />
     <arg name="robot_initial_pose" value="-z 0.8" />
   </include>
   

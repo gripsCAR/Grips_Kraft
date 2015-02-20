@@ -11,10 +11,4 @@
     <param name="publish_frequency" type="double" value="50.0" />
   </node>
   
-  <!-- State of the endpoint (FK) -->
-  <node name="endpoint_state" pkg="grips_control" type="endpoint_state.py" >
-    <param name="frame_id" type="string" value="base_link" />
-    <param name="tip_link" type="string" value="end_effector" />
-  </node>
-  
 </launch>

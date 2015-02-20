@@ -1,23 +1,9 @@
 # Using the calibration algorithm
-bias: [-0.0118351, 0.00533736, -0.00596248, 0.00064073, 0.0725907, 0.00805979]
+bias: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 gripper_com_frame_id: end_effector
-gripper_com_pose: [-0.008, 0.065, 0.0, 0.0, 0.0, 0.0]
+gripper_com_pose: [-0.008, 0.075, 0.0, 0.0, 0.0, 0.0]
 gripper_mass: 3.26024
 #~ Inertia:       [Ixx,     Ixy,    Ixz,      Iyy,      Iyz,    Izz]
 gripper_inertia:  [7300e-6, 0,      -650e-6,  8800e-6,  0,      7000e-6]
 
-#~ Data from manufacturer manual (http://support.robotiq.com/display/IMB/6.4+Moment+of+inertia+and+center+of+mass)
-#~ mass: 2.3 Kg
-#~ center of mass: [-8 0 65] mm
-#~ Inertia: Kg.mm^2
-#~ Ixx: 7300
-#~ Ixy: 0
-#~ Ixz: -650
-#~ Iyy: 8800
-#~ Iyz: 0
-#~ Izz: 7000
 
-#~ Real measurements
-#~ FT Sensor: 1.4 N
-#~ Acople:    1.4 N
-#~ Robotiq:   23.3 N
