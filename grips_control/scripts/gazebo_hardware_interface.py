@@ -16,6 +16,7 @@ class HardwareInterface(LabviewServer):
     # Set-up publishers/subscribers
     rospy.Subscriber('/joint_states', JointState, self.joint_states_cb)
     rospy.Subscriber('/grips/gripper/command', Float64, self.gripper_cmd_cb)
+    self.el_offset = math.atan2(29.845, 123.4444)
     rospy.spin()
 
   def gripper_cmd_cb(self, msg):
@@ -30,7 +31,7 @@ class HardwareInterface(LabviewServer):
     # Convert the value from linkage_tr to EL
     SE = msg.position[msg.name.index('SE')]
     TR = msg.position[msg.name.index('linkage_tr')]
-    EL  = TR + SE + math.pi
+    EL  = TR + SE + math.pi/2.0 - self.el_offset
     cmd_msg.position[msg.name.index('linkage_tr')] = EL
     cmd_msg.name[msg.name.index('linkage_tr')] = 'EL'
     # Add gripper command

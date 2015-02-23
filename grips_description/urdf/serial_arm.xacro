@@ -134,7 +134,7 @@
       <parent link="upper_arm" />
       <axis xyz="1 0 0" />
       <origin xyz="0 -9.82e-3 ${upper_arm_length}" rpy="0 0 0" />
-      <limit lower="-1.28" upper="${pi/3}" effort="${max_effort}" velocity="${50*pi/180}" />
+      <limit lower="${-40*pi/180}" upper="${70*pi/180}" effort="${max_effort}" velocity="${50*pi/180}" />
       <dynamics damping="10"/>
     </joint>
     <joint name="WP" type="revolute">
@@ -142,7 +142,7 @@
       <parent link="forearm" />
       <axis xyz="1 0 0" />
       <origin xyz="0 0.26109 7.5e-3" rpy="0 0 0" />
-      <limit lower="-0.581" upper="1.1" effort="${max_effort}" velocity="${100*pi/180}" />
+      <limit lower="${-35*pi/180}" upper="${65*pi/180}" effort="${max_effort}" velocity="${100*pi/180}" />
       <dynamics damping="${WP_damping}"/>
     </joint>
     <joint name="WY" type="revolute">
@@ -150,7 +150,7 @@
       <parent link="pitch" />
       <axis xyz="0 0 1" />
       <origin xyz="0 ${pitch_length} 0" rpy="0 0 0" />
-      <limit lower="-1.01" upper="0.675" effort="${max_effort}" velocity="${115*pi/180}" />
+      <limit lower="${-39*pi/180}" upper="${66*pi/180}" effort="${max_effort}" velocity="${115*pi/180}" />
       <dynamics damping="${WY_damping}"/>
     </joint>
     <joint name="WR" type="continuous">
