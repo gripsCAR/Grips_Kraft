@@ -61,14 +61,16 @@ class DynamicCompensation(object):
     a = np.array([ax[-1], ay[-1], az[-1]]) * self.fs
     alpha = np.array([alphax[-1], alphay[-1], alphaz[-1]]) * self.fs
     # Calculate the gravity vector in the reference frame of the F/T sensor
-    q = quaternion_to_numpy(msg.pose.orientation)[:3,:3]
-    g = tr.quaternion_matrix(q) * self.gravity
+    q = quaternion_to_numpy(msg.pose.orientation)
+    g = np.squeeze(np.asarray( tr.quaternion_matrix(q)[:3,:3] * np.matrix(self.gravity).T ))
     # Estimate the force/torque to be removed from the sensor readings
     m = self.mass
     c = self.com
     w = np.array([self.wx[-1], self.wy[-1], self.wz[-1]])
-    fe = m * (a - g) + alpha * (m * c) + w * (w * (m * c))
+    fe = m * (a - g) + np.cross(alpha, m * c) + np.cross(w, np.cross(w, m * c))
     te = np.zeros(3)
+    fc = self.force - fe
+    tc = self.torque - te
     # Publish results
     acc_msg = Twist()
     acc_msg.linear = Vector3(*a)
@@ -77,10 +79,13 @@ class DynamicCompensation(object):
     wrench_msg.header.stamp = rospy.Time.now()
     # TODO: This should be read from the netft_cb callback
     wrench_msg.header.frame_id = self.ft_frame_id
-    wrench_msg.wrench.force = Vector3(*(self.force - fe))
-    wrench_msg.wrench.torque = Vector3(*(self.torque - te))
-    self.acc_pub.publish(acc_msg)
-    self.wrench_pub.publish(wrench_msg)
+    wrench_msg.wrench.force = Vector3(*fc)
+    wrench_msg.wrench.torque = Vector3(*tc)
+    try:
+      self.wrench_pub.publish(wrench_msg)
+      self.acc_pub.publish(acc_msg)
+    except:
+      pass
   
   def netft_cb(self, msg):
     self.ft_frame_id = msg.header.frame_id
