@@ -1,7 +1,7 @@
 joint_state_controller:
   type: joint_state_controller/JointStateController
   # Hz
-  publish_rate: 500
+  publish_rate: 1000.0
 # Grips
 SA:
   type: effort_controllers/JointEffortController
