@@ -158,7 +158,7 @@
       <parent link="yaw" />
       <axis xyz="0 1 0" />
       <origin xyz="-0.787e-3 ${yaw_length} 0.051331" rpy="0 0 0" />
-      <limit lower="${-pi}" upper="${pi}" effort="${max_effort}" velocity="${200*pi/180}" />
+      <limit lower="${-100*pi/180}" upper="${100*pi/180}" effort="${max_effort}" velocity="${200*pi/180}" />
       <dynamics damping="${WR_damping}"/>
     </joint>
     
