@@ -28,8 +28,8 @@ class DynamicCompensation(object):
     self.ft_frame_id = None
     
     self.window_size = int(self.fs / 2.0)
-    order = int(10000 / self.fs)
-    self.b = smooth_diff(order)
+    order = 10
+    self.b = -smooth_diff(order)
     self.vx = collections.deque(maxlen=self.window_size)
     self.vy = collections.deque(maxlen=self.window_size)
     self.vz = collections.deque(maxlen=self.window_size)
@@ -60,7 +60,7 @@ class DynamicCompensation(object):
     alphaz = lfilter(self.b, 1.0, self.wz)
     a = np.array([ax[-1], ay[-1], az[-1]]) * self.fs
     alpha = np.array([alphax[-1], alphay[-1], alphaz[-1]]) * self.fs
-    # Calculate the gravity vector in the reference frame of the F/T sensor
+    # FIXME: Calculate the gravity vector in the reference frame of the F/T sensor
     q = quaternion_to_numpy(msg.pose.orientation)
     g = np.squeeze(np.asarray( tr.quaternion_matrix(q)[:3,:3] * np.matrix(self.gravity).T ))
     # Estimate the force/torque to be removed from the sensor readings

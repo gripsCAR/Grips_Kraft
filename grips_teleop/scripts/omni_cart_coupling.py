@@ -60,7 +60,7 @@ class CartCoupling(object):
   def pose_cb(self, msg):
     self.locked_pub.publish(Bool(self.buttons[WHITE_BUTTON]))
     cmd_msg = msg
-    q_roll = PyKDL.Rotation.RotY(self.roll_angle)
+    q_roll = PyKDL.Rotation.RotZ(self.roll_angle)
     q = (self.q0 * q_roll).GetQuaternion()
     cmd_msg.pose.orientation = Quaternion(q[0], q[1], q[2], q[3])
     if not self.buttons[WHITE_BUTTON]:
