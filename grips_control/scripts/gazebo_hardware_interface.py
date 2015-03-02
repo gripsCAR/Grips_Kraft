@@ -37,6 +37,9 @@ class HardwareInterface(LabviewServer):
     # Add gripper command
     cmd_msg.name.append('gripper')
     cmd_msg.position.append(self.gripper_cmd)
+    # FIXME
+    WY = msg.position[msg.name.index('WY')]
+    cmd_msg.position[msg.name.index('WY')] = -WY
     # Serialize cmd_msg
     file_str = StringIO()
     cmd_msg.serialize(file_str)
